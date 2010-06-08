@@ -1,3 +1,6 @@
 [submodule "lib/jsdom"]
 	path = lib/jsdom
 	url = git://github.com/tmpvar/jsdom.git
+[submodule "lib/node-htmlparser"]
+	path = lib/node-htmlparser
+	url = git://github.com/davglass/node-htmlparser.git
