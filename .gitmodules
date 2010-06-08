@@ -1,0 +1,3 @@
+[submodule "lib/jsdom"]
+	path = lib/jsdom
+	url = git://github.com/tmpvar/jsdom.git
