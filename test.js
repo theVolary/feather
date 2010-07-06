@@ -2,7 +2,7 @@ var sys = require("sys");
 var jojo = require("./lib/core").jojo;
 
 var tick;
-var idleTimer;
+var idleTimer; //could be used to tackle certain processing while the server is idle
 
 //TODO: refactor this stuff into modules, and do a middle-ware thing to stack request handlers
 //TODO: make generic configuration file loader for this stuff
@@ -32,7 +32,7 @@ require("./lib/server").init(jojo, {
                 
                 //test what happens when requests take too long
                 /*setTimeout(function() {
-                    fsm.fire("finishingRequest", args);
+                    fsm.fire("endRequest", args);
                 }, 1000);*/
                
                 //done processing the request, we can go wait for a new one now
