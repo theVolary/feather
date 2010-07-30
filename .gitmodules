@@ -4,6 +4,3 @@
 [submodule "lib/node-htmlparser"]
 	path = lib/node-htmlparser
 	url = git://github.com/davglass/node-htmlparser.git
-[submodule "lib/connect"]
-	path = lib/connect
-	url = git@github.com:ryedin/connect.git
