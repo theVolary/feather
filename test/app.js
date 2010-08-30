@@ -2,16 +2,14 @@ var sys = require("sys"),
     Connect = require("../lib/connect/lib/connect/index"),
     jojo = require("../lib/core").jojo;
 
-var tick;
-var idleTimer; //could be used to tackle certain processing while the server is idle
-
-//TODO: refactor this stuff into modules, and do a middle-ware thing to stack request handlers
+//TODO: These states have some core functionality which should be moved in the framework
 //TODO: make generic configuration file loader for this stuff
 jojo.init({
-    port: 8089,
+    port: 8088,
     debug: true,
     jojoRoot: "../lib/",
     appRoot: __dirname,
+    logFilePath: "test.log",
     middleware: [
         
     ],
@@ -27,26 +25,41 @@ jojo.init({
         },
         processingRequest: {
             stateStartup: function(fsm, args) {
-                tick = (new Date()).getTime();
                                
                 var req = args.request;
                 var res = args.response;
                 
-                sys.puts("processing request: " + req.url); 
+                //per-request logging
+                req.logger = new jojo.logging.logger();
+                
+                //basic benchmarking
+                req.startTime = (new Date()).getTime();
+                
+                req.logger.log("-------------------------------------------------------------------------");
+                req.logger.log("processing request: " + req.url); 
+                                
+                req.on("end", function() {
+                  fsm.fire("endRequest", {request: req, response: res});
+                });
                 
                 //start running through the middleware
                 args.next();
                 
-                //done processing the request, we can go wait for a new one now
-                fsm.fire("endRequest", args);
-            },
-            endRequest: function(fsm, args) {
-                //simple per-request benchmarking
-                var newTick = (new Date()).getTime();
-                var diff = newTick - tick;
-                sys.puts("request took " + diff + " milliseconds");
-                return fsm.states.ready;
+                //go back and wait for the next request
+                return fsm.states.ready;               
             }
+        },
+        global: {
+          endRequest: function(fsm, args) {
+            //done processing the request, we can go wait for a new one now
+            //simple per-request benchmarking
+            var req = args.request;
+            var newTick = (new Date()).getTime();
+            var diff = newTick - req.startTime;
+            req.logger.log("request took " + diff + " milliseconds");
+            req.logger.log("-------------------------------------------------------------------------");
+            req.logger.dispose();
+          }
         }
     }
 });

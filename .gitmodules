@@ -7,3 +7,6 @@
 [submodule "lib/connect"]
 	path = lib/connect
 	url = http://github.com/senchalabs/connect.git
+[submodule "lib/node-core-enhancements"]
+	path = lib/node-core-enhancements
+	url = git@github.com:ryedin/node-core-enhancements.git
