@@ -1,6 +1,7 @@
 var sys = require("sys"),
-    Connect = require("../lib/connect/lib/connect/index"),
-    jojo = require("../lib/core").jojo;
+    Connect = require("../lib/connect/lib/connect/index");
+    
+require("../lib/core");
 
 //TODO: These states have some core functionality which should be moved in the framework
 //TODO: make generic configuration file loader for this stuff

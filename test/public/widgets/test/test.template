@@ -1,0 +1,21 @@
+<p>
+  <div>
+    <b>{title}</b>
+    <div>{html}</div>
+    <input type="button" id="{id}_testBtn" value="test1" />
+    <input type="button" id="{id}_testBtn2" value="test2" />
+  </div>
+  <widget path="widgets/test2/" id="myTest2">
+    <contentTemplate>
+      content template inside nested widget
+      <input type="button" id="blah" value="blah" />
+      <widget path="widgets/test2/" id="innerTest2">
+        <options>
+          <option name="bar" value="foo"/>
+        </options>
+        <blah/>
+      </widget>
+      content after inner test2 widget
+    </contentTemplate>
+  </widget>
+</p>

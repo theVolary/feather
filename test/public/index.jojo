@@ -9,31 +9,36 @@
     <p>
       This page demonstrates the basics of widget rendering on the server, along with widget templating and making calls back to the server via serverMethods.
     </p>
-      <widget path="widgets/test/" id="test1">
-        <options title="Test 1"></options> <!-- NOTE: apparently all top level custom tags must be closed like this vs. self-closing -->
-        <contentTemplate>
-          --- BEGIN TEST 1
-          <div style="border: 1px solid black;">
-            <widget path="widgets/test/" id="test2">
-              <options title="Test 2"></options>
-              <contentTemplate>
-                ------ BEGIN TEST 2
-                <div style="border: 1px solid red;">
-                  <widget path="widgets/test/" id="test3">
-                    <options title="Test 3"></options>
-                    <foo bar="baz"></foo>
-                    <contentTemplate>
-                      --------- TEST 3
-                    </contentTemplate>
-                  </widget>
-                </div>
-                ------ END TEST 2
-              </contentTemplate>
-            </widget>
-          </div>
-          --- END TEST 1
-        </contentTemplate>
-      </widget>
+    <widget path="widgets/test/" id="test1">
+      <options>
+        <option name="title" value="Test 1"/>
+      </options>
+      <contentTemplate>
+        --- BEGIN TEST 1
+        <div style="border: 1px solid black;">
+          <widget path="widgets/test/" id="test2">
+            <options>
+              <option name="title" value="Test 2"/>
+            </options>
+            <contentTemplate>
+              ------ BEGIN TEST 2
+              <div style="border: 1px solid red;">
+                <widget path="widgets/test/" id="test3">
+                  <options>
+                    <option name="title" value="Test 3"/>
+                  </options>
+                  <contentTemplate>
+                    --------- TEST 3
+                  </contentTemplate>
+                </widget>
+              </div>
+              ------ END TEST 2
+            </contentTemplate>
+          </widget>
+        </div>
+        --- END TEST 1
+      </contentTemplate>
+    </widget>
     <p>foo</p>
     <widget path="widgets/test/" id="test4">
       <options title="Test 4"></options>
