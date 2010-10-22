@@ -7,7 +7,7 @@ jojo.init({
     port: 8088,
     debug: true,
     jojoRoot: "../lib/",
-    enableLogging: true,
+    enableLogging: false,
     logFilePath: "client_test.log",
     appRoot: __dirname,
     middleware: [
@@ -16,7 +16,7 @@ jojo.init({
     states: {
         ready: {
             stateStartup: function(fsm, args) {
-                if (!jojo.logger) {
+                if (jojo.appOptions.enableLogging && !jojo.logger) {
                     jojo.logger = new jojo.logging.logger();
                 }
                 sys.puts("app is currently waiting on requests");                

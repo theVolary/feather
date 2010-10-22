@@ -10,6 +10,7 @@ jojo.init({
     debug: true,
     jojoRoot: "../lib/",
     appRoot: __dirname,
+    enableLogging: true,
     logFilePath: "test.log",
     middleware: [
         
