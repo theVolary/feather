@@ -1,0 +1,31 @@
+<html>
+<head>
+<title>LYB framework test page</title>
+
+<!-- framework... -->
+<script type="text/javascript" src="js/jojojs-client/lib/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/jojojs-client/lib/jquery-tmpl.js"></script>
+<script type="text/javascript" src="js/jojojs-client/core.js"></script>
+<script type="text/javascript" src="js/jojojs-client/lang.js"></script>
+<script type="text/javascript" src="js/jojojs-client/event.js"></script>
+<script type="text/javascript" src="js/jojojs-client/fsm.js"></script>
+<script type="text/javascript" src="js/jojojs-client/widget.js"></script>
+
+<!-- testing... -->
+<script type="text/javascript" src="widgets/headerBar/headerBar.client.js"></script>
+
+<!-- styles... -->
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/themes/base/jquery-ui.css" type="text/css" media="all" />
+</head>
+<body>
+    <h1>jojojo client test page</h1>
+    <widget id="app" path="widgets/app/">
+        
+    </widget>
+    <script id="headerBarTmpl" type="text/x-jquery-tmpl">
+        <div>
+            <div>${Customer.Name}</div>
+        </div>
+    </script>
+</body>
+</html>

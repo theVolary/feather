@@ -1,0 +1,14 @@
+<div class="headerArea">
+    <widget id="headerBar" path="widgets/headerBar/" />
+</div>
+<div class="appArea">
+    <div class="navigatorArea">
+        <widget id="navigator" path="widgets/navigator/" />
+    </div>
+    <div class="workArea">
+        <widget id="workArea" path="widgets/workArea/" />
+    </div>
+    <div class="infoArea">
+        <widget id="infoPanel" path="widgets/infoPanel/" />
+    </div>
+</div>
