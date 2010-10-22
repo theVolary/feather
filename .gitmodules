@@ -1,6 +1,3 @@
-[submodule "lib/jsdom"]
-	path = lib/jsdom
-	url = git://github.com/tmpvar/jsdom.git
 [submodule "lib/node-htmlparser"]
 	path = lib/node-htmlparser
 	url = git://github.com/davglass/node-htmlparser.git
@@ -10,3 +7,6 @@
 [submodule "lib/node-core-enhancements"]
 	path = lib/node-core-enhancements
 	url = git@github.com:ryedin/node-core-enhancements.git
+[submodule "lib/jsdom"]
+	path = lib/jsdom
+	url = http://github.com/tmpvar/jsdom.git
