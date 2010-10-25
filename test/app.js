@@ -63,7 +63,7 @@ jojo.init({
             if (jojo.logger) {
                 jojo.logger.log("request took " + diff + " milliseconds");
                 jojo.logger.log("-------------------------------------------------------------------------");
-                jojo.logger.dispose();
+                jojo.logger.flush();
             }
           }
         }
