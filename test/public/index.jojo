@@ -3,6 +3,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Index.jojo</title>
+    
+    <!-- framework... -->
+    <script type="text/javascript" src="/jojojs-client/lib/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="/jojojs-client/lib/jquery.tmpl.js"></script>
+    <script type="text/javascript" src="/jojojs-client/core.js"></script>
+    <script type="text/javascript" src="/jojojs-client/lang.js"></script>
+    <script type="text/javascript" src="/jojojs-client/event.js"></script>
+    <script type="text/javascript" src="/jojojs-client/fsm.js"></script>
+    <script type="text/javascript" src="/jojojs-client/widget.js"></script>
+    
+    <!-- styles... -->
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/themes/base/jquery-ui.css" type="text/css" media="all" />
 </head>
 <body>
     <h1>jojo Test1 </h1>

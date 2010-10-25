@@ -10,6 +10,7 @@ jojo.init({
     debug: true,
     jojoRoot: "../lib/",
     appRoot: __dirname,
+    enableLogging: true,
     logFilePath: "test.log",
     middleware: [
         
@@ -17,6 +18,9 @@ jojo.init({
     states: {
         ready: {
             stateStartup: function(fsm, args) {
+                if (jojo.appOptions.enableLogging && !jojo.logger) {
+                    jojo.logger = new jojo.logging.logger();
+                }
                 sys.puts("app is currently waiting on requests");                
             },
             request: function(fsm, args) {
@@ -30,17 +34,16 @@ jojo.init({
                 var req = args.request;
                 var res = args.response;
                 
-                //per-request logging
-                req.logger = new jojo.logging.logger();
-                
                 //basic benchmarking
                 req.startTime = (new Date()).getTime();
                 
-                req.logger.log("-------------------------------------------------------------------------");
-                req.logger.log("processing request: " + req.url); 
+                if (jojo.logger) {
+                    jojo.logger.log("-------------------------------------------------------------------------");
+                    jojo.logger.log("processing request: " + req.url);
+                }
                                 
                 req.on("end", function() {
-                  fsm.fire("endRequest", {request: req, response: res});
+                    fsm.fire("endRequest", {request: req, response: res});
                 });
                 
                 //start running through the middleware
@@ -57,9 +60,11 @@ jojo.init({
             var req = args.request;
             var newTick = (new Date()).getTime();
             var diff = newTick - req.startTime;
-            req.logger.log("request took " + diff + " milliseconds");
-            req.logger.log("-------------------------------------------------------------------------");
-            req.logger.dispose();
+            if (jojo.logger) {
+                jojo.logger.log("request took " + diff + " milliseconds");
+                jojo.logger.log("-------------------------------------------------------------------------");
+                jojo.logger.flush();
+            }
           }
         }
     }
