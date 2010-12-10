@@ -1,21 +1,23 @@
-jojo is a full-on widget based web framework implemented in pure js. 
+jojojs is a full-featured widget-based web framework implemented in pure js. 
 The main goal is to enable rapid development of powerful RIA-type apps (long running single-page applications).
 
-The proof of concept for jojo was originally written for Aptana's Jaxer server (a js server based on Rhino/Spidermonkey: www.jaxer.org).
+The proof of concept for jojojs was originally written for Aptana's Jaxer server (a js server based on Rhino/Spidermonkey: www.jaxer.org).
 The only real bonus to Jaxer over node.js, however, is the presence of E4X (for widget templating) and a fully functional DOM on the server,
 which is incredibly useful, but also amounts to quite a bit of overhead (a sandboxed DOM is recreated for every single request mapped to the
 application space in Jaxer). 
 
-So, I've decided to expand the scope of the framework a bit more to include generic support for various SSJS 
-technology and servers. My thinking currently is that a fully featured robust stack might look like this: 
-nginx > node > jaxer && pintura/persevere.
+So, I've decided to expand the scope of the framework a bit and standardize on node.js.
 
-The ngingx layer would serve static content and theoretically reverse proxy to node for dynamic content, which could perhaps
-act as a caching layer for parsed widget templates from the jaxer layer and fetch data from the pintura layer. This would allow
-node to act in a manner that it enjoys: async orchestrator of events. 
+Since this is meant to be a full-featured framework, there will likely be some dependencies (like jQuery and CouchDB for example). 
+This is not intended to be a bits-and-pieces library, but where possible I will try to keep things modular so they can be used standalone... just know,
+however, that that is not a primary goal of the project. 
 
-That level of "sharded" stack (don't shoot me for misuse of an emerging buzzword), of course, would be optional, and you could choose to run it all from a node context. 
-The point is that jojo aims to be ultimately configurable, with
-each framework service being deployable in the most flexible way possible, eventually with some nice pre-configured packages
-to go with it.
+In the end, I want to develop apps from the browser, using jojojs/jojojs-client
 
+ABOUT THE NAME:
+I had originally created a skeleton framework called MojoJojo, which was to be a Canvas game engine for Palm's WebOS. Their 
+built-in framework was called Mojo, and I liked how adding Jojo to it made three consecutive jo sounds (and I also
+enjoyed that it shared names with the main villian from the Power Puff Girls). As I continued to then implement
+my generic web framework in javascript, I hijacked my own name and took out the Mojo part. That's a true story. I did not
+name it jojo because it looks close to dojo, and at the time I did not realize there was a CMS project called jojo.
+So, I like the name jojojs and I'm sticking with it, so there :)

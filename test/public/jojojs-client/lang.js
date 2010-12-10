@@ -10,7 +10,7 @@
     
     //TODO: this really needs to be thought through to make sure proper disposal steps are taken for all objects
     //lightweight universal object cache for all jojo objects
-    //jojo.lang.objects = {};
+    jojo.lang.objects = {};
     
     Function.prototype.bind = function(obj, args, appendArgs){
         var method = this;
@@ -45,6 +45,7 @@
         };
     };
     _global.$break = {};
+    Array.isArray = Array.isArray || $.isArray;
     Array.prototype.each = Array.prototype.forEach || function(iterator) {
         try {
             for (var i = 0; i < this.length; i++) {
@@ -62,6 +63,16 @@
                 return this[i];
             }
         }
+    };
+    Array.prototype.findAll = function(iterator) {
+        var ret = null;
+        for (var i = 0; i < this.length; i++) {
+            if (iterator(this[i], i)) {
+                ret = ret || [];
+                ret.push(this[i]);
+            }
+        }
+        return ret;
     };
     Array.prototype.reject = function(iterator) {
         var results = [];
@@ -217,15 +228,6 @@
         return $H(obj).keys();
     };
     
-    var _$ = _global.$; //allow, for instance, for jQuery to be loaded
-    _global.$ = function(el) {
-      if (_$) {
-        return _$(el);
-      }
-      //just a dumb alias for now
-      return document.getElementById(el);
-    };
-    
     /**
      * The lowest level for all jojo objects (namely widgets, etc) (require unique id, etc.)
      * @param {Object} options
@@ -234,13 +236,16 @@
         initialize: function(options) {
             options = options || {};
             this.id = options.id || jojo.id();
-            //if (jojo.lang.objects[this.id]) {
-            //    throw new Error("All jojo base objects must have a unique .id property specified. ID: '" + this.id + "'");
-            //}
-            //jojo.lang.objects[this.id] = this;
+            if (jojo.lang.objects[this.id]) {
+                throw new Error("All jojo base objects must have a unique .id property specified. ID: '" + this.id + "'");
+            }
+            jojo.lang.objects[this.id] = this;
         },
         dispose: function() {
-            //delete jojo.lang.objects[this.id];
+            delete jojo.lang.objects[this.id];
+            for (var p in this) {
+                delete this[p];
+            }
         }
     });
     
@@ -255,28 +260,36 @@
          * @param {Boolean} fireEvents  True to implement an event publisher
          * @param {String} uniqueErrorMessage   Error message to throw when unique property is violated
          */
-        initialize: function($super, unique, fireEvents, uniqueErrorMessage) {        
-            $super();
+        initialize: function($super, options) {  
+            //naive catch-all for legacy calls
+            if (arguments.length > 2) {
+                throw new Error("jojo.lang.registry Class constructor has been changed to accept only a single 'options' JSON argument");
+            }
+                 
+            $super(options);
             
             //public properties
             this.items = [];
-            this.itemCache = {};        
-            if (unique === undefined || unique === null) {
-                unique = true;
+            this.itemCache = {};
+
+            options = options || {};
+            if (options.unique === undefined || options.unique === null) {
+                options.unique = true;
             }
-            this.unique = unique;            
-            this.uniqueErrorMessage = uniqueErrorMessage || "Error: All items in this registry instance must have unique IDs.";
+            this.unique = options.unique;            
+            this.uniqueErrorMessage = options.uniqueErrorMessage || "Error: All items in this registry instance must have unique IDs.";
             
             //decorate with event functionality if needed
-            if (fireEvents === undefined || fireEvents === null) {
-                fireEvents = true;
+            if (options.fireEvents === undefined || options.fireEvents === null) {
+                options.fireEvents = true;
             }
-            this.fireEvents = fireEvents;
+            this.fireEvents = options.fireEvents;
             if (this.fireEvents) {
                 var myid = this.id; //very important not to overwrite the id for outside code to grab the correct instance via the jojo.lang.objects cache
-                Object.extend(this, new jojo.event.eventPublisher());
+                Object.extend(this, new jojo.event.eventPublisher(options));
                 this.id = myid;
             }
+            this.idKey = options.idKey || "id";
         },
         /**
          * Add an item to the registry
@@ -286,12 +299,12 @@
          * @return {Boolean}
          */
         add: function(item, onlyAddIfNotAlreadyAdded, stackIndex) {            
-            if (item.id) {
-                if (onlyAddIfNotAlreadyAdded && this.findById(item.id)) {
+            if (item[this.idKey]) {
+                if (onlyAddIfNotAlreadyAdded && this.findById(item[this.idKey])) {
                     return false;
                 }
-                if (this.unique && this.findById(item.id) != null) {
-                    throw new Error(this.uniqueErrorMessage + "\n\nid: " + item.id);
+                if (this.unique && this.findById(item[this.idKey]) != null) {
+                    throw new Error(this.uniqueErrorMessage + "\n\nid: " + item[this.idKey]);
                 }
                 
                 if (stackIndex != undefined && !isNaN(stackIndex)) {
@@ -315,14 +328,14 @@
                 }
                     
                 if (this.unique) {
-                    this.itemCache[item.id] = item;
+                    this.itemCache[item[this.idKey]] = item;
                 }
                 
                 if (this.fireEvents) {
                     this.fire("itemAdded", {item: item});
                 }
             } else {
-                throw new Error("Items must have 'id' properties in order to be added to a registry.");
+                throw new Error("Items in this registry must have '" + this.idKey + "' properties in order to be added.");
             }
             return true;
         },
@@ -353,6 +366,14 @@
          */
         find: function(iterator) {
             return this.items.find(iterator);
+        },
+        /**
+         * Finds all matching items in the registry
+         * @param {Function} iterator   Function which returns true when the desired item is found
+         * @return {Array} The matching items, or null if none found
+         */
+        findAll: function(iterator) {
+            return this.items.findAll(iterator);
         },    
         /**
          * Finds an item in the registry by ID
@@ -365,7 +386,7 @@
             }
                 
             for(var i = 0; i < this.items.length; i++) {
-                if (this.items[i].id == id) {
+                if (this.items[i][this.idKey] == id) {
                     return this.items[i];
                 }
             }
@@ -398,7 +419,7 @@
                 return false;
             });        
             if(this.unique) {
-                delete this.itemCache[item.id];
+                delete this.itemCache[item[this.idKey]];
             }            
             if (foundItem) {
                 if (this.fireEvents) {

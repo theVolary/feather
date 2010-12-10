@@ -64,11 +64,15 @@
       fsmEvent: function(eventName, args) {            
         if (this.currentState[eventName] || this.states.global[eventName]) {
           var newState;
-          if (typeof this.currentState[eventName] === "function") {
-            newState = this.currentState[eventName](this, args); //pass the instance explicitly which allows unbound state definitions
-          } else if (typeof this.states.global[eventName] === "function") {
+          if (typeof this.states.global[eventName] === "function") {
             newState = this.states.global[eventName](this, args);
           }
+          if (typeof this.currentState[eventName] === "function") {
+            var _newState = this.currentState[eventName](this, args); //pass the instance explicitly which allows unbound state definitions
+            if (_newState) {
+                newState = _newState; //allows local state transitions to override global
+            }
+          } 
           if (newState && newState !== this.currentState) {
             //allow the state to clean things up if needed before entering the new state...
             //NOTE: if the "leavingState" transition function returns a new state, it
@@ -180,8 +184,8 @@
     var states = {
       initial: {
         stateStartup: function(fsm, args) {
-          //go right to the "loading state" since that is exactly what we're doing at the time this instance is created
-          return fsm.states.loading;
+            //go right to the "loading state" since that is exactly what we're doing at the time this instance is created
+            return fsm.states.loading;
         }
       },
       loading: {
