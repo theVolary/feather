@@ -9,7 +9,9 @@ test.test = jojo.widget.create({
 			this.title = options.title;
 		},
 		doSomething: jojo.widget.serverMethod(function(foo, bar) {
-			jojo.debug.log("successfuly called server side test.test.doSomething() from the client");
+			if (jojo.logger) {
+                jojo.logger.log("successfuly called server side test.test.doSomething() from the client");
+            }
 			return {message: "success", foo: foo, bar: bar};
 		}),
 		doSomething2: jojo.widget.serverMethod(function() {

@@ -30,7 +30,6 @@ jojo.init({
         },
         processingRequest: {
             stateStartup: function(fsm, args) {
-                               
                 var req = args.request;
                 var res = args.response;
                 
@@ -40,11 +39,11 @@ jojo.init({
                 if (jojo.logger) {
                     jojo.logger.log("-------------------------------------------------------------------------");
                     jojo.logger.log("processing request: " + req.url);
-                }
+                }  
                                 
                 req.on("end", function() {
                     fsm.fire("endRequest", {request: req, response: res});
-                });
+                });     
                 
                 //start running through the middleware
                 args.next();

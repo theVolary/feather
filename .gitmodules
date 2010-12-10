@@ -10,3 +10,6 @@
 [submodule "lib/jsdom"]
 	path = lib/jsdom
 	url = http://github.com/tmpvar/jsdom.git
+[submodule "lib/jquery-tmpl"]
+	path = lib/jquery-tmpl
+	url = https://github.com/jquery/jquery-tmpl.git
