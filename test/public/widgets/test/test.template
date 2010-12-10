@@ -1,9 +1,9 @@
 <p>
   <div>
-    <b>{title}</b>
-    <div>{html}</div>
-    <input type="button" id="{id}_testBtn" value="test1" />
-    <input type="button" id="{id}_testBtn2" value="test2" />
+    <b>${title}</b>
+    <div>${html}</div>
+    <input type="button" id="${id}_testBtn" value="test1" />
+    <input type="button" id="${id}_testBtn2" value="test2" />
   </div>
   <widget path="widgets/test2/" id="myTest2">
     <contentTemplate>

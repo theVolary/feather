@@ -1,2 +1,2 @@
 <p>THIS IS NESTED IN A TEMPLATE</p>
-<p>NESTED CUSTOM CONTENT: {html}</p>
+<p>NESTED CUSTOM CONTENT: ${html}</p>
