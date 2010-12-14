@@ -1,13 +1,19 @@
 <p>
   <div>
     <b>${title}</b>
-    <div>${html}</div>
+    <content/>
     <input type="button" id="${id}_testBtn" value="test1" />
     <input type="button" id="${id}_testBtn2" value="test2" />
   </div>
   <widget path="widgets/test2/" id="myTest2">
+    <options>
+      <option name="title" value="child title"></option>
+    </options>
     <contentTemplate>
       content template inside nested widget
+      <div>my parent's title is ${title}</div>
+      <div>my parent's title is ${$$("parent.title")}</div>
+      <div>my title is ${$$("title")}</div>
       <input type="button" id="blah" value="blah" />
       <widget path="widgets/test2/" id="innerTest2">
         <options>

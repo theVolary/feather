@@ -10,8 +10,8 @@ test.test = jojo.widget.create({
 		},
 		doSomething: jojo.widget.serverMethod(function(foo, bar) {
 			if (jojo.logger) {
-                jojo.logger.log("successfuly called server side test.test.doSomething() from the client");
-            }
+        jojo.logger.log("successfuly called server side test.test.doSomething() from the client");
+      }
 			return {message: "success", foo: foo, bar: bar};
 		}),
 		doSomething2: jojo.widget.serverMethod(function() {
