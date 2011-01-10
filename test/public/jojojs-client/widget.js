@@ -68,8 +68,9 @@
             }
             //remove UI elements
             if (this.container) {
-                this.container.html("");
-                if (!this.keepContainerOnDispose) {
+                if (this.keepContainerOnDispose) {
+                    this.container.html("");
+                } else {
                     this.container.remove();
                 }
             }
@@ -89,6 +90,9 @@
             render: function(widget, args) {        
                 //move to the rendering state (if present)
                 return widget.states.rendering;
+            },
+            ready: function(widget, args) {
+                return widget.states.ready;
             }
         },
         ready: {//this state indicates rendering has completed, the widget's DOM is ready for manipulation (if the widget has a UI)
@@ -105,8 +109,13 @@
         },
         rendering: {
             stateStartup: function(widget, args) {
+                
+                //NOTE: the below logic is a bit of a relic. Need to think more on this. For now, 
+                //leaving it out and coordinating order of operations a bit differently,
+                //but really want a more generic (yet streamlined) all around approach.
+                
                 //let the system renderMachine handle when it's ok to actually render all widgets
-                jojo.widget.renderMachine.onceState("rendering", function() {
+                /*jojo.widget.renderMachine.onceState("rendering", function() {
                     if (!widget.container && !widget.containerId && widget.containerWrapper) {
                         widget.container = widget.containerWrapper(args);
                     }
@@ -114,16 +123,11 @@
                         widget.container = $("#" + widget.containerId);
                     }
                     if (widget.template && widget.container) {
-                        //convert $[] server side variables in the template
-                        if (!widget.templateConverted) {
-                            widget.template = widget.template.html.replace(/\$\[([^\]]*)\]/g, "${" + "$1" + "}");
-                            widget.templateConverted = true;
-                        }
                         var tmpl = $.tmpl(widget.template, widget);
                         tmpl && tmpl.appendTo && tmpl.appendTo(widget.container);
                         widget.fire("rendered");
                     }
-                });
+                });*/
             },
             rendered: function(widget, args) {
                 return widget.states.ready;
@@ -169,10 +173,13 @@
         return classObj.classDef;
     };
     
+    
+    //TODO: figure out a bit more elegant/configurable means to handle rendering than the below
+    
     /**
      * an FSM to handle coordination of batch widget rendering
      */
-    jojo.widget.renderMachine = new jojo.fsm.finiteStateMachine({
+    /*jojo.widget.renderMachine = new jojo.fsm.finiteStateMachine({
         states: {
             initial: {
                 stateStartup: function(fsm, args) {
@@ -198,6 +205,6 @@
                 }
             }
         }
-    });
+    });*/
     
 })();
