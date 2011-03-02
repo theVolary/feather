@@ -1,7 +1,8 @@
 var sys = require("sys"),
     Connect = require("../lib/connect/lib/connect/index");
-    
-require("../lib/core");
+
+//bootstrap jojo (default context object is 'global')
+require("../lib/core").bootstrap(/*some custom context object can go here*/);
 
 //TODO: These states have some core functionality which should be moved in the framework
 //TODO: make generic configuration file loader for this stuff
