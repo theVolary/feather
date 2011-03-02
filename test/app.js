@@ -1,5 +1,5 @@
 var sys = require("sys"),
-    Connect = require("../lib/connect/lib/connect/index");
+    Connect = require("connect");
 
 //bootstrap jojo (default context object is 'global')
 require("../lib/core").bootstrap(/*some custom context object can go here*/);
