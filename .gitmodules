@@ -1,15 +1,6 @@
-[submodule "lib/connect"]
-	path = lib/connect
-	url = http://github.com/senchalabs/connect.git
-[submodule "lib/node-htmlparser"]
-	path = lib/node-htmlparser
-	url = http://github.com/davglass/node-htmlparser.git
 [submodule "lib/node-core-enhancements"]
 	path = lib/node-core-enhancements
 	url = http://github.com/ryedin/node-core-enhancements.git
-[submodule "lib/jsdom"]
-	path = lib/jsdom
-	url = http://github.com/tmpvar/jsdom.git
 [submodule "lib/jquery-tmpl"]
 	path = lib/jquery-tmpl
 	url = https://github.com/jquery/jquery-tmpl.git
