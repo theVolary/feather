@@ -1,0 +1,5 @@
+<label for="username">Username</label>
+<input type="text" name="username" size="10" /><br/>
+<label for="password">Password</label>
+<input type="password" name="password" size="10" /><br/>
+<input type="button" id="${id}_signinButton" value="Sign In" />

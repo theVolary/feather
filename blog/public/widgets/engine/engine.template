@@ -1,0 +1,23 @@
+<widget path="/widgets/header/" id="header">
+  <options>
+    <option name="title" value="The JoJo Blog" />
+  </options>
+</widget>
+<div id="content">
+  <div id="left-col">
+    <widget path="/widgets/lastfive/" id="lastfive">
+      <options>
+      </options>
+    </widget>
+  </div>
+  <div id="right-col">
+    <widget path="/widgets/signin/" id="signin">
+      <options>
+      </options>
+    </widget>
+    <widget path="/widgets/search/" id="search">
+      <options>
+      </options>
+    </widget>
+  </div>
+</div>

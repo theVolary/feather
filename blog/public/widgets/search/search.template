@@ -1,0 +1,2 @@
+Search<input type="text" name="query" size="25" />
+<input type="button" name="action" value="Search" />
