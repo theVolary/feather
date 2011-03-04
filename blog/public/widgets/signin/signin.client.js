@@ -3,7 +3,7 @@ jojo.ns("blog");
 
 	blog.signin = jojo.widget.create({
 		name : "blog.signin",
-		path : "/widgets/signin/",
+		path : "widgets/signin/",
 		prototype : {
 			initialize : function($super, options) {
 				$super(options);
@@ -12,7 +12,7 @@ jojo.ns("blog");
 				var me = this;
 				
 				this.domEvents.bind(this.get("#signinButton"), "click", function() {
-					
+					me.fire('signedIn', {});
 				});
 			}
 		}

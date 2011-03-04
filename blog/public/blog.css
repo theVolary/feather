@@ -29,12 +29,12 @@ body {
 	padding-top: 3px;
 	padding-bottom: 3px;
 }
-#signinContainer, #searchContainer {
+#blogengine_signinContainer, #blogengine_searchContainer {
 	text-align: center;
 	padding: 5px;
 }
 
-#headerContainer h1 {
+h1 {
 	margin: 0px;
 	font-family: "Arial Black", sans-serif;
 	background-color: #aade32;
@@ -44,16 +44,16 @@ body {
 	color: #6a340a;
 	text-shadow: 2px 2px 3px black;
 }
-#headerContainer h1 img {
+h1 img {
 	vertical-align: middle;
 }
 
-#signinContainer, #searchContainer {
+#blogengine_signinContainer, #blogengine_searchContainer {
 	background-color: #E1ECAA;
 	border-radius: 10px;
 	border: solid 1px #329300;
 }
 
-#searchContainer {
+#blogengine_searchContainer {
 	margin-top: 10px;
 }
