@@ -11,6 +11,7 @@
     <clientscript type="text/javascript" src="/jojojs-client/event.js"></clientscript>
     <clientscript type="text/javascript" src="/jojojs-client/fsm.js"></clientscript>
     <clientscript type="text/javascript" src="/jojojs-client/widget.js"></clientscript>
+		<clientscript type="text/javascript" src="/date.js"></clientscript>
     
     <!-- styles... -->
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/themes/base/jquery-ui.css" type="text/css" media="all" />
