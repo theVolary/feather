@@ -10,7 +10,7 @@ jojo.ns("blog");
 			},
 			onReady : function(args) {
 				var me = this;
-				debugger;
+
 				me.fsm = new jojo.fsm.finiteStateMachine({
 					states: {
 						initial: {
@@ -23,7 +23,7 @@ jojo.ns("blog");
 						},
 						signedIn: {
 							stateStartup: function(fsm, args) {
-								me.signin.dispose();
+                me.signin.dispose();
 							}
 						}
 					}
