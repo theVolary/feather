@@ -57,3 +57,33 @@ h1 img {
 #blogengine_searchContainer {
 	margin-top: 10px;
 }
+
+ul {
+	list-style: none;
+	-webkit-margin-before: 0px;
+  -webkit-margin-after: 0px;
+	margin: 0px 0px;
+	-webkit-padding-start: 0px;
+}
+
+.blogentry {
+	background-color: #E1ECAA;
+  border-radius: 10px;
+  border: solid 1px #329300;
+	padding: 3px 5px;
+	margin-bottom: 5px;
+	margin-right: 5px;
+}
+
+.blogentry h3 {
+	margin: 0px;
+}
+
+.blogentry p {
+	border-top: 1px solid #329300;
+	padding-top: 5px;
+}
+
+.collapsed {
+	display: none;
+}
