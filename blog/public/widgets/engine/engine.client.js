@@ -65,6 +65,7 @@ jojo.ns("blog");
             },
             signedIn : {
               stateStartup : function(fsm, args) {
+                if (console) console.log("disposing of signin");
                 me.signin.dispose();
               }
             }
