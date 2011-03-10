@@ -71,9 +71,8 @@ jojo.ns("blog");
           }
         }); // end me.fsm
 
-        /*
-         * me.signin.on('signedIn', function() { me.fsm.fire('signedIn'); });
-         */
+         me.signin.on('signedIn', function() { me.fsm.fire('signedIn'); });
+         
       }
     }
   });

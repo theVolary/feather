@@ -1,3 +1,5 @@
 .project
 .tmp_*
 *.log
+*/jojolib
+*.orig

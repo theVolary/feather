@@ -13,6 +13,17 @@
     <clientscript type="text/javascript" src="/jojojs-client/fsm.js"></clientscript>
     <clientscript type="text/javascript" src="/jojojs-client/widget.js"></clientscript>
     
+    <clientscript type="text/javascript" src="/dnode.js"></clientscript>
+    <clientscript type="text/javascript">
+        window.onload = function () {
+            DNode.connect(function (remote) {
+                remote.rpc(function () {
+                    debugger;
+                });
+            });
+        };
+    </clientscript>
+    
     <!-- styles... -->
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/themes/base/jquery-ui.css" type="text/css" media="all" />
 </head>
