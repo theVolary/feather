@@ -49,6 +49,10 @@ jojo.ns("blog");
 		prototype : {
 			initialize : function($super, options) {
 				$super(options);
+        //testing...
+        this.server_doSomething([123, 456], function(result) {
+          debugger;
+        });
 			},
 			onReady : function(args) {
 				var me = this;

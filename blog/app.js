@@ -7,7 +7,6 @@ require("../lib/core").bootstrap(/*some custom context object can go here*/);
 //TODO: These states have some core functionality which should be moved in the framework
 //TODO: make generic configuration file loader for this stuff
 jojo.init({
-    port: 8088,
     debug: true,
     jojoRoot: "../lib/",
     appRoot: __dirname,

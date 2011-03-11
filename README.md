@@ -39,7 +39,7 @@ Thus, I'm going to include some workflow instructions.
   - Dependencies (this list will change, so please continue to check it, especially as a first place to look if you do an update and run into errors that look like missing dependencies) (NOTE: yes, we plan on create a complete npm-encapsulated package to ease this pain, but for now we're still playing with things too much)
     - $: npm install connect
     - $: npm install jsdom
-    - $: npm install socket.io-connect
+    - $: npm install socket.io
   - Symlink Requirements (this section is also subject to change)
     - in order to break out of Connect.static's security model, we currently have a symlink requirement for each app (/blog and /test are examples of apps)
     - the symlink must point to the /jojojs/lib directory and must be named 'jojolib'
@@ -53,4 +53,4 @@ At this point you should be able to run the blog app and hit it from a browser:
 - $: node app.js
 - in a browser: http://localhost:8088  (replace localhost with the appropriate IP address or hostname if running on a VM... obviously :P)
       
-    
+NOTE: AS OF NOW (3/11/2011), you must run the 'app.js' file for your app (/blog, /test, etc.) from within that directory!

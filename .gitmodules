@@ -4,6 +4,6 @@
 [submodule "lib/jquery-tmpl"]
 	path = lib/jquery-tmpl
 	url = https://github.com/jquery/jquery-tmpl.git
-[submodule "lib/socket.io"]
-	path = lib/socket.io
-	url = https://github.com/LearnBoost/Socket.IO.git
+[submodule "lib/socket.io.client"]
+	path = lib/socket.io.client
+	url = git://github.com/LearnBoost/Socket.IO.git
