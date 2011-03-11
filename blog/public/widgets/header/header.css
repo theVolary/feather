@@ -1,0 +1,13 @@
+h1 {
+  margin: 0px;
+  font-family: "Arial Black", sans-serif;
+  background-color: #aade32;
+  border-bottom: ridge 5px #329300;
+  padding: 5px;
+  font-size: 75px;
+  color: #6a340a;
+  text-shadow: 2px 2px 3px black;
+}
+h1 img {
+  vertical-align: middle;
+}

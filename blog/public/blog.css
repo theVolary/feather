@@ -34,20 +34,6 @@ body {
 	padding: 5px;
 }
 
-h1 {
-	margin: 0px;
-	font-family: "Arial Black", sans-serif;
-	background-color: #aade32;
-	border-bottom: ridge 5px #329300;
-	padding: 5px;
-	font-size: 75px;
-	color: #6a340a;
-	text-shadow: 2px 2px 3px black;
-}
-h1 img {
-	vertical-align: middle;
-}
-
 #blogengine_signinContainer, #blogengine_searchContainer {
 	background-color: #E1ECAA;
 	border-radius: 10px;
@@ -64,26 +50,4 @@ ul {
   -webkit-margin-after: 0px;
 	margin: 0px 0px;
 	-webkit-padding-start: 0px;
-}
-
-.blogentry {
-	background-color: #E1ECAA;
-  border-radius: 10px;
-  border: solid 1px #329300;
-	padding: 3px 5px;
-	margin-bottom: 5px;
-	margin-right: 5px;
-}
-
-.blogentry h3 {
-	margin: 0px;
-}
-
-.blogentry p {
-	border-top: 1px solid #329300;
-	padding-top: 5px;
-}
-
-.collapsed {
-	display: none;
 }

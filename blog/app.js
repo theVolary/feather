@@ -8,7 +8,7 @@ require("../lib/core").bootstrap(/*some custom context object can go here*/);
 //TODO: make generic configuration file loader for this stuff
 jojo.init({
     port: 8088,
-    debug: true,
+    debug: false,
     jojoRoot: "../lib/",
     appRoot: __dirname,
     enableLogging: true,
