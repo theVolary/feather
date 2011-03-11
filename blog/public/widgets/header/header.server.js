@@ -6,7 +6,6 @@ blog.header = jojo.widget.create({
 	prototype: {
 		initialize: function($super, options) {
 			$super(options);
-			this.options = options;
 		}
 	}		
 });
