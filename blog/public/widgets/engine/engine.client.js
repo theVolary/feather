@@ -50,9 +50,8 @@ jojo.ns("blog");
 		initialize : function($super, options) {
 			$super(options);
     //testing...
-    this.server_doSomething([123, 456], function(result) {
-      debugger;
-    });
+    //this.server_doSomething([123, 456], function(result) {
+	//});
 		},
       onReady : function(args) {
         var me = this;
@@ -68,8 +67,9 @@ jojo.ns("blog");
             },
             signedIn : {
               stateStartup : function(fsm, args) {
-                if (console) console.log("disposing of signin");
-                me.signin.dispose();
+                me.server_doSomething([12, 42], function(response) {alert('done with ' + response.result.clientArg1 + ', ' + response.result.clientArg2);})
+                //if (console) console.log("disposing of signin");
+                //me.signin.dispose();
               }
             }
           }

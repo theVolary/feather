@@ -29,18 +29,18 @@ body {
 	padding-top: 3px;
 	padding-bottom: 3px;
 }
-#blogengine_signinContainer, #blogengine_searchContainer {
+#blogengine_signin_Container, #blogengine_search_Container {
 	text-align: center;
 	padding: 5px;
 }
 
-#blogengine_signinContainer, #blogengine_searchContainer {
+#blogengine_signin_Container, #blogengine_search_Container {
 	background-color: #E1ECAA;
 	border-radius: 10px;
 	border: solid 1px #329300;
 }
 
-#blogengine_searchContainer {
+#blogengine_search_Container {
 	margin-top: 10px;
 }
 
