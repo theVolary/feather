@@ -43,14 +43,17 @@ jojo.ns("blog");
   blog.entries.sort(function(a, b) {
     return b.pubDate - a.pubDate;
   });*/
-
   blog.engine = jojo.widget.create({
     name : "blog.engine",
     path : "widgets/engine/",
     prototype : {
-      initialize : function($super, options) {
-        $super(options);
-      },
+		initialize : function($super, options) {
+			$super(options);
+    //testing...
+    this.server_doSomething([123, 456], function(result) {
+      debugger;
+    });
+		},
       onReady : function(args) {
         var me = this;
         me.fsm = new jojo.fsm.finiteStateMachine({
