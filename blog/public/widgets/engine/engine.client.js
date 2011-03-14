@@ -3,7 +3,7 @@ jojo.ns("blog");
   
   blog.entries = [];
 
-  /*blog.entries = [
+  blog.entries = [
       {
         id : '1',
         summary : 'The JoJo Blog is Born',
@@ -42,7 +42,7 @@ jojo.ns("blog");
 
   blog.entries.sort(function(a, b) {
     return b.pubDate - a.pubDate;
-  });*/
+  });
   blog.engine = jojo.widget.create({
     name : "blog.engine",
     path : "widgets/engine/",
