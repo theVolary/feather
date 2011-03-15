@@ -7,19 +7,31 @@ jojo.ns("blog");
 		prototype : {
 			initialize : function($super, options) {
 				$super(options);
-				
-			},
-			onReady : function(args) {
 				var me = this;
-				var maxEntries = blog.entries.length;
+				me.server_getPosts(function(result) {
+          if (result.success) {
+            blog.entries = result.result;
+            me.loadPosts();
+          } else {
+            
+          }
+				});
+			},
+			showLoadError: function(err) {
+			  this.get("#lastFiveList").empty().append('<li class="blogentry"><h3 id="' + me.id + '_blog_header_' + curr.id + '">An error occurred while loading blog posts</h3><p class="collapsed">'+ err +'</p></li>');
+			},
+			loadPosts: function() {
+			  var me = this;
+			  var maxEntries = blog.entries.length;
 				var ul = me.get('#lastFiveList');
 				var curr;
 				if (maxEntries > 5) { maxEntries = 5; }
 				
+				ul.empty();
 				for (var i = 0; i < maxEntries; i++) {
 					
 					curr = blog.entries[i];
-					ul.append('<li class="blogentry"><h3 id="' + me.id + '_blog_header_' + curr.id + '">' + curr.summary + ' <span style="font-style:italic;font-size:75%;">Posted on ' + curr.pubDate.toString("MM/dd/yyyy hh:mm tt") + '</span></h3><p id="blog_content_' + curr.id + '" class="collapsed">' + curr.content + '</p></li>');
+					ul.append('<li class="blogentry"><h3 id="' + me.id + '_blog_header_' + curr.id + '">' + curr.summary + ' <span style="font-style:italic;font-size:75%;">Posted on ' + new Date(curr.pubDate.toString()).toString("MM/dd/yyyy hh:mm tt") + '</span></h3><p id="blog_content_' + curr.id + '" class="collapsed">' + curr.post + '</p></li>');
 					
 				}
 				
@@ -35,6 +47,9 @@ jojo.ns("blog");
 						}
 					}
 				});
+			},
+			onReady : function(args) {
+				
 			}
 		}
 	});

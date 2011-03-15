@@ -46,11 +46,12 @@ var couchdb = {
 	 * @options options object.  Options:
 	 *   <ul>
 	 *   <li>callback: the callback function to call with the result</li>
-	 *   <li>any other options you wish to pass to the view (startKey, endKey, key, descending, etc.)</li>
+	 *   <li>any other options you wish to pass to the view (startKey, endKey, limit, key, descending, etc.)</li>
 	 *   </ul>
 	 */
-	view: function(path, options) {
-	  return this.db.view(path, options);
+	view: function(path, options, callback) {
+	  
+	  return this.db.view(path, options, callback);
 	}
 };
 

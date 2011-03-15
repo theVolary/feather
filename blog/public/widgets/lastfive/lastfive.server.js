@@ -1,39 +1,42 @@
 jojo.ns("blog");
 
 var Couch = require("../../../api/couchdb");
-var sys = require("sys");
 
 Couch.db.initialize({
-  hostUrl: 'http://zqdppapp06.zyquest.com',
+  hostUrl: 'http://localhost',
   dbName: 'jojoblog'
 });
 
 blog.lastfive = jojo.widget.create({
-	name: "blog.lastfive",
-	path: "widgets/lastfive/",
-	prototype: {
-		initialize: function($super, options) {
-			$super(options);
-			this.getPosts();
-		},
-    getPosts: function() {
+  name: "blog.lastfive",
+  path: "widgets/lastfive/",
+  prototype: {
+    initialize: function($super, options) {
+      $super(options);
+      //this.getPosts();
+    },
+    getPosts: jojo.widget.serverMethod(function(client, result) {
       var me = this;
-      jojo.request.suppress(["data", "end"], true);
-      Couch.db.view("blogentry/posts_by_date", { callback:function(err, res) {
-        var posts = [];
-        if (err) {
-          sys.puts(err.error + ": " + err.reason);
-        } else {
-          sys.puts("docs (" + res.length + "): ");
-          res.forEach(function(doc) {
-            sys.puts("doc: " + doc.summary)
+      var posts = [];
+      client.manageResponse = false; // We'll handle the sending of data back to the client.
+      Couch.db.view("blogentry/posts_by_date", { descending: true }, function(err, dbResult) {
+        if (!err) {
+          debugger;
+          dbResult.forEach(function(key, doc, id) {
+            doc.key = key;
+            doc.pubDate = new Date(key[0], key[1], key[2], key[3], key[4], key[5]);
+            doc.id = id;
             posts.push(doc); // id, key, value { pub_date, summary, post }
           });
+          result.success = true;
+          result.result = posts;
+        } else {
+          result.success = false;
+          result.err = err;
         }
-        // add posts to dom.
-        var lf = me.get("#lastFiveList").append("<li>Hi Mom!</li>");
-        jojo.request.unsuppress();
-      }, descending: true });
-    } // end getPosts
-	}		
+        client.send(result);
+
+      }); // end couch.db.view
+    }) // end getPosts
+  } // end prototype
 });

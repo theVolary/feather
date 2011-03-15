@@ -1,5 +1,5 @@
 jojo.ns("blog");
-
+var sys = require("sys")
 blog.engine = jojo.widget.create({
 	name: "blog.engine",
 	path: "widgets/engine/",
