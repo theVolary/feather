@@ -52,7 +52,24 @@ var couchdb = {
 	view: function(path, options, callback) {
 	  
 	  return this.db.view(path, options, callback);
+	},
+	
+	exportDb: function(options) {
+	  // export design documents
+	  // export other documents (get all, write to json files)
+	},
+	
+	exportView: function(path, options) {
+	  var dataFolder = "/data";
+	  
+	},
+	
+	importDb: function(options) {
+	  // read json files from data folder.
+	  // save documents to couchdb.
 	}
+	
+	
 };
 
 exports.db = couchdb;

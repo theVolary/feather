@@ -67,9 +67,11 @@ jojo.ns("blog");
             },
             signedIn : {
               stateStartup : function(fsm, args) {
-                me.server_doSomething([12, 42], function(response) {alert('done with ' + response.result.clientArg1 + ', ' + response.result.clientArg2);})
+                me.server_doSomething([12, 42], function(response) {
+                  alert('done with ' + response.result.clientArg1 + ', ' + response.result.clientArg2);
+                });
                 //if (console) console.log("disposing of signin");
-                //me.signin.dispose();
+                me.signin.dispose();
               }
             }
           }

@@ -9,16 +9,20 @@ jojo.ns("blog");
 				$super(options);
 				var me = this;
 				me.server_getPosts(function(result) {
-          if (result.success) {
-            blog.entries = result.result;
-            me.loadPosts();
-          } else {
-            
-          }
-				});
+			    me.getPostsCallback(result);
+			  });
 			},
 			showLoadError: function(err) {
 			  this.get("#lastFiveList").empty().append('<li class="blogentry"><h3 id="' + me.id + '_blog_header_' + curr.id + '">An error occurred while loading blog posts</h3><p class="collapsed">'+ err +'</p></li>');
+			},
+			getPostsCallback: function(result) {
+			  if (result.success) {
+          blog.entries = result.result;
+          this.loadPosts();
+        } else {
+          
+        }
+        this.get('.loader').hide();
 			},
 			loadPosts: function() {
 			  var me = this;
@@ -49,7 +53,13 @@ jojo.ns("blog");
 				});
 			},
 			onReady : function(args) {
-				
+			  var me = this;
+				this.domEvents.bind($(".blog_lastfive .toolbar .refresh"), "click", function(event) {
+				  me.get('.loader').show();
+				  me.server_getPosts(function(result) {
+				    me.getPostsCallback(result);
+				  });
+				});
 			}
 		}
 	});

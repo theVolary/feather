@@ -7,7 +7,7 @@ blog.engine = jojo.widget.create({
 		initialize: function($super, options) {
 			$super(options);
 		},
-    doSomething: jojo.widget.serverMethod(function(client, arg1, arg2) {
+    doSomething: jojo.widget.serverMethod(function(params, arg1, arg2) {
       return {
         clientArg1: arg1,
         clientArg2: arg2
