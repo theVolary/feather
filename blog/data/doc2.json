@@ -1,0 +1,22 @@
+{
+   "_id": "5b0bd32a70e368f053d3d2b8a64bd58f",
+   "type": "thing",
+   "thing_template": null,
+   "thing_type": "thing_template",
+   "thing_schema": [
+       {
+           "name": "summary",
+           "type": "string"
+       },
+       {
+           "name": "pub_date",
+           "type": "array"
+       },
+       {
+           "name": "post",
+           "type": "string"
+       }
+   ],
+   "thing_name": "blogpost",
+   "thing_version": "1.0"
+}

@@ -1,0 +1,14 @@
+{
+   "_id": "49a09ccc06e4ae7a3440c5c2553f5fdb",
+   "type": "thing",
+   "thing_template": {
+       "name": "blogpost",
+       "version": "1.0",
+       "id": "5b0bd32a70e368f053d3d2b8a64bd58f"
+   },
+   "thing_type": "thing_template",
+   "thing_name": "youtubepost",
+   "thing_schema": {
+   },
+   "thing_version": "1.0"
+}

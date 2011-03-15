@@ -1,0 +1,15 @@
+{
+   "_id": "_design/blogentry",
+   "views": {
+       "posts_by_date": {
+           "map": "function(doc) { \n emit(doc.pub_date, \n { \"pubDate\": new Date(doc.pub_date[0], doc.pub_date[1], doc.pub_date[2], doc.pub_date[3], doc.pub_date[4], doc.pub_date[5]), \n \"summary\":doc.summary, \n \"post\":doc.post }) \n};"
+       },
+       "top_level_things": {
+           "map": "function(doc) {\n if (doc.type === \"thing\" && doc.thing_type === \"thing_template\") {\n emit(doc.thing_template_name, doc);\n }\n}"
+       },
+       "thing_templates": {
+           "map": "function(doc) {\n if (doc.type === \"thing\" && doc.thing_type && doc.thing_type == \"thing_template\") {\n emit(doc.thing_template_name, doc);\n }\n}"
+       }
+   },
+   "language": "javascript"
+}
