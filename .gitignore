@@ -3,3 +3,5 @@
 *.log
 */jojolib
 *.orig
+*/data/design
+*/data/docs
