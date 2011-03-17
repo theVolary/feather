@@ -34,7 +34,7 @@ body {
 	padding: 5px;
 }
 
-#blogengine_signin_Container, #blogengine_search_Container {
+#blogengine_signin_Container, #blogengine_search_Container, .blog_exportdb {
 	background-color: #E1ECAA;
 	border-radius: 10px;
 	border: solid 1px #329300;
