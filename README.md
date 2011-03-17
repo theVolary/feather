@@ -47,6 +47,13 @@ Thus, I'm going to include some workflow instructions.
       - $: ln -s ../lib jojolib
       - $: cd ../test
       - $: ln -s ../lib jojolib
+- Data
+  - 3/15/2011: as of today, the blog app now requires CouchDB (and currently, running on the same machine as the node app).
+      - install couch via the instructions for your OS (http://wiki.apache.org/couchdb/Installation)
+      - from Futon (http://localhost:5984/_utils/), create a db called "jojoblog"
+      - from that new db, click "New Document", then go to the "Source" tab on the far right. Paste the contents of /jojojs/blog/data/design.json into the text area and save the document.
+      - repeat the above step for docs 1-5
+      - assuming the couch install is local to the node app, you should now be able to hit the blog app from a browser and have 5 blog post summaries show up.
       
 At this point you should be able to run the blog app and hit it from a browser:
 - $: cd ~/mainline/jojojs/blog

@@ -1,0 +1,16 @@
+{
+   "_id": "07c6a417c9d30cbe8daff66d26f9adff",
+   "summary": "The JoJo Blog is Born",
+   "post": "Today the JoJo Blog was born.  Long may it live.",
+   "type": "thing",
+   "pub_date": [
+       2011,
+       2,
+       3,
+       22,
+       30,
+       0
+   ],
+   "thing_template_id": "5b0bd32a70e368f053d3d2b8a64bd58f",
+   "thing_type": "blogpost"
+}
