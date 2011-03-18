@@ -10,7 +10,7 @@ jojo.ns("blog");
 			},
 			onReady: function(args) {
 				var me = this;
-				
+
 				this.domEvents.bind(this.get("#signinButton"), "click", function() {
           me.fire('signedIn');
 				});

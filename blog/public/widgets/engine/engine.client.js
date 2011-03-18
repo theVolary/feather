@@ -47,19 +47,16 @@ jojo.ns("blog");
     name : "blog.engine",
     path : "widgets/engine/",
     prototype : {
-		initialize : function($super, options) {
-			$super(options);
-    //testing...
-    //this.server_doSomething([123, 456], function(result) {
-	//});
-		},
+  		initialize : function($super, options) {
+  			$super(options);
+  		},
       onReady : function(args) {
         var me = this;
         me.fsm = new jojo.fsm.finiteStateMachine({
           states : {
             initial : {
               stateStartup : function(fsm, args) {
-
+  
               },
               signedIn : function(fsm, args) {
                 return fsm.states.signedIn;
@@ -70,15 +67,14 @@ jojo.ns("blog");
                 me.server_doSomething([12, 42], function(response) {
                   alert('done with ' + response.result.clientArg1 + ', ' + response.result.clientArg2);
                 });
-                //if (console) console.log("disposing of signin");
                 me.signin.dispose();
               }
             }
           }
         }); // end me.fsm
-
-         me.signin.on('signedIn', function() { me.fsm.fire('signedIn'); });
-         
+  
+        me.signin.on('signedIn', function() { me.fsm.fire('signedIn'); });
+           
       }
     }
   });
