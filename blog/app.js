@@ -12,6 +12,26 @@ jojo.init({
     appRoot: __dirname,
     enableLogging: true,
     logFilePath: "blog.log",
+    data: {
+      securitydb: {
+        /*hostUrl: 'http://localhost',
+      	dbName: 'auth',
+      	dbPort: 5984,
+      	cache: true,
+      	raw: false,
+      	auth: { username:"", password:"" },
+      	useAuth: false,
+      	secure: false*/
+      },
+      metadb: {
+        // ditto
+      },
+      appdb: {
+        hostUrl: 'http://localhost',
+        dbName:'jojoblog'
+      }
+      
+    },
     middleware: [
         
     ],

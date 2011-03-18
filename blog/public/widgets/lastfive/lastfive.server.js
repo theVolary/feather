@@ -1,12 +1,5 @@
 jojo.ns("blog");
 
-var Couch = require("../../../api/couchdb");
-
-Couch.db.initialize({
-  hostUrl: 'http://localhost',
-  dbName: 'jojoblog'
-});
-
 blog.lastfive = jojo.widget.create({
   name: "blog.lastfive",
   path: "widgets/lastfive/",
@@ -19,7 +12,7 @@ blog.lastfive = jojo.widget.create({
       var me = this;
       var posts = [];
       params.autoResponse = false; // We'll handle the sending of data back to the client.
-      Couch.db.view("blogentry/posts_by_date", { descending: true }, function(err, dbResult) {
+      jojo.data.appdb.view("blogentry/posts_by_date", { descending: true }, function(err, dbResult) {
         if (!err) {
           dbResult.forEach(function(key, doc, id) {
             doc.key = key;
