@@ -10,9 +10,6 @@ jojo.ns("blog");
 			},
 			onReady: function(args) {
 				var me = this;
-				//me.fsm = new jojo.fsm.finiteStateMachine({
-				  
-			  //});
 				this.domEvents.bind(this.get("#signinButton"), "click", function() {
           me.fire('signedIn');
 				});

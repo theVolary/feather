@@ -1,0 +1,46 @@
+.blog_chat
+{
+  background-color: #E1ECAA;
+  border-radius: 10px;
+  border: solid 1px #329300;
+  padding: 7px;
+  font-family: verdana, helvetica, sans-serif;
+  font-size: 12px;
+  margin-top: 10px;
+}
+.blog_chat h4
+{
+  margin: 7px;
+}
+.blog_chat .conversation
+{
+  height: 200px;
+  width: 98%;
+  overflow-y: scroll;
+  background-color: white;
+  border-radius: 5px;
+  border: solid 1px #666;
+}
+.blog_chat span
+{
+  padding: 3px;
+}
+.blog_chat .chatboxContainer
+{
+  padding: 5px;
+}
+.blog_chat .message .namelabel
+{
+  color: blue;
+  font-weight: bold;
+}
+.blog_chat input
+{
+  font-family: verdana;
+  font-weight: bold;
+  font-size: 10px;
+}
+.blog_chat input.grey
+{
+  color: #ccc;
+}
