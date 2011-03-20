@@ -10,7 +10,7 @@ blog.importdb = jojo.widget.create({
 		runImport: jojo.widget.serverMethod(function(params, overwrite) {
 		  var me = this;
 		  params.autoResponse = false;
-		  jojo.data.appdb.importDb({overwrite: params.overwrite}, function(err) {
+		  jojo.data.appdb.importDb({overwrite: overwrite}, function(err) {
 		    if (err) {
 		      params.result.err = err;
 		      params.result.success = false;
