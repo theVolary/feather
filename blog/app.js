@@ -28,7 +28,8 @@ jojo.init({
       },
       appdb: {
         hostUrl: 'http://localhost',
-        dbName:'jojoblog'
+        dbName:'jojoblog',
+        auth: { username:'jojoadmin', password:'password'}
       }
       
     },
