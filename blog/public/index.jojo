@@ -3,16 +3,7 @@
 <head>
     <title>Index.jojo</title>
     
-    <!-- framework... -->
-    <clientscript type="text/javascript" src="/jojojs-client/lib/jquery-1.4.2.js"></clientscript>
-    <clientscript type="text/javascript" src="/jojojs-client/lib/jquery.tmpl.js"></clientscript>
-    <clientscript type="text/javascript" src="/jojojs-client/core.js"></clientscript>
-    <clientscript type="text/javascript" src="/jojojs-client/lang.js"></clientscript>
-    <clientscript type="text/javascript" src="/jojojs-client/event.js"></clientscript>
-    <clientscript type="text/javascript" src="/jojojs-client/fsm.js"></clientscript>
-    <clientscript type="text/javascript" src="/jojojs-client/widget.js"></clientscript>
-    <clientscript type="text/javascript" src="/socket.io.client/socket.io.js"></clientscript>
-    <clientscript type="text/javascript" src="/jojojs-client/socket.js"></clientscript>
+    <resources />
     
     <!-- 3rd party... -->
 		<clientscript type="text/javascript" src="/date.js"></clientscript>
