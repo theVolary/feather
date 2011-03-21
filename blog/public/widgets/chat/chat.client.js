@@ -16,8 +16,13 @@
     name: "blog.chat",
     path: "widgets/chat/",
     prototype: {
+      notifier: null,
       initialize: function($super, options) {
         $super(options);
+        if (Audio) {
+          this.notifier = new Audio();
+          this.notifier.src = '/widgets/chat/notify.wav';
+        }
       },
       onReady: function() {
         var me = this,
@@ -65,6 +70,10 @@
       },
       newMessage: function(data) {
         $.tmpl(messageTemplate, data).appendTo(this.get("#conversation"));
+        if (this.notifier) {
+          this.notifier.load();
+          this.notifier.play();
+        }
       }
     } // end prototype
   });

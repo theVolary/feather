@@ -1,12 +1,10 @@
 body {
 	font-family: Arial, sans-serif;
 	background-color: #d9f38e;
-	margin: 0px;
 	padding: 0px;
 }
 
 #content {
-	margin: 0px;
 	padding: 5px;
 }
 
@@ -17,9 +15,10 @@ body {
 #right-col {
 	width:25%;
 	float:right;
+	padding-bottom: 30px;
 }
 #footer {
-	position: absolute;
+	position: fixed;
 	bottom: 0px;
 	width: 99%;
 	clear:both;
