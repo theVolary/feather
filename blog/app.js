@@ -33,16 +33,20 @@ jojo.init({
       }
       
     },
+    logging: {
+      enabled: true,
+      templates: [
+        {id:'some.template', template:'This is my message w/ var: ${var}'}
+      ]
+    },
     middleware: [
         
     ],
     states: {
         ready: {
             stateStartup: function(fsm, args) {
-                if (jojo.appOptions.enableLogging && !jojo.logger) {
-                    jojo.logger = new jojo.logging.logger();
-                }
-                sys.puts("app is currently waiting on requests");                
+              jojo.logger.addTemplate('separator', "-------------------------------------------------------------------------");
+              jojo.logger.trace({message:"app is currently waiting on requests", category:jojo.logger.categories.http});
             },
             request: function(fsm, args) {
                 //we got a new request, move to the "processingRequest" state
@@ -57,10 +61,8 @@ jojo.init({
                 //basic benchmarking
                 req.startTime = (new Date()).getTime();
                 
-                if (jojo.logger) {
-                    jojo.logger.log("-------------------------------------------------------------------------");
-                    jojo.logger.log("processing request: " + req.url);
-                }  
+                jojo.logger.trace({templateId:'separator', category:jojo.logger.categories.http});
+                jojo.logger.trace({message:"processing request: ${url}", replacements:req, category:jojo.logger.categories.http});
                                 
                 req.on("end", function() {
                     fsm.fire("endRequest", {request: req, response: res});
@@ -81,9 +83,9 @@ jojo.init({
             var newTick = (new Date()).getTime();
             var diff = newTick - req.startTime;
             if (jojo.logger) {
-                jojo.logger.log("request took " + diff + " milliseconds");
-                jojo.logger.log("-------------------------------------------------------------------------");
-                jojo.logger.flush();
+                jojo.logger.trace({message:"request took ${ms} milliseconds", replacements:{ms:diff}, category:jojo.logger.categories.http});
+                jojo.logger.trace({templateId:'separator'});
+//                jojo.logger.flush();
             }
           }
         }

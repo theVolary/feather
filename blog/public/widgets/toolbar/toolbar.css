@@ -1,0 +1,39 @@
+.blog_toolbar {
+  background-color: #aade32;
+  background-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0, rgb(171,222,51)),
+      color-stop(1, rgb(216,235,171))
+  );
+  background-image: -moz-linear-gradient(
+      center top,
+      rgb(171,222,51) 0%,
+      rgb(216,235,171) 100%
+  );
+  border-radius: 3px;
+  -moz-border-radius: 5px;
+  border: solid 1px #329300;
+  padding: 3px 5px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+.blog_toolbar .button {
+  cursor: pointer; 
+  width: 16px;
+  height: 16px;
+  padding: 0px 8px;
+  margin: 0px 2px;
+  background-repeat: no-repeat;
+  background-position: top left;
+}
+
+.blog_toolbar .refresh {
+  background-image: url('/images/arrow_refresh.png');
+}
+
+.blog_toolbar .new {
+  background-image: url('/images/page_add.png');
+}

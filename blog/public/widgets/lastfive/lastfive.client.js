@@ -22,7 +22,6 @@ jojo.ns("blog");
         } else {
           
         }
-        this.get('.loader').hide();
 			},
 			loadPosts: function() {
 			  var me = this;
@@ -52,14 +51,11 @@ jojo.ns("blog");
 					}
 				});
 			},
-			onReady : function(args) {
+			refreshPosts: function() {
 			  var me = this;
-				this.domEvents.bind($(".blog_lastfive .toolbar .refresh"), "click", function(event) {
-				  me.get('.loader').show();
-				  me.server_getPosts(function(result) {
-				    me.getPostsCallback(result);
-				  });
-				});
+			  me.server_getPosts(function(result) {
+			    me.getPostsCallback(result);
+			  });
 			}
 		}
 	});

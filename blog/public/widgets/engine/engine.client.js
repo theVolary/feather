@@ -65,16 +65,21 @@ jojo.ns("blog");
             },
             signedIn: {
               stateStartup: function(fsm, args){
-                me.server_doSomething([12, 42], function(response){
-                  alert('done with ' + response.result.clientArg1 + ', ' + response.result.clientArg2);
-                });
-                me.signin.dispose();
+
               }
             }
           }
         }); // end me.fsm
+        me.toolbar.on("refresh", function() {
+          me.lastfive.refreshPosts();
+        });
         me.signin.on('signedIn', function(){
-          me.fsm.fire('signedIn');
+          if (blog.auth && (blog.auth.username == 'admin' || blog.auth.username == 'editor')) {
+            me.toolbar.addButton({ name: 'new', tooltip: 'New Blog Post', after:'refresh' });
+          }
+        });
+        me.signin.on('signedOut', function() {
+          me.toolbar.removeButton({name:'new'});
         });
       }
     }
