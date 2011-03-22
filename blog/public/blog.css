@@ -4,19 +4,6 @@ body {
 	padding: 0px;
 }
 
-#content {
-	padding: 5px;
-}
-
-#left-col {
-	width: 75%;
-	float:left;
-}
-#right-col {
-	width:25%;
-	float:right;
-	padding-bottom: 30px;
-}
 #footer {
 	position: fixed;
 	bottom: 0px;
