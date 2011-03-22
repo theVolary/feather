@@ -8,6 +8,7 @@ jojo.ns("blog");
 			initialize : function($super, options) {
 				$super(options);
 				var me = this;
+
 				me.server_getPosts(function(result) {
 			    me.getPostsCallback(result);
 			  });
