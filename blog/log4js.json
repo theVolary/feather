@@ -1,7 +1,19 @@
 {
   "appenders": [
 		{
-			"type": "console"
+			"type": "logLevelFilter",
+			"level": "TRACE",
+			"appender": {
+				"type": "console"
+			}
+		},
+		{
+			"category": "[jojo.http]",
+			"type": "logLevelFilter",
+			"level": "WARN",
+			"appender": {
+				"type": "console"
+			}
 		}
   ]
 }
