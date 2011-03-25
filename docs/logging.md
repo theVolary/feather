@@ -68,8 +68,9 @@ Appenders are functions that do something with a logging event.
 Creating custom appenders is also possible by specifying "custom" as the type.  The disabled option is supported for custom appenders since it is handled outside of each appender, but for `levelThreshold`, `includedCategories`, and `excludedCategories` to be supported the custom appender must make use of them.  
 
 To create a custom appender, add the `fn` option to it, and set its value to a function.  One parameter will be passed to this function, representing the logging event for the appender to handle.  The logging event has the following properties:
-*  startTime (a Date object representing the time of the event)
-*  category
+
+*    startTime (a Date object representing the time of the event)
+*    category
 *  message
 *  level (a Level object, containing the following properties)
   *  level: an integer representing the log level
