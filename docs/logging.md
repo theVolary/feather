@@ -24,88 +24,87 @@ To configure logging, add an object to the jojo.init options object called "logg
 
 ### Example Configuration ###
 Here is a sample of the configuration found in the blog sample app.
-
-`logging: {  
-  enabled: true,  
-  defaultLevel: 'all',// values: all, trace, debug, info, warn, error, fatal, off  
-  absorbConsoleLogging: true,  
-  categories: {  
-    // values: all, trace, debug, info, warn, error, fatal, off  
-    'jojo.http': 'trace',  
-    'jojo.fsm': 'info'  
-  },  
-  appenders: [  
-    {   
-      // Most basic of appenders.  
-      type: 'console',   
-      options: { layout:'colored' }   
-    },  
-    {   
-      type: 'file',   
-      disabled: false,   
-      options: {   
-        layout: 'colored',   
-        filename: 'jojoblog.log',   
-        maxFileSize:10*1024*1024,   
-        numBackups:2,   
-        filePollInterval:60,   
-        includedCategories: ['jojo.http'] },  
-        levelThreshold: 'info'  
-      },  
-    {   
-      type: 'file',   
-      disabled: false,   
-      options: {   
-        layout: 'colored',   
-        filename: 'nonhttp.log',   
-        maxFileSize:10*1024*1024,   
-        numBackups:2,   
-        filePollInterval:60,   
-        excludedCategories: ['jojo.http'] } },  
-    {   
-      type: 'url',   
-      disabled: true,   
-      options: {   
-        host: 'localhost',   
-        port: '5984',   
-        path:'/jojoblog_log/',   
-        excludedCategories: ['jojo.http', 'jojo.fsm']   
-      }  
-    },  
-    // example of a custom appender.  fn should be a function that /is/ the appender.    
-    // In this case, the module pattern is used.  
-    // Incidentally, this is functionally identical to the url appender above.  
-    { type: 'custom',   
-      disabled: true,  
-      fn: (function() {  
-        var http = require('http');  
-        var connection = http.createClient(5984, 'localhost');  
-        var path = "/jojoblog_log/";  
-        var headers = {  
-          "Content-Type": "application/json",  
-          "Content-Length": 0   
-        };  
+	logging: {  
+	    enabled: true,  
+	    defaultLevel: 'all',// values: all, trace, debug, info, warn, error, fatal, off  
+	    absorbConsoleLogging: true,  
+	    categories: {  
+	      // values: all, trace, debug, info, warn, error, fatal, off  
+	      'jojo.http': 'trace',  
+	      'jojo.fsm': 'info'  
+		  },  
+		  appenders: [  
+		    {   
+		      // Most basic of appenders.  
+		      type: 'console',   
+		      options: { layout:'colored' }   
+		    },  
+		    {   
+		      type: 'file',   
+		      disabled: false,   
+		      options: {   
+		        layout: 'colored',   
+		        filename: 'jojoblog.log',   
+		        maxFileSize:10*1024*1024,   
+		        numBackups:2,   
+		        filePollInterval:60,   
+		        includedCategories: ['jojo.http'] },  
+		        levelThreshold: 'info'  
+		      },  
+		    {   
+		      type: 'file',   
+		      disabled: false,   
+		      options: {   
+		        layout: 'colored',   
+		        filename: 'nonhttp.log',   
+		        maxFileSize:10*1024*1024,   
+		        numBackups:2,   
+		        filePollInterval:60,   
+		        excludedCategories: ['jojo.http'] } },  
+		    {   
+		      type: 'url',   
+		      disabled: true,   
+		      options: {   
+		        host: 'localhost',   
+		        port: '5984',   
+		        path:'/jojoblog_log/',   
+		        excludedCategories: ['jojo.http', 'jojo.fsm']   
+		      }  
+		    },  
+		    // example of a custom appender.  fn should be a function that /is/ the appender.    
+		    // In this case, the module pattern is used.  
+		    // Incidentally, this is functionally identical to the url appender above.  
+		    { type: 'custom',   
+		      disabled: true,  
+		      fn: (function() {  
+		        var http = require('http');  
+		        var connection = http.createClient(5984, 'localhost');  
+		        var path = "/jojoblog_log/";  
+		        var headers = {  
+		          "Content-Type": "application/json",  
+		          "Content-Length": 0   
+		        };  
   
-        return function(loggingEvent) {  
-          var data = JSON.stringify({  
-            level: loggingEvent.level.levelName,  
-            message: loggingEvent.message,  
-            timestamp: loggingEvent.startTime,  
-            category: loggingEvent.category,  
-            exception: loggingEvent.exception  
-          });  
-          headers['Content-Length'] = data.length;  
-          var req = connection.request("POST", path, headers);  
-          req.write(data);  
-          req.end();  
-        };  
-      })()  
-    }  
-  ],  
-  templates: [  
-    {id:'separator', template:'-------------------------------------------------------------------------'}  
-  ]  
-},`  
+		        return function(loggingEvent) {  
+		          var data = JSON.stringify({  
+		            level: loggingEvent.level.levelName,  
+		            message: loggingEvent.message,  
+		            timestamp: loggingEvent.startTime,  
+		            category: loggingEvent.category,  
+		            exception: loggingEvent.exception  
+		          });  
+		          headers['Content-Length'] = data.length;  
+		          var req = connection.request("POST", path, headers);  
+		          req.write(data);  
+		          req.end();  
+		        };  
+		      })()  
+		    }  
+		  ],  
+		  templates: [  
+		    {id:'separator', template:'-------------------------------------------------------------------------'}  
+		  ]  
+		},
 
 ## Logging Messages ##
 Here are examples of log calls containing every possible option:
