@@ -72,9 +72,9 @@ To create a custom appender, add the `fn` option to it, and set its value to a f
 * category
 * message
 * level (a Level object, containing the following properties)
-	* level: an integer representing the log level
-	* levelName: text name of the log level
-	* color: useful for console appending
+  * level: an integer representing the log level
+  * levelName: text name of the log level
+  * color: useful for console appending
 * logger (used mainly internally to the framework)
 * exception (this property may or may not exist, depending on the event)
 
