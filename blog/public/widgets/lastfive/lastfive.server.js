@@ -20,7 +20,7 @@ blog.lastfive = jojo.widget.create({
             doc.key = key;
             doc.pubDate = new Date(key[0], key[1], key[2], key[3], key[4], key[5]);
             doc.id = id;
-            jojo.logger.info({message:'Found document w/ id ${id}, key ${key}', replacements:doc});
+            jojo.logger.debug({message:'Found document w/ id ${id}, key ${key}', replacements:doc});
             posts.push(doc); // id, key, value { pub_date, summary, post }
           });
           params.result.success = true;

@@ -35,8 +35,83 @@ jojo.init({
     },
     logging: {
       enabled: true,
+      defaultLevel: 'all',// values: all, trace, debug, info, warn, error, fatal, off
+      absorbConsoleLogging: true,
+      categories: {
+        // values: all, trace, debug, info, warn, error, fatal, off
+        'jojo.http': 'trace',
+        'jojo.fsm': 'info'
+      },
+      appenders: [
+        { 
+          // Most basic of appenders.
+          type: 'console', 
+          options: { layout:'colored' } 
+        },
+        { 
+          type: 'file', 
+          disabled: false, 
+          options: { 
+            layout: 'colored', 
+            filename: 'jojoblog.log', 
+            maxFileSize:10*1024*1024, 
+            numBackups:2, 
+            filePollInterval:60, 
+            includedCategories: ['jojo.http'] },
+            levelThreshold: 'info'
+          },
+        { 
+          type: 'file', 
+          disabled: false, 
+          options: { 
+            layout: 'colored', 
+            filename: 'nonhttp.log', 
+            maxFileSize:10*1024*1024, 
+            numBackups:2, 
+            filePollInterval:60, 
+            excludedCategories: ['jojo.http'] } },
+        { 
+          type: 'url', 
+          disabled: true, 
+          options: { 
+            host: 'localhost', 
+            port: '5984', 
+            path:'/jojoblog_log/', 
+            excludedCategories: ['jojo.http', 'jojo.fsm'] 
+          }
+        },
+        // example of a custom appender.  fn should be a function that /is/ the appender.  
+        // In this case, the module pattern is used.
+        // Incidentally, this is functionally identical to the url appender above.
+        { type: 'custom', 
+          disabled: true,
+          fn: (function() {
+            var http = require('http');
+            var connection = http.createClient(5984, 'localhost');
+            var path = "/jojoblog_log/";
+            var headers = {
+              "Content-Type": "application/json",
+              "Content-Length": 0 
+            };
+            
+            return function(loggingEvent) {
+              var data = JSON.stringify({
+                level: loggingEvent.level.levelName,
+                message: loggingEvent.message,
+                timestamp: loggingEvent.startTime,
+                category: loggingEvent.category,
+                exception: loggingEvent.exception
+              });
+              headers['Content-Length'] = data.length;
+              var req = connection.request("POST", path, headers);
+              req.write(data);
+              req.end();
+            };
+          })()
+        }
+      ],
       templates: [
-        {id:'some.template', template:'This is my message w/ var: ${var}'}
+        {id:'separator', template:'-------------------------------------------------------------------------'}
       ]
     },
     middleware: [
@@ -45,8 +120,7 @@ jojo.init({
     states: {
         ready: {
             stateStartup: function(fsm, args) {
-              jojo.logger.addTemplate('separator', "-------------------------------------------------------------------------");
-              jojo.logger.trace({message:"app is currently waiting on requests", category:jojo.logger.categories.http});
+              jojo.logger.info({message:"app is currently waiting on requests", category:'jojo.http'});
             },
             request: function(fsm, args) {
                 //we got a new request, move to the "processingRequest" state
@@ -61,8 +135,8 @@ jojo.init({
                 //basic benchmarking
                 req.startTime = (new Date()).getTime();
                 
-                jojo.logger.trace({templateId:'separator', category:jojo.logger.categories.http});
-                jojo.logger.trace({message:"processing request: ${url}", replacements:req, category:jojo.logger.categories.http});
+                jojo.logger.trace({templateId:'separator', category:'jojo.http'});
+                jojo.logger.trace({message:"processing request: ${url}", replacements:req, category:'jojo.http'});
                                 
                 req.on("end", function() {
                     fsm.fire("endRequest", {request: req, response: res});
@@ -83,8 +157,8 @@ jojo.init({
             var newTick = (new Date()).getTime();
             var diff = newTick - req.startTime;
             if (jojo.logger) {
-                jojo.logger.trace({message:"request took ${ms} milliseconds", replacements:{ms:diff}, category:jojo.logger.categories.http});
-                jojo.logger.trace({templateId:'separator'});
+                jojo.logger.trace({message:"request took ${ms} milliseconds", replacements:{ms:diff}, category:'jojo.http'});
+                jojo.logger.trace({templateId:'separator', category:'jojo.http'});
 //                jojo.logger.flush();
             }
           }
