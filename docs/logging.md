@@ -24,6 +24,7 @@ To configure logging, add an object to the jojo.init options object called "logg
 
 ### Example Configuration ###
 Here is a sample of the configuration found in the blog sample app.
+
 `logging: {  
   enabled: true,  
   defaultLevel: 'all',// values: all, trace, debug, info, warn, error, fatal, off  
