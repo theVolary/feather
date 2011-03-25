@@ -19,7 +19,7 @@
       notifier: null,
       initialize: function($super, options) {
         $super(options);
-        if (Audio) {
+        if (window.Audio) { //window reference required to avoid breaking error during check if undefined
           this.notifier = new Audio();
           this.notifier.src = '/widgets/chat/notify.wav';
           this.notifier.load();
