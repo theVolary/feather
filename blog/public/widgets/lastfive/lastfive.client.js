@@ -9,9 +9,9 @@ jojo.ns("blog");
 				$super(options);
 				var me = this;
 
-				me.server_getPosts(function(result) {
-			    me.getPostsCallback(result);
-			  });
+        me.server_getPosts(function(result) {
+          me.getPostsCallback(result);
+        });
 			},
 			showLoadError: function(err) {
 			  this.get("#lastFiveList").empty().append('<li class="blogentry"><h3 id="' + me.id + '_blog_header_' + curr.id + '">An error occurred while loading blog posts</h3><p class="collapsed">'+ err +'</p></li>');
@@ -30,7 +30,6 @@ jojo.ns("blog");
 				var ul = me.get('#lastFiveList');
 				var curr;
 				if (maxEntries > 5) { maxEntries = 5; }
-				
 				ul.empty();
 				for (var i = 0; i < maxEntries; i++) {
 					
