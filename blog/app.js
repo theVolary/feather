@@ -27,7 +27,7 @@ jojo.init({
         // ditto
       },
       appdb: {
-        hostUrl: 'http://localhost',
+        hostUrl: 'http://jojovm',
         dbName:'jojoblog',
         auth: { username:'jojoadmin', password:'jojoadmin'}
       }
