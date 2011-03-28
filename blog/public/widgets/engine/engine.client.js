@@ -52,7 +52,7 @@ jojo.ns("blog");
       },
       onReady: function(args){
         var me = this;
-        alert(this.foo);
+        //alert(this.foo);
         me.fsm = new jojo.fsm.finiteStateMachine({
           states: {
             initial: {

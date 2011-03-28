@@ -29,9 +29,21 @@ jojo.init({
       appdb: {
         hostUrl: 'http://localhost',
         dbName:'jojoblog',
-        auth: { username:'jojoadmin', password:'password'}
+        auth: { username:'jojoadmin', password:'password' }
       }
       
+    },
+    session: {
+      config: {
+        key: 'jojoblog.sid',
+        /*store: new JojoStore({
+          internalStore: new MemoryStore
+        }),*/
+        // fingerprint: some fn,
+        cookie: { path: '/', httpOnly: false, maxAge: 14400000 },
+        secret: 'jojo blog key'
+      },
+      ignorePaths: ['/robots.txt' /*, '/other files'  */]
     },
     logging: {
       enabled: true,
@@ -39,7 +51,7 @@ jojo.init({
       absorbConsoleLogging: true,
       categories: {
         // values: all, trace, debug, info, warn, error, fatal, off
-        'jojo.http': 'trace',
+        'jojo.http': 'off',
         'jojo.fsm': 'info'
       },
       appenders: [
@@ -50,19 +62,20 @@ jojo.init({
         },
         { 
           type: 'file', 
-          disabled: false, 
+          disabled: true, 
           options: { 
             layout: 'colored', 
             filename: 'jojoblog.log', 
             maxFileSize:10*1024*1024, 
             numBackups:2, 
             filePollInterval:60, 
-            includedCategories: ['jojo.http'] },
+            includedCategories: ['jojo.http'],
             levelThreshold: 'info'
           },
+        },
         { 
           type: 'file', 
-          disabled: false, 
+          disabled: true, 
           options: { 
             layout: 'colored', 
             filename: 'nonhttp.log', 
@@ -161,6 +174,8 @@ jojo.init({
                 jojo.logger.trace({templateId:'separator', category:'jojo.http'});
 //                jojo.logger.flush();
             }
+            delete jojo.request;
+            delete jojo.response;
           }
         }
     }
