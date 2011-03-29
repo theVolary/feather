@@ -48,7 +48,6 @@ jojo.ns("blog");
 				}); // end signinButton click
 				
 				me.server_verifySignin(function(result) {
-				  debugger;
 				  if(! result.err) {
 				    if (result.result) { // already signed in.
 				      blog.auth = { username: result.result };
