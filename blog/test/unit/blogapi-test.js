@@ -7,7 +7,7 @@ var apiStub = new sinon.stub(api);
 
 vows.describe('Blog API').addBatch({
     'when getting posts': {
-        topic: function () { return 42 / 0 },
+        topic: function () { return apiStub.getPosts(); },
 
         'we get Infinity': function (topic) {
             assert.equal (topic, Infinity);
