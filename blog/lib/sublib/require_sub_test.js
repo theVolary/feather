@@ -1,0 +1,1 @@
+exports.mySubMethod = function() { return 'hi Mom!'; }
