@@ -1,0 +1,262 @@
+#!/usr/bin/env node
+
+var sys     = require("sys"),
+		fs      = require("fs"),
+    path    = require("path"),
+    vm      = null,
+    YUITest = require("yuitest"),
+    TestRunner = YUITest.TestRunner,
+    stdout  = process.stdout,
+    stderr  = process.stderr || stdout,
+    formatter = null;
+
+var arg, 
+    args = [], 
+    argv = process.argv.slice(2),
+    files = [];
+
+if (process.binding("natives").vm){
+  vm = require("vm");
+}
+
+//options collected from command line  
+var options = {
+    verbose: false,
+    webcompat: false,
+    help: false,
+    format: "tap"
+};
+
+//-----------------------------------------------------------------------------
+// Function to get all files in a directory
+//-----------------------------------------------------------------------------
+
+function getFiles(dir){
+    var files = [];
+    
+    try {
+        fs.statSync(dir);
+    } catch (ex){
+        return [];
+    }
+
+    function traverse(dir, stack){
+        stack.push(dir);
+        fs.readdirSync(stack.join("/")).forEach(function(file){
+            var path = stack.concat([file]).join("/");
+            var stat = fs.statSync(path);
+            
+            if (file[0] == ".") {
+                return;
+            } else if (stat.isFile() && /\.js$/.test(file)){
+                files.push(path);
+            } else if (stat.isDirectory()){
+                traverse(file, stack);
+            }
+        });
+        stack.pop();
+    }
+    
+    traverse(dir, []);
+
+    return files;
+}
+
+function outputHelp(){
+    stdout.write([
+        "\nUsage: yuitest [options] app-name [file|dir]*",
+        " ",
+        "Global Options",
+        "  --groups groupname  Run only tests cases that are part of groupname.",
+        "  --help              Displays this information.",
+        "  --format <format>   Specifies output format (junitxml, tap, xunit).",
+        "  --verbose           Display informational messages and warnings.",
+        "  --webcompat         Load tests designed for use in browsers."   
+    ].join("\n") + "\n\n");
+}
+
+//-----------------------------------------------------------------------------
+// Process command line
+//-----------------------------------------------------------------------------
+var first = true;
+while (arg = argv.shift()) {
+  if (arg === __filename) { continue }
+
+  if (arg[0] !== '-') {
+		if (first) {
+		  options.appName = arg;
+			first = false;
+		} else {
+		  //see if it's a directory or a file
+	    if (fs.statSync(arg).isDirectory()){
+	        files = files.concat(getFiles(arg));
+	    } else {
+	        files.push(arg);
+	    }
+		}
+  } else {
+      arg = arg.match(/^--?(.+)/)[1];
+      if (arg == 'format') {
+        options[arg] = argv.shift();
+      } else {
+        options[arg] = true;
+      }
+  }
+}
+
+if (options.help){
+    outputHelp();
+    process.exit(0);
+}
+
+//get the full path names
+files = files.map(function(filename){
+    return path.join(process.cwd(), filename);
+});
+
+//-----------------------------------------------------------------------------
+// Determine output format
+//-----------------------------------------------------------------------------
+
+switch(options.format){
+    case "junitxml":
+        if (options.verbose){
+            stderr.write("[INFO] Using JUnitXML output format.\n");
+        }
+        YUITest.Node.CLI.Format(YUITest.TestFormat.JUnitXML);
+        formatter = YUITest.TestFormat.JUnitXML;
+        break;
+    case "xunit":
+      if (options.verbose) {
+        stderr.write("[INFO] Using XUnit output format.\n");
+      }
+      break;
+    case "tap":
+        if (options.verbose){
+            stderr.write("[INFO] Using TAP output format.\n");
+        }
+        YUITest.Node.CLI.Format(YUITest.TestFormat.TAP);
+        formatter = YUITest.TestFormat.TAP;
+        break;
+    default:
+        if (options.verbose){
+            stderr.write("[INFO] Using XUnit output format.\n");
+        }
+        YUITest.Node.CLI.XUnit();
+        formatter = YUITest.TestFormat.TAP;
+        break;
+}
+
+//-----------------------------------------------------------------------------
+// Set up TestRunner
+//-----------------------------------------------------------------------------
+
+TestRunner.subscribe("complete", function(event){
+
+	// Write test results to file.
+	var output = formatter(event.results);
+	var path = __dirname + '/../' + appName + '/reports/test-results.xml';
+	sys.puts("Writing " + output + " to " + path);
+	fs.writeFileSync(path, output);
+	
+	jojo.shutdown();
+	
+	//if there are failed tests, exit with code 1
+	if (event.results.failed){
+		process.exit(1);
+	}
+});
+
+var appName = options.appName;
+require.paths.unshift(__dirname + '/../' + appName);
+require.paths.unshift(__dirname + '/../' + appName+'/jojolib');
+require.paths.unshift(__dirname + '/../' + appName+'/lib');
+
+if (!appName || appName.length == 0) {
+  console.error("No application name specified");
+} else {
+  
+  var baseApp = require("jojolib/base-app");
+  
+  var options = {
+    // Any property /not/ in the environments block is global to all environments 
+    // and is the default.  Each environment may still override.
+    debug: true,
+    useEnv: 'test',
+    appRoot: __dirname + '/../' + appName,
+    environments: {
+      test: {
+        data: {
+          appdb: {
+            hostUrl: 'http://localhost',
+            dbName:'jojoblog',
+            auth: { username:'jojoadmin', password:'password' }
+          }
+        },
+        logging: {
+          enabled: true,
+          defaultLevel: 'all',// values: all, trace, debug, info, warn, error, fatal, off
+          absorbConsoleLogging: true,
+          categories: {
+            // values: all, trace, debug, info, warn, error, fatal, off
+            'jojo.http': 'off',
+            'jojo.fsm': 'info'
+          },
+          appenders: [
+            { 
+              // Most basic of appenders.
+              type: 'console', 
+              options: { layout:'colored' } 
+            }
+          ],
+          templates: [
+            {id:'separator', template:'-------------------------------------------------------------------------'}
+          ]
+        }
+      }
+    },
+    onReady: function() {
+			//-----------------------------------------------------------------------------
+			// Include test files
+			//-----------------------------------------------------------------------------
+			stdout.write("[INFO] Reading test files\n");
+			var i, len, output;
+
+			if (files.length){
+			    for (i=0, len=files.length; i < len; i++){
+
+			        if (options.verbose){
+			            stderr.write("[INFO] Loading " + files[i] + "\n");
+			        }
+
+			        if (options.webcompat){
+			            output = fs.readFileSync(files[i]);
+			            if (vm){
+			                vm.runInThisContext("(function(YUITest){\n" + output + "\n})", files[i])(YUITest);
+			            } else {
+			                process.compile("(function(YUITest){\n" + output + "\n})", files[i])(YUITest);
+			            }
+			        } else {
+			            try {
+			                require(files[i]);
+			            } catch (ex) {
+			                stderr.write("[ERROR] " + ex.stack);
+			                stderr.write("\n[ERROR] No tests loaded from " + files[i] + ". If you're not using CommonJS module format, try running with --webcompat option.\n");
+			                process.exit(1);
+			            }            
+			        }
+			    }
+			} else {
+			  stderr.write("[ERROR] No tests to run, exiting.\n");
+				process.exit(1);
+			}
+
+      // Kick off the test runner.
+			stdout.write("[INFO] Running tests.\n");
+      TestRunner.run({
+          groups: options.groups ? options.groups.split(",") : null
+      });
+    }
+  };
+  jojo.start(options);
+} // end else arg length != 0

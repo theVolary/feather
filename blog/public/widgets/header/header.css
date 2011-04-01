@@ -1,13 +1,23 @@
-h1 {
+@font-face {
+  font-family: rubberneck;
+  src: url('/fonts/RUBBERNECK.ttf');
+}
+@font-face {
+  font-family: bukabird;
+  src: url('/fonts/Buka Bird.ttf');
+}
+
+.blog_header h1 {
   margin: 0px;
-  font-family: "Arial Black", sans-serif;
+  padding: 5px;
+  font-family: bukabird, "Arial Black", sans-serif;
   background-color: #aade32;
   border-bottom: ridge 5px #329300;
-  padding: 5px;
-  font-size: 75px;
+  font-size:80px;
   color: #6a340a;
-  text-shadow: 2px 2px 3px black;
+  text-shadow: 2px 2px 3px #000000;
 }
-h1 img {
+.blog_header h1 img {
   vertical-align: middle;
+  margin-right: 15px;
 }
