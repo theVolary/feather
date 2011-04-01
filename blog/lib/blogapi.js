@@ -15,7 +15,7 @@ exports.BlogApi = Class.create({
           jojo.logger.debug({message:'Found document w/ id ' + id + ', key ' + key});
         });
       } else {
-        jojo.logger.error(err);
+        jojo.logger.error({message:"Error getting posts from couch", exception:err});
       }
       if (callback) {
         callback(err, dbResult);
