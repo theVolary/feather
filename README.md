@@ -41,6 +41,7 @@ Thus, I'm going to include some workflow instructions.
     - $: `npm install jsdom`
     - $: `npm install socket.io`
     - $: `npm install cradle`
+    - $: `npm install yuitest`
   - Symlink Requirements (this section is also subject to change)
     - in order to break out of Connect.static's security model, we currently have a symlink requirement for each app (/blog and /test are examples of apps)
     - the symlink must point to the /jojojs/lib directory and must be named 'jojolib'
