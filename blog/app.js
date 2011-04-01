@@ -1,11 +1,15 @@
-require.paths.unshift('.');
-var baseApp = require("jojolib/base-app");
+require.paths.unshift(__dirname);
+var path = require("path"),
+    baseApp = require("jojolib/base-app");
 
 var options = {
   // Any property /not/ in the environments block is global to all environments 
   // and is the default.  Each environment may still override.
   debug: true,
   appRoot: __dirname,
+  runAsDaemon: false,
+  daemonOutputPath: path.basename(__dirname) + '.out',
+  daemonPidPath: '/tmp/'+path.basename(__dirname)+'.pid',
   environments: {
     dev: {
       data: {
@@ -25,7 +29,7 @@ var options = {
         appdb: {
           hostUrl: 'http://localhost',
           dbName:'jojoblog',
-          auth: { username:'jojoadmin', password:'jojoadmin' }
+          auth: { username:'jojoadmin', password:'password' }
         }
       },
       logging: {
