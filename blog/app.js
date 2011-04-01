@@ -1,29 +1,11 @@
-var sys = require("sys"),
-    Connect = require("connect");
-
-//bootstrap jojo (default context object is 'global')
-require("../lib/core").bootstrap(/*some custom context object can go here*/);
+require.paths.unshift('.');
+var baseApp = require("jojolib/base-app");
 
 var options = {
   // Any property /not/ in the environments block is global to all environments 
   // and is the default.  Each environment may still override.
   debug: true,
-  useEnv: 'dev',
-  jojoRoot: "../lib/",
   appRoot: __dirname,
-  enableLogging: true,
-  session: {
-    config: {
-      key: 'jojoblog.sid',
-      /*store: new JojoStore({
-        internalStore: new MemoryStore
-      }),*/
-      // fingerprint: some fn,
-      cookie: { path: '/', httpOnly: false, maxAge: 14400000 },
-      secret: 'jojo blog key'
-    },
-    ignorePaths: ['/robots.txt' /*, '/other files'  */]
-  },
   environments: {
     dev: {
       data: {
@@ -129,68 +111,13 @@ var options = {
           {id:'separator', template:'-------------------------------------------------------------------------'}
         ]
       }
-    },
-    test: {
-      
-    }, 
-    prod: {
-      
     }
   },
-  //TODO: These states have some core functionality which should be moved in the framework
-  states: {
-      ready: {
-          stateStartup: function(fsm, args) {
-            jojo.logger.info({message:"app is currently waiting on requests", category:'jojo.http'});
-            jojo.ns("jojo.blog");
-            var BlogApi = require("blogapi").BlogApi;
-            jojo.blog.api = new BlogApi();
-          },
-          request: function(fsm, args) {
-              //we got a new request, move to the "processingRequest" state
-              return fsm.states.processingRequest;
-          }
-      },
-      processingRequest: {
-          stateStartup: function(fsm, args) {
-              var req = args.request;
-              var res = args.response;
-              
-              //basic benchmarking
-              req.startTime = (new Date()).getTime();
-              
-              jojo.logger.trace({templateId:'separator', category:'jojo.http'});
-              jojo.logger.trace({message:"processing request: ${url}", replacements:req, category:'jojo.http'});
-                              
-              req.on("end", function() {
-                  fsm.fire("endRequest", {request: req, response: res});
-              });     
-              
-              //start running through the middleware
-              args.next();
-              
-              //go back and wait for the next request
-              return fsm.states.ready;               
-          }
-      },
-      global: {
-        endRequest: function(fsm, args) {
-          //done processing the request, we can go wait for a new one now
-          //simple per-request benchmarking
-          var req = args.request;
-          var newTick = (new Date()).getTime();
-          var diff = newTick - req.startTime;
-          if (jojo.logger) {
-              jojo.logger.trace({message:"request took ${ms} milliseconds", replacements:{ms:diff}, category:'jojo.http'});
-              jojo.logger.trace({templateId:'separator', category:'jojo.http'});
-//                jojo.logger.flush();
-          }
-          delete jojo.request;
-          delete jojo.response;
-        }
-      }
+  onReady: function() {
+    jojo.ns("jojo.blog");
+    var BlogApi = require("blogapi").BlogApi;
+    jojo.blog.api = new BlogApi();
   }
 };
 
-//TODO: make generic configuration file loader for this stuff
-jojo.init(options);
+jojo.start(options);
