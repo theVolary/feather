@@ -12,27 +12,19 @@ blog.lastfive = jojo.widget.create({
       var me = this;
       var posts = [];
       params.autoResponse = false; // We'll handle the sending of data back to the client.
-      jojo.logger.info('Getting posts by date from couch.');
-      jojo.data.appdb.view("blogentry/posts_by_date", { descending: true }, function(err, dbResult) {
+      jojo.blog.api.getPosts(function(err, dbResult) {
         if (!err) {
-          jojo.logger.info({message:'Found ${cnt} posts.', replacements:{cnt:dbResult.length}});
           dbResult.forEach(function(key, doc, id) {
-            doc.key = key;
-            doc.pubDate = new Date(key[0], key[1], key[2], key[3], key[4], key[5]);
-            doc.id = id;
-            jojo.logger.debug({message:'Found document w/ id ${id}, key ${key}', replacements:doc});
             posts.push(doc); // id, key, value { pub_date, summary, post }
           });
           params.result.success = true;
           params.result.result = posts;
         } else {
-          jojo.logger.error(err);
           params.result.success = false;
           params.result.err = err;
         }
         params.client.send(params.result);
-
-      }); // end couch.db.view
+      });
     }) // end getPosts
   } // end prototype
 });

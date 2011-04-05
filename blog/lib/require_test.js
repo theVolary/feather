@@ -1,0 +1,1 @@
+exports.myMethod = function() {}

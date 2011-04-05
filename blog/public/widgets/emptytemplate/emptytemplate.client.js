@@ -15,13 +15,15 @@ jojo.ns("blog");
         
         jojo.widget.load({
           path: "widgets/clientwidget/",
-          container: id,
-          options: {
+          serverOptions: {
             foo: "bar"
           },
-          on: {
-            ready: function(){
-              alert("on ready");
+          clientOptions: {
+            container: $("#" + id),
+            on: {
+              ready: function(){
+                alert("on ready");
+              }
             }
           }
         });

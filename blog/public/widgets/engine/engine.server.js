@@ -1,11 +1,15 @@
 jojo.ns("blog");
-var sys = require("sys")
+var sys = require("sys"),
+    test = require("require_test"),
+    subtest = require("sublib/require_sub_test");
 blog.engine = jojo.widget.create({
 	name: "blog.engine",
 	path: "widgets/engine/",
 	prototype: {
 		initialize: function($super, options) {
 			$super(options);
+			jojo.logger.warn('test is ' + test.myMethod);
+			jojo.logger.warn("subtest is " + subtest.mySubMethod);
 		},
     onRender: function() {
       //send data to client side instance
