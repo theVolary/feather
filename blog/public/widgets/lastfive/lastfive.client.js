@@ -34,7 +34,7 @@ jojo.ns("blog");
 				for (var i = 0; i < maxEntries; i++) {
 					
 					curr = blog.entries[i];
-					ul.append('<li class="blogentry"><h3 id="' + me.id + '_blog_header_' + curr.id + '">' + curr.summary + ' <span style="font-style:italic;font-size:75%;">Posted on ' + new Date(curr.pubDate.toString()).toString("MM/dd/yyyy hh:mm tt") + '</span></h3><p id="blog_content_' + curr.id + '" class="collapsed">' + curr.post + '</p></li>');
+					ul.append('<li class="blogentry"><h3 id="' + me.id + '_blog_header_' + curr.id + '"><a href="/post?id=' + curr.id + '">' + curr.summary + '</a> <span style="font-style:italic;font-size:75%;">Posted on ' + new Date(curr.pubDate.toString()).toString("MM/dd/yyyy hh:mm tt") + '</span></h3><p id="blog_content_' + curr.id + '" class="collapsed">' + curr.post + '</p></li>');
 					
 				}
 				

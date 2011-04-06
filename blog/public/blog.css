@@ -21,7 +21,7 @@ body {
 	padding: 5px;
 }
 
-#blogengine_signin_Container, #blogengine_search_Container, .blog_exportdb, .blog_importdb {
+#blogengine_signin_Container, #blogengine_search_Container, .blog_exportdb, .blog_importdb, .rounded_border {
 	background-color: #E1ECAA;
 	border-radius: 10px;
 	border: solid 1px #329300;
@@ -37,4 +37,13 @@ ul {
   -webkit-margin-after: 0px;
 	margin: 0px 0px;
 	-webkit-padding-start: 0px;
+}
+
+a:link, a:visited {
+  color: #329300;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }

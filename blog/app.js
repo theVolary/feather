@@ -7,13 +7,15 @@ var options = {
   // and is the default.  Each environment may still override.
   debug: true,
   appRoot: __dirname,
-  runAsDaemon: false,
-  daemonOutputPath: path.basename(__dirname) + '.out',
-  daemonPidPath: '/tmp/'+path.basename(__dirname)+'.pid',
+  daemon: {
+    runAsDaemon: false,
+    outputPath: path.basename(__dirname) + '.out',
+    pidPath: '/tmp/'+path.basename(__dirname)+'.pid'
+  },
   environments: {
     dev: {
       data: {
-        securitydb: {
+        authdb: {
           /*hostUrl: 'http://localhost',
         	dbName: 'auth',
         	dbPort: 5984,

@@ -14,10 +14,13 @@
   background-color: #aade32;
   border-bottom: ridge 5px #329300;
   font-size:80px;
-  color: #6a340a;
   text-shadow: 2px 2px 3px #000000;
 }
 .blog_header h1 img {
   vertical-align: middle;
   margin-right: 15px;
+}
+.blog_header a {
+  color: #6a340a;
+  text-decoration: none ! important;
 }
