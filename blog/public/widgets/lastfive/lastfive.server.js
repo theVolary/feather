@@ -6,25 +6,20 @@ blog.lastfive = jojo.widget.create({
   prototype: {
     initialize: function($super, options) {
       $super(options);
-      //this.getPosts();
     },
-    getPosts: jojo.widget.serverMethod(function(params) {
+    getPosts: function(cb) {
       var me = this;
       var posts = [];
-      params.autoResponse = false; // We'll handle the sending of data back to the client.
       jojo.blog.api.getPosts(function(err, dbResult) {
         if (!err) {
           dbResult.forEach(function(key, doc, id) {
             posts.push(doc); // id, key, value { pub_date, summary, post }
           });
-          params.result.success = true;
-          params.result.result = posts;
+          cb({posts: posts});
         } else {
-          params.result.success = false;
-          params.result.err = err;
+          cb({error: err.reason});
         }
-        params.client.send(params.result);
       });
-    }) // end getPosts
+    }
   } // end prototype
 });

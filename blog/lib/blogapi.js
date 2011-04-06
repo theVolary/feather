@@ -8,7 +8,6 @@ exports.BlogApi = Class.create({
       if (!err) {
         jojo.logger.info({message:'Found ' + dbResult.length + ' posts.'});
         dbResult.forEach(function(key, doc, id) {
-          debugger;
           doc.key = key;
           doc.pubDate = new Date(key[0]-0, key[1]-0, key[2]-0, key[3]-0, key[4]-0, key[5]-0);
           doc.id = id;
