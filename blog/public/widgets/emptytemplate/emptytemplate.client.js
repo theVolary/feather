@@ -11,7 +11,7 @@ jojo.ns("blog");
       onReady : function(args) {
         var me = this;
         var id = jojo.id();
-        $("<div id='" + id + "'></div>").appendTo(me.container);
+        $("<div id='" + id + "Container'></div>").appendTo(me.container);
         
         jojo.widget.load({
           path: "widgets/clientwidget/",
@@ -19,10 +19,11 @@ jojo.ns("blog");
             foo: "bar"
           },
           clientOptions: {
-            container: $("#" + id),
+            id: id,
+            container: $("#" + id + "Container"),
             on: {
-              ready: function(){
-                alert("on ready");
+              ready: function(args){
+                alert("on ready: " + args.sender.id);
               }
             }
           }

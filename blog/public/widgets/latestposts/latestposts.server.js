@@ -1,8 +1,8 @@
 jojo.ns("blog");
 
-blog.lastfive = jojo.widget.create({
-  name: "blog.lastfive",
-  path: "widgets/lastfive/",
+blog.latestposts = jojo.widget.create({
+  name: "blog.latestposts",
+  path: "widgets/latestposts/",
   prototype: {
     initialize: function($super, options) {
       $super(options);

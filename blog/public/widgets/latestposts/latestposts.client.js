@@ -1,9 +1,9 @@
 jojo.ns("blog");
 (function() {
 	
-	blog.lastfive = jojo.widget.create({
-		name : "blog.lastfive",
-		path : "widgets/lastfive/",
+	blog.latestposts = jojo.widget.create({
+		name : "blog.latestposts",
+		path : "widgets/latestposts/",
 		prototype : {
 			initialize : function($super, options) {
 				$super(options);
@@ -11,10 +11,10 @@ jojo.ns("blog");
 			},
       onReady: function() {
         // Bind a click event to the headers to expand / collapse them.
-        this.domEvents.bind(this.get("#lastFiveList .blogentry h3"), "click", function(event) {
-          var target = event.target || event.srcElement;
-          if (target) {
-            var content = $(target).next('p');
+        this.domEvents.bind(this.get(".blogentry h3"), "click", function(event) {
+          var target = $(this); //note: 'this' inside jQuery .bind functions === the element that triggered the event
+          if (target[0]) {
+            var content = target.next('p');
             if (content.hasClass('collapsed')) {
               content.removeClass('collapsed');
             } else {
