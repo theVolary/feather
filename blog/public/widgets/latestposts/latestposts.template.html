@@ -1,0 +1,25 @@
+<ul id="list">
+  <async method="getPosts">
+    [[if error]]
+      <li class="error">
+        <h3>
+          An error occured while loading blog posts: $[error]
+        </h3>
+      </li>
+    [[else]]
+      [[each(i, item) posts]]
+      	<li class="blogentry">
+          <h3>
+            $[summary]
+            <span style="font-style:italic;font-size:75%;">
+              Posted on $[pubDate]
+            </span>
+          </h3>
+          <p class="collapsed">
+            $[post]
+          </p>
+        </li>
+      [[/each]]
+    [[/if]]
+  </async>
+</ul>

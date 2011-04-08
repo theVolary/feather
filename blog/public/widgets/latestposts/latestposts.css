@@ -1,4 +1,4 @@
-.blogentry {
+.blog_latestposts .blogentry {
   background-color: #E1ECAA;
   border-radius: 5px;
   border: solid 1px #329300;
@@ -7,15 +7,15 @@
   margin-right: 5px;
 }
 
-.blogentry h3 {
+.blog_latestposts .blogentry h3 {
   margin: 0px;
 }
 
-.blogentry p {
+.blog_latestposts .blogentry p {
   border-top: 1px solid #329300;
   padding-top: 5px;
 }
 
-.collapsed {
+.blog_latestposts .collapsed {
   display: none;
 }
