@@ -8,9 +8,11 @@ blog.importdb = jojo.widget.create({
 			$super(options);
 		},
 		runImport: jojo.widget.serverMethod(function(params, overwrite) {
+      debugger;
 		  var me = this;
 		  params.autoResponse = false;
 		  jojo.data.appdb.importDb({overwrite: overwrite}, function(err) {
+        debugger;
 		    if (err) {
 		      params.result.err = err;
 		      params.result.success = false;

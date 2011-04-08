@@ -3,3 +3,4 @@
 *.log
 */jojolib
 *.orig
+lib/node-core-enhancements/*
