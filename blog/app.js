@@ -32,7 +32,16 @@ var options = {
           hostUrl: 'http://localhost',
           dbName:'jojoblog',
           auth: { username:'jojoadmin', password:'password' }
+        },
+        authdb: {
+          hostUrl: 'http://localhost',
+          dbName: '_users',
+          auth: { username:'jojoadmin', password:'password' }
         }
+      },
+      auth: {
+        enabled: true,
+        userIdPrefix: "org.couchdb.user:"
       },
       logging: {
         enabled: true,
