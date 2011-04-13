@@ -14,12 +14,21 @@ exports.BlogApi = Class.create({
           jojo.logger.debug({message:'Found document w/ id ' + id + ', key ' + key});
         });
       } else {
-        jojo.logger.error(err);
+        jojo.logger.error({message:"Error getting posts from couch", exception:err});
       }
       if (callback) {
         callback(err, dbResult);
       }
     }); // end couch.db.view
+  },
+  getPost:function(id, callback) {
+    jojo.logger.info("Getting post " + id);
+    jojo.data.appdb.get(id, function(err, doc) {
+      if (!err) {
+        doc.pubDate = new Date(doc.pub_date[0]-0, doc.pub_date[1]-0, doc.pub_date[2]-0, doc.pub_date[3]-0, doc.pub_date[4]-0, doc.pub_date[5]-0);
+      }
+      callback(err, doc);
+    });
   }
   
 });

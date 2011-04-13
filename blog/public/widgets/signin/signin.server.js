@@ -13,14 +13,15 @@ blog.signin = jojo.widget.create({
       
     },
     verifySignin: jojo.widget.serverMethod(function(params) {
-      if (params.client.session && params.client.session.username) {
-        return params.client.session.username;
+      if (jojo.request.session && jojo.request.session.user) {
+        return jojo.request.session.user;
       }
     }),
-    signIn: jojo.widget.serverMethod(function(params, username) {
-      jojo.logger.info("Logging in user " + username);
-      params.client.session.username = username;
-      return true;
+    signIn: jojo.widget.serverMethod(function(params, username, password) {
+      jojo.auth.api.login({
+        username: username,
+        password: password
+      });
     })
 	}		
 });

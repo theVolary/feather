@@ -8,34 +8,22 @@ jojo.ns("blog");
       initialize: function($super, options){
         $super(options);
       },
+      checkUser: function() {
+        var me = this;
+        if (jojo.auth.user && (jojo.auth.user.hasAnyAuthority(['admin', 'editor']))) {
+          me.toolbar.addButton({ name: 'new', tooltip: 'New Blog Post', after:'refresh' });
+        }
+      },
       onReady: function(args){
         var me = this;
-        me.fsm = new jojo.fsm.finiteStateMachine({
-          states: {
-            initial: {
-              stateStartup: function(fsm, args){
-              
-              },
-              signedIn: function(fsm, args){
-                return fsm.states.signedIn;
-              }
-            },
-            signedIn: {
-              stateStartup: function(fsm, args){
-
-              }
-            }
-          }
-        }); // end me.fsm
+        me.checkUser();
         me.toolbar.on("refresh", function() {
           me.latestposts.refreshPosts();
         });
-        me.signin.on('signedIn', function(){
-          if (blog.auth && (blog.auth.username == 'admin' || blog.auth.username == 'editor')) {
-            me.toolbar.addButton({ name: 'new', tooltip: 'New Blog Post', after:'refresh' });
-          }
+        jojo.auth.api.on('authenticated', function() {
+          me.checkUser();
         });
-        me.signin.on('signedOut', function() {
+        jojo.auth.api.on('loggedOut', function() {
           me.toolbar.removeButton({name:'new'});
         });
       }
