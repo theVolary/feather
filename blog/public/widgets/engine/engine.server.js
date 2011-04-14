@@ -1,13 +1,13 @@
-jojo.ns("blog");
+feather.ns("blog");
 
-blog.engine = jojo.widget.create({
+blog.engine = feather.widget.create({
 	name: "blog.engine",
 	path: "widgets/engine/",
 	prototype: {
 		initialize: function($super, options) {
 			$super(options);
 		},
-    doSomething: jojo.widget.serverMethod(function(params, arg1, arg2) {
+    doSomething: feather.widget.serverMethod(function(params, arg1, arg2) {
       return {
         clientArg1: arg1,
         clientArg2: arg2

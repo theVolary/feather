@@ -1,6 +1,6 @@
-jojo.ns("blog");
+feather.ns("blog");
 
-blog.clientwidget = jojo.widget.create({
+blog.clientwidget = feather.widget.create({
   name : "blog.clientwidget",
   path : "widgets/clientwidget/",
   prototype : {

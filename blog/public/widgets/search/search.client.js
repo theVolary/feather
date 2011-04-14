@@ -1,7 +1,7 @@
-jojo.ns("blog");
+feather.ns("blog");
 (function() {
 
-	blog.search = jojo.widget.create({
+	blog.search = feather.widget.create({
 		name : "blog.search",
 		path : "widgets/search/",
 		prototype : {

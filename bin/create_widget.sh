@@ -14,9 +14,9 @@ read NAME
 FULLPATH="${APP}/public/${LOCATION}/${NAME}"
 
 CLIENT_TEMPLATE=$(cat <<EOF
-jojo.ns("${APP}");
+feather.ns("${APP}");
 (function() {	
-	${APP}.${NAME} = jojo.widget.create({
+	${APP}.${NAME} = feather.widget.create({
 		name: "${APP}.${NAME}",
 		path: "${LOCATION}/${NAME}/",
 		prototype: {
@@ -30,8 +30,8 @@ EOF
 )
 
 SERVER_TEMPLATE=$(cat <<EOF
-jojo.ns("${APP}");
-${APP}.${NAME} = jojo.widget.create({
+feather.ns("${APP}");
+${APP}.${NAME} = feather.widget.create({
 	name: "${APP}.${NAME}",
 	path: "${LOCATION}/${NAME}/",
 	prototype: {

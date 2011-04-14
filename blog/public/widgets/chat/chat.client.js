@@ -1,9 +1,9 @@
 (function() {
   
-  jojo.ns("blog");
+  feather.ns("blog");
   
   //create a comm channel to route chat messages through
-  var chatChannel = jojo.socket.addChannel("blog.chat"); //NOTE: the name could be keyed by page name/etc... 
+  var chatChannel = feather.socket.addChannel("blog.chat"); //NOTE: the name could be keyed by page name/etc... 
   
   var messageTemplate = [
     '<div class="message">',
@@ -12,7 +12,7 @@
     '</div>'
   ].join('');
 
-  blog.chat = jojo.widget.create({
+  blog.chat = feather.widget.create({
     name: "blog.chat",
     path: "widgets/chat/",
     prototype: {

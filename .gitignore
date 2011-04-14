@@ -2,5 +2,6 @@
 .tmp_*
 *.log
 */jojolib
+*/featherlib
 *.orig
 lib/node-core-enhancements/*

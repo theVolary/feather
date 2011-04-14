@@ -1,7 +1,7 @@
-jojo.ns("blog");
+feather.ns("blog");
 var url = require("url");
 
-blog.blogentry = jojo.widget.create({
+blog.blogentry = feather.widget.create({
 	name: "blog.blogentry",
 	path: "widgets/blogentry/",
 	prototype: {
@@ -9,19 +9,19 @@ blog.blogentry = jojo.widget.create({
 		initialize: function($super, options) {
 			$super(options);
 			var me = this;
-			if (jojo.request.url) { 
-			  var params = url.parse(jojo.request.url, true).query;
+			if (feather.request.url) { 
+			  var params = url.parse(feather.request.url, true).query;
 			  me.blogId = params.id;
 		  }
 		},
 		onRender: function() {
 		  this.renderOnInitScript("widget.blogId = '" + this.blogId+ "';");
 		},
-		getPost: jojo.widget.serverMethod(function(params, blogId) {
+		getPost: feather.widget.serverMethod(function(params, blogId) {
 		  var me = this;
 		  params.autoResponse = false;
-		  jojo.blog.api.getPost(blogId, function(err, result) {
-		    jojo.logger.trace("getPost err is " + err);
+		  feather.blog.api.getPost(blogId, function(err, result) {
+		    feather.logger.trace("getPost err is " + err);
 		    debugger;
 		    if (err) {
 		      params.result.err = err;

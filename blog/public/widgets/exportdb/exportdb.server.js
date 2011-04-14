@@ -1,16 +1,16 @@
-jojo.ns("blog");
+feather.ns("blog");
 
-blog.exportdb = jojo.widget.create({
+blog.exportdb = feather.widget.create({
 	name: "blog.exportdb",
 	path: "widgets/exportdb/",
 	prototype: {
 		initialize: function($super, options) {
 			$super(options);
 		},
-		runExport: jojo.widget.serverMethod(function(params) {
+		runExport: feather.widget.serverMethod(function(params) {
 		  var me = this;
 		  params.autoResponse = false;
-		  jojo.data.appdb.exportDb({}, function(err) {
+		  feather.data.appdb.exportDb({}, function(err) {
 		    if (err) {
 		      params.result.err = err;
 		      params.result.success = false;

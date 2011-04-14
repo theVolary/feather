@@ -1,15 +1,15 @@
-jojojs
+feather
 ======
 
 ### Overview
-jojojs is a full-featured widget-based web framework implemented in pure js. 
+feather is a full-featured widget-based web framework implemented in pure js. 
 The main goal is to enable rapid development of powerful RIA-type apps (long running single-page applications).
 
 Since this is meant to be a full-featured framework, there will likely be some dependencies (like jQuery and CouchDB, for example). 
 This is not intended to be a bits-and-pieces library where each concern is its own standalone module. 
 Where possible (and sensible), we will work on modularizing certain things, but just keep in mind that that is not a primary goal of the project.
 
-In the end, the intent is to use jojojs to create a browser-based development platform where real-time collaboration is first-class.
+In the end, the intent is to use feather to create a browser-based development platform where real-time collaboration is first-class.
 Short of that
 
 ### Features
@@ -30,12 +30,12 @@ I assume the Windows/cygwin flavors of node builds should also work but we aren'
 Thus, I'm going to include some workflow instructions.
   - This is obviously not a requirement, but for sake of convenience I'm basing paths of the following root folder (just because that's our internal convention): ~/mainline
 - Setup 
-  - first, fork the project (via your github account) from [https://github.com/ryedin/jojojs](https://github.com/ryedin/jojojs)
+  - first, fork the project (via your github account) from [https://github.com/ryedin/feather](https://github.com/ryedin/feather)
   - clone locally (and recursively to auto pull the submodules), and remember to add the remote to 'upstream' as explained here: [http://help.github.com/fork-a-repo/](http://help.github.com/fork-a-repo/)
     - $: `cd ~/mainline`
     - $: `git clone --recursive [your-fork-url]`
-    - $: `cd jojojs`
-    - $: `git remote add upstream git@github.com:ryedin/jojojs.git`
+    - $: `cd feather`
+    - $: `git remote add upstream git@github.com:ryedin/feather.git`
   - Dependencies (this list will change, so please continue to check it, especially as a first place to look if you do an update and run into errors that look like missing dependencies) (NOTE: yes, we plan on create a complete npm-encapsulated package to ease this pain, but for now we're still playing with things too much)
     - $: `npm install connect`
     - $: `npm install jsdom`
@@ -45,11 +45,11 @@ Thus, I'm going to include some workflow instructions.
 		- $: `npm install daemon`
   - Symlink Requirements (this section is also subject to change)
     - in order to break out of Connect.static's security model, we currently have a symlink requirement for each app (/blog and /test are examples of apps)
-    - the symlink must point to the /jojojs/lib directory and must be named 'jojolib'
+    - the symlink must point to the /feather/lib directory and must be named 'featherlib'
       - $: `cd blog`
-      - $: `ln -s ../lib jojolib`
+      - $: `ln -s ../lib featherlib`
       - $: `cd ../test`
-      - $: `ln -s ../lib jojolib`
+      - $: `ln -s ../lib featherlib`
 - Data
   - 3/15/2011: as of today, the blog app now requires CouchDB.
       - install couch via the instructions for your OS ([http://wiki.apache.org/couchdb/Installation](http://wiki.apache.org/couchdb/Installation))
@@ -60,7 +60,7 @@ Thus, I'm going to include some workflow instructions.
       - refresh the page in your browser.  You should now see 3 sample blog entries.  If you click on them they should expand to show the full blog post.
 - Starting the Sample App
 At this point you should be able to run the blog app and hit it from a browser:
-  - $: cd ~/mainline/jojojs/blog
+  - $: cd ~/mainline/feather/blog
   - $: node app.js
   - in a browser: [http://localhost:8080/](http://localhost:8080/)  (replace localhost with the appropriate IP address or hostname if running on a VM... obviously :P)
       

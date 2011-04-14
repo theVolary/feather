@@ -1,6 +1,6 @@
 require.paths.unshift(__dirname);
 var path = require("path"),
-    baseApp = require("jojolib/base-app");
+    baseApp = require("featherlib/base-app");
 
 var options = {
   // Any property /not/ in the environments block is global to all environments 
@@ -30,13 +30,13 @@ var options = {
         },
         appdb: {
           hostUrl: 'http://localhost',
-          dbName:'jojoblog',
-          auth: { username:'jojoadmin', password:'password' }
+          dbName:'featherblog',
+          auth: { username:'featheradmin', password:'password' }
         },
         authdb: {
           hostUrl: 'http://localhost',
           dbName: '_users',
-          auth: { username:'jojoadmin', password:'password' }
+          auth: { username:'featheradmin', password:'password' }
         }
       },
       auth: {
@@ -49,8 +49,8 @@ var options = {
         absorbConsoleLogging: true,
         categories: {
           // values: all, trace, debug, info, warn, error, fatal, off
-          'jojo.http': 'off',
-          'jojo.fsm': 'info'
+          'feather.http': 'off',
+          'feather.fsm': 'info'
         },
         appenders: [
           { 
@@ -63,11 +63,11 @@ var options = {
             disabled: true, 
             options: { 
               layout: 'colored', 
-              filename: 'jojoblog.log', 
+              filename: 'featherblog.log', 
               maxFileSize:10*1024*1024, 
               numBackups:2, 
               filePollInterval:60, 
-              includedCategories: ['jojo.http'],
+              includedCategories: ['feather.http'],
               levelThreshold: 'info'
             },
           },
@@ -80,15 +80,15 @@ var options = {
               maxFileSize:10*1024*1024, 
               numBackups:2, 
               filePollInterval:60, 
-              excludedCategories: ['jojo.http'] } },
+              excludedCategories: ['feather.http'] } },
           { 
             type: 'url', 
             disabled: true, 
             options: { 
               host: 'localhost', 
               port: '5984', 
-              path:'/jojoblog_log/', 
-              excludedCategories: ['jojo.http', 'jojo.fsm'] 
+              path:'/featherblog_log/', 
+              excludedCategories: ['feather.http', 'feather.fsm'] 
             }
           },
           // example of a custom appender.  fn should be a function that /is/ the appender.  
@@ -99,7 +99,7 @@ var options = {
             fn: (function() {
               var http = require('http');
               var connection = http.createClient(5984, 'localhost');
-              var path = "/jojoblog_log/";
+              var path = "/featherblog_log/";
               var headers = {
                 "Content-Type": "application/json",
                 "Content-Length": 0 
@@ -128,10 +128,10 @@ var options = {
     }
   },
   onReady: function() {
-    jojo.ns("jojo.blog");
+    feather.ns("feather.blog");
     var BlogApi = require("blogapi").BlogApi;
-    jojo.blog.api = new BlogApi();
+    feather.blog.api = new BlogApi();
   }
 };
 
-jojo.start(options);
+feather.start(options);

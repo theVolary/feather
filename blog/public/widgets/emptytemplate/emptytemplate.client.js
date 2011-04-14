@@ -1,7 +1,7 @@
-jojo.ns("blog");
+feather.ns("blog");
 (function() {
 
-  blog.emptytemplate = jojo.widget.create({
+  blog.emptytemplate = feather.widget.create({
     name : "blog.emptytemplate",
     path : "widgets/emptytemplate/",
     prototype : {
@@ -10,10 +10,10 @@ jojo.ns("blog");
       },
       onReady : function(args) {
         var me = this;
-        var id = jojo.id();
+        var id = feather.id();
         $("<div id='" + id + "Container'></div>").appendTo(me.container);
         
-        jojo.widget.load({
+        feather.widget.load({
           path: "widgets/clientwidget/",
           serverOptions: {
             foo: "bar"
