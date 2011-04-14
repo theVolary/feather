@@ -1,7 +1,5 @@
 jojo.ns("blog");
 
-var sys = require("sys");
-
 blog.signin = jojo.widget.create({
 	name: "blog.signin",
 	path: "widgets/signin/",

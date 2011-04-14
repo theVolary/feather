@@ -10,33 +10,76 @@ jojo.ns("blog");
 			},
 			onReady: function(args) {
 				var me = this;
-				jojo.auth.api.on("loggedOut", function() {
-          me.get("#signedin").hide();
-          me.get("#signinform").show();
-				});
-				this.domEvents.bind(this.get("#signinButton"), "click", function() {
-				  var user = me.get('#username').val();
-				  var pass = me.get('#password').val();
-				  jojo.auth.api.login({ username: user, password: pass }, function(err) {
-				    if (!err) {
-              me.showLoggedIn();
-				    } else {
-				      me.get('#message').append(err);
-				    }
-				  }); // end login call.
-				}); // end signinButton click
-				me.showLoggedIn();
-			}, // end onReady
-			showLoggedIn: function() {
-			  var me = this;
-			  if (jojo.auth.user && jojo.auth.user.isLoggedIn()) {
-  			  me.get("#signinform").hide();
-          me.get("#signedin").empty().append($.tmpl('Welcome ${user}.  <input type="button" id="${id}_signoutBtn" value="Sign Out" />', {user:jojo.auth.user.username, id:me.id}) ).show();
-          me.domEvents.bind(me.get("#signoutBtn"), "click", function() {
-            jojo.auth.api.logout();
-          });
-        }
-			} // end showLoggedIn.
+        
+        /**
+         * create an FSM to handle ui states
+         */
+        var fsm = new jojo.fsm.finiteStateMachine({
+          states: {
+            initial: {
+              stateStartup: function(fsm, args) {
+                //cache the templates
+                me.signedInTemplate = me.templates.findById("signedIn");
+                me.signedOutTemplate = me.templates.findById("signedOut");
+                if (me.get("#signoutBtn").length) {
+                  return fsm.states.loggedIn;
+                }
+                return fsm.states.loggedOut;
+              }
+            },
+            loggedIn: {
+              stateStartup: function(fsm, args) {
+                if (!me.get("#signoutBtn").length) {
+                  me.get("#signInPanel").html("");
+                  $.tmpl(me.signedInTemplate.tmpl, {user: jojo.auth.user}).appendTo(me.get("#signInPanel"));
+                }
+                //wire the signInHandler
+                me.signOutHandler = me.domEvents.bind(me.get("#signoutBtn"), "click", function() {
+                  jojo.auth.api.logout();
+                  fsm.fire("loggedOut");
+                });
+              },
+              loggedOut: function(fsm, args) {
+                return fsm.states.loggedOut;
+              },
+              leavingState: function(fsm, args) {
+                me.signOutHandler.unbind();
+                me.signOutHandler = null;
+              }
+            }, //end loggedIn state
+            loggedOut: {
+              stateStartup: function(fsm, args) {
+                if (!me.get("#signinBtn").length) {
+                  me.get("#signInPanel").html("");
+                  $.tmpl(me.signedOutTemplate.tmpl).appendTo(me.get("#signInPanel"));
+                }
+                //wire the signInHandler
+                me.signInHandler = me.domEvents.bind(me.get("#signinBtn"), "click", function() {
+                  var user = me.get('#username').val();
+                  var pass = me.get('#password').val();
+                  jojo.auth.api.login({
+                    username: user,
+                    password: pass
+                  }, function(err) {
+                    if (!err) {
+                      fsm.fire("loggedIn");
+                    } else {
+                      me.get('#message').append(err);
+                    }
+                  }); // end login call.
+                }); // end signinButton click
+              }, 
+              loggedIn: function(fsm, args) {
+                return fsm.states.loggedIn;
+              },
+              leavingState: function(fsm, args) {
+                me.signInHandler.unbind();
+                me.signInHandler = null;
+              }
+            } //end loggedOutState
+          }
+        });
+			} // end onReady
 		}
 	});
 
