@@ -1,17 +1,17 @@
-jojo.ns("blog");
+feather.ns("blog");
 
-blog.importdb = jojo.widget.create({
+blog.importdb = feather.widget.create({
 	name: "blog.importdb",
 	path: "widgets/importdb/",
 	prototype: {
 		initialize: function($super, options) {
 			$super(options);
 		},
-		runImport: jojo.widget.serverMethod(function(params, overwrite) {
+		runImport: feather.widget.serverMethod(function(params, overwrite) {
       debugger;
 		  var me = this;
 		  params.autoResponse = false;
-		  jojo.data.appdb.importDb({overwrite: overwrite}, function(err) {
+		  feather.data.appdb.importDb({overwrite: overwrite}, function(err) {
         debugger;
 		    if (err) {
 		      params.result.err = err;

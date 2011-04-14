@@ -1,6 +1,6 @@
-jojo.ns("blog");
+feather.ns("blog");
 
-blog.signin = jojo.widget.create({
+blog.signin = feather.widget.create({
 	name: "blog.signin",
 	path: "widgets/signin/",
 	prototype: {
@@ -10,13 +10,13 @@ blog.signin = jojo.widget.create({
     onRender: function() {
       
     },
-    verifySignin: jojo.widget.serverMethod(function(params) {
-      if (jojo.request.session && jojo.request.session.user) {
-        return jojo.request.session.user;
+    verifySignin: feather.widget.serverMethod(function(params) {
+      if (feather.request.session && feather.request.session.user) {
+        return feather.request.session.user;
       }
     }),
-    signIn: jojo.widget.serverMethod(function(params, username, password) {
-      jojo.auth.api.login({
+    signIn: feather.widget.serverMethod(function(params, username, password) {
+      feather.auth.api.login({
         username: username,
         password: password
       });

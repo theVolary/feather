@@ -14,7 +14,7 @@
   </div>
 </template>
 <div id="signInPanel">
-  <async method="jojo.auth.api.getCurrentUser">
+  <async method="feather.auth.api.getCurrentUser">
     [[if user]]
       <insert_template name="signedIn"/>
     [[else]]

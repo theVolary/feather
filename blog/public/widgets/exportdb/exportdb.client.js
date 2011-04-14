@@ -1,6 +1,6 @@
-jojo.ns("blog");
+feather.ns("blog");
 (function() {	
-	blog.exportdb = jojo.widget.create({
+	blog.exportdb = feather.widget.create({
 		name: "blog.exportdb",
 		path: "widgets/exportdb",
 		prototype: {

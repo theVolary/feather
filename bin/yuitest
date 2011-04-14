@@ -159,7 +159,7 @@ TestRunner.subscribe("complete", function(event){
 	sys.puts("Writing " + output + " to " + path);
 	fs.writeFileSync(path, output);
 	
-	jojo.shutdown();
+	feather.shutdown();
 	
 	//if there are failed tests, exit with code 1
 	if (event.results.failed){
@@ -199,8 +199,8 @@ if (!appName || appName.length == 0) {
           absorbConsoleLogging: true,
           categories: {
             // values: all, trace, debug, info, warn, error, fatal, off
-            'jojo.http': 'off',
-            'jojo.fsm': 'info'
+            'feather.http': 'off',
+            'feather.fsm': 'info'
           },
           appenders: [
             { 
@@ -258,5 +258,5 @@ if (!appName || appName.length == 0) {
       });
     }
   };
-  jojo.start(options);
+  feather.start(options);
 } // end else arg length != 0

@@ -1,6 +1,6 @@
-jojo.ns("blog");
+feather.ns("blog");
 (function() {	
-	blog.importdb = jojo.widget.create({
+	blog.importdb = feather.widget.create({
 		name: "blog.importdb",
 		path: "widgets/importdb/",
 		prototype: {

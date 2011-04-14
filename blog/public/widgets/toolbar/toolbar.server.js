@@ -1,5 +1,5 @@
-jojo.ns("blog");
-blog.toolbar = jojo.widget.create({
+feather.ns("blog");
+blog.toolbar = feather.widget.create({
 	name: "blog.toolbar",
 	path: "widgets/toolbar/",
 	prototype: {

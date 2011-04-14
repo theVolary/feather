@@ -1,8 +1,8 @@
-jojo.ns("blog");
+feather.ns("blog");
 (function() {	
   var template = '<span class="button ${name}" title="${tooltip}">&nbsp;</span>';
   
-	blog.toolbar = jojo.widget.create({
+	blog.toolbar = feather.widget.create({
 		name: "blog.toolbar",
 		path: "widgets/toolbar/",
 		prototype: {

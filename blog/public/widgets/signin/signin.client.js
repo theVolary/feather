@@ -1,7 +1,7 @@
-jojo.ns("blog");
+feather.ns("blog");
 (function() {
 
-	blog.signin = jojo.widget.create({
+	blog.signin = feather.widget.create({
 		name: "blog.signin",
 		path: "widgets/signin/",		
 		prototype: {
@@ -14,7 +14,7 @@ jojo.ns("blog");
         /**
          * create an FSM to handle ui states
          */
-        var fsm = new jojo.fsm.finiteStateMachine({
+        var fsm = new feather.fsm.finiteStateMachine({
           states: {
             initial: {
               stateStartup: function(fsm, args) {
@@ -31,11 +31,11 @@ jojo.ns("blog");
               stateStartup: function(fsm, args) {
                 if (!me.get("#signoutBtn").length) {
                   me.get("#signInPanel").html("");
-                  $.tmpl(me.signedInTemplate.tmpl, {user: jojo.auth.user}).appendTo(me.get("#signInPanel"));
+                  $.tmpl(me.signedInTemplate.tmpl, {user: feather.auth.user}).appendTo(me.get("#signInPanel"));
                 }
                 //wire the signInHandler
                 me.signOutHandler = me.domEvents.bind(me.get("#signoutBtn"), "click", function() {
-                  jojo.auth.api.logout();
+                  feather.auth.api.logout();
                   fsm.fire("loggedOut");
                 });
               },
@@ -57,7 +57,7 @@ jojo.ns("blog");
                 me.signInHandler = me.domEvents.bind(me.get("#signinBtn"), "click", function() {
                   var user = me.get('#username').val();
                   var pass = me.get('#password').val();
-                  jojo.auth.api.login({
+                  feather.auth.api.login({
                     username: user,
                     password: pass
                   }, function(err) {

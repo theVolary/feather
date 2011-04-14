@@ -1,4 +1,4 @@
-jojo.ns("blog");
+feather.ns("blog");
 
 /**
  * global static method which can also be used from within the template via an 'async' tag
@@ -7,7 +7,7 @@ jojo.ns("blog");
 blog.getPosts = function(cb) {
   var me = this;
   var posts = [];
-  jojo.blog.api.getPosts(function(err, dbResult) {
+  feather.blog.api.getPosts(function(err, dbResult) {
     if (!err) {
       dbResult.forEach(function(key, doc, id) {
         doc.timestamp = (new Date()).getTime(); //for testing
@@ -20,7 +20,7 @@ blog.getPosts = function(cb) {
   });
 };
 
-blog.latestposts = jojo.widget.create({
+blog.latestposts = feather.widget.create({
   name: "blog.latestposts",
   path: "widgets/latestposts/",
   prototype: {
@@ -28,7 +28,7 @@ blog.latestposts = jojo.widget.create({
       $super(options);
       this.timestamp = (new Date()).getTime();
     },
-    getPosts: jojo.widget.serverMethod(function(params) {
+    getPosts: feather.widget.serverMethod(function(params) {
       var me = this;
       var posts = [];
       params.autoResponse = false; // We'll handle the sending of data back to the client.
