@@ -1,11 +1,24 @@
-<div id="${id}_signinform" class="signinform">
-	<label for="username">Username</label>
-	<input id="${id}_username" type="text" name="username" size="10" /><br/>
-	<label for="password">Password</label>
-	<input id="password" type="password" name="password" size="10" /><br/>
-	<input type="button" id="${id}_signinButton" value="Sign In" />
-	<p id="${id}_message"></p>
-</div>
-<div id="${id}_signedin" class="welcome">
-	
+<template client_enabled="true" name="signedIn">
+  <div id="signedin" class="welcome">
+    Welcome $[user.username].  <input type="button" id="signoutBtn" value="Sign Out" />
+  </div>
+</template>
+<template client_enabled="true" name="signedOut">
+  <div id="signinform" class="signinform">
+    <label for="username">Username</label>
+    <input id="username" type="text" name="username" size="10" /><br/>
+    <label for="password">Password</label>
+    <input id="password" type="password" name="password" size="10" /><br/>
+    <input type="button" id="signinBtn" value="Sign In" />
+    <p id="message"></p>
+  </div>
+</template>
+<div id="signInPanel">
+  <async method="jojo.auth.api.getCurrentUser">
+    [[if user]]
+      <insert_template name="signedIn"/>
+    [[else]]
+      <insert_template name="signedOut"/>
+    [[/if]]
+  </async>
 </div>
