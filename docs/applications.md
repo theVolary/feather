@@ -22,8 +22,9 @@ Currently, all applications must reside as a subfolder of the jojojs framework i
 			appRoot: __dirname,
 			// Add your app's options here.
 		});
-6.  Start your app by running `node app.js` from the `jojojs/example` folder.
-7.  To stop your app when not running in daemon mode, simply press Ctrl-C from your terminal.
+6.  Create a new file "index.jojo" in your app's public folder and give it some HTML content.
+7.  Start your app by running `node app.js` from the `jojojs/example` folder.
+8.  To stop your app when not running in daemon mode, simply press Ctrl-C from your terminal.
 
 ## Running your application as a Daemon process ##
 To run your application as a daemon, add the following block to your app's options:  
