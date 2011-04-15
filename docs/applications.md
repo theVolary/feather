@@ -1,10 +1,10 @@
-# jojojs Application Documentation #
+# feather Application Documentation #
 
 ## Creating a New Application ##
-Currently, all applications must reside as a subfolder of the jojojs framework itself.  Here, then, are the steps to create a new application called "example".
+Currently, all applications must reside as a subfolder of the feather framework itself.  Here, then, are the steps to create a new application called "example".
 
-1.  Create a new folder inside of jojojs called example
-2.  Create a symbolic link called _jojolib_ inside of this folder that links to the jojojs's _lib_ folder. `ln -s ../lib jojolib`
+1.  Create a new folder inside of feather called example
+2.  Create a symbolic link called _featherlib_ inside of this folder that links to the feather's _lib_ folder. `ln -s ../lib featherlib`
 3.  Create the following folders inside of _example_.
     *  lib
     *  public
@@ -16,14 +16,14 @@ Currently, all applications must reside as a subfolder of the jojojs framework i
 5.  Add the following to your javascript file:  
 
 		require.paths.unshift(__dirname);  
-		var baseApp = require("jojolib/base-app");  
+		var baseApp = require("featherlib/base-app");  
 		
-		jojo.start({
+		feather.start({
 			appRoot: __dirname,
 			// Add your app's options here.
 		});
-6.  Create a new file *index.jojo* in your app's public folder and give it some HTML content.
-7.  Start your app by running `node app.js` from the `jojojs/example` folder.
+6.  Create a new file *index.feather* in your app's public folder and give it some HTML content.
+7.  Start your app by running `node app.js` from the `feather/example` folder.
 8.  To stop your app when not running in daemon mode, simply press Ctrl-C from your terminal.
 
 ## Running your application as a Daemon process ##
@@ -38,7 +38,7 @@ To run your application as a daemon, add the following block to your app's optio
 To stop your application when it is running in daemon mode, you will have to manually send the PID (found in the file at pidPath) a kill command.
 
 ## Runtime Environments ##
-jojojs apps borrow the concept of environments from other notable frameworks such as Grails.  To create a new runtime environment, add an environments block to your application, and add your options to environments in there instead of directly to options.  By convention, any options not in an environment block are included in all environments.  Environments can be named whatever you wish, but it is conventional to have environments named "dev", "prod", and possibly "staging" or "test".  If an option occurs both in and out of an environment block, the one inside the environment block will override the global one.  In the example below, logging is disabled by default.  However, each of the three environment blocks overrides it by enabling logging and setting the default logging level appropriately.  Finally, in the global options, add the *useEnv* option and set it to the name of one your environments to use that environment when the application runs.
+feather apps borrow the concept of environments from other notable frameworks such as Grails.  To create a new runtime environment, add an environments block to your application, and add your options to environments in there instead of directly to options.  By convention, any options not in an environment block are included in all environments.  Environments can be named whatever you wish, but it is conventional to have environments named "dev", "prod", and possibly "staging" or "test".  If an option occurs both in and out of an environment block, the one inside the environment block will override the global one.  In the example below, logging is disabled by default.  However, each of the three environment blocks overrides it by enabling logging and setting the default logging level appropriately.  Finally, in the global options, add the *useEnv* option and set it to the name of one your environments to use that environment when the application runs.
 
 	var appOptions = {
 		appRoot: __dirname,

@@ -53,7 +53,7 @@ Thus, I'm going to include some workflow instructions.
 - Data
   - 3/15/2011: as of today, the blog app now requires CouchDB.
       - install couch via the instructions for your OS ([http://wiki.apache.org/couchdb/Installation](http://wiki.apache.org/couchdb/Installation))
-      - from Futon ([http://localhost:5984/_utils/](http://localhost:5984/_utils/)), create a db called "jojoblog"
+      - from Futon ([http://localhost:5984/_utils/](http://localhost:5984/_utils/)), create a db called "featherblog"
       - if couch is not installed on localhost, edit app.js and modify the hostUrl value in the data.appdb variable
       - start the blog application (See Starting the Sample App below)
       - browse to [http://localhost:8080/](http://localhost:8080/) and press the Go button where it says "Import the database"
