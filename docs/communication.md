@@ -56,72 +56,74 @@ The name you choose for your channel can also serve as a means of limiting the s
 
 _Example 1_:
   
-  feather.ns("myapp");
-  (function() {  
-    /**
-     * create a generic channel named 'chat', which all clients can listen to
-     */
-    var chatChannel = feather.socket.addChannel("chat");
+    feather.ns("myapp");
+    (function() {  
     
-    myapp.foo = feather.widget.create({
-      name: "myapp.foo",
-      path: "widgets/foo/",
-      prototype: {
-        initialize: function($super, options) {
-          $super(options);
-        },
-        onReady: function() {
-          var me = this;
-          //when one of my buttons is clicked, send a chat message on the chat channel
-          me.domEvents.bind(me.get("#someButton"), "click", function() {
-            chatChannel.fire("message", {message: "hi!"});
-          });
-          
-          //when I receive a message event on the chat channel, update the UI
-          chatChannel.on("message", function(args) {
-            //in a real app we'd obviously do more than just alert, but you get the idea...
-            alert("Incoming chat. Message = " + args.message);
-          });
-        })
-      }   
-    });
-  })(); 
+      /**
+       * create a generic channel named 'chat', which all clients can listen to
+       */
+      var chatChannel = feather.socket.addChannel("chat");
+      
+      myapp.foo = feather.widget.create({
+        name: "myapp.foo",
+        path: "widgets/foo/",
+        prototype: {
+          initialize: function($super, options) {
+            $super(options);
+          },
+          onReady: function() {
+            var me = this;
+            //when one of my buttons is clicked, send a chat message on the chat channel
+            me.domEvents.bind(me.get("#someButton"), "click", function() {
+              chatChannel.fire("message", {message: "hi!"});
+            });
+            
+            //when I receive a message event on the chat channel, update the UI
+            chatChannel.on("message", function(args) {
+              //in a real app we'd obviously do more than just alert, but you get the idea...
+              alert("Incoming chat. Message = " + args.message);
+            });
+          })
+        }   
+      });
+    })(); 
     
   Notice that in the above example when a client listens for an event on a given channel, messages from that client do not end up in its own listeners. In other words, if you wanted to test the (pseudo) code above, you would actually have to open the page in two separate browser tabs.
   Another important thing to note about the above example is that all instances of this widget will receive these messages, even if they are on different pages of your app.
   
 _Example 2 (keying the channel name)_:
 
-  feather.ns("myapp");
-  (function() {  
-    /**
-     * create a page specific chat channel
-     */
-    var chatChannel = feather.socket.addChannel("chat:" + window.location.href);
+    feather.ns("myapp");
+    (function() {  
     
-    myapp.foo = feather.widget.create({
-      name: "myapp.foo",
-      path: "widgets/foo/",
-      prototype: {
-        initialize: function($super, options) {
-          $super(options);
-        },
-        onReady: function() {
-          var me = this;
-          //when one of my buttons is clicked, send a chat message on the chat channel
-          me.domEvents.bind(me.get("#someButton"), "click", function() {
-            chatChannel.fire("message", {message: "hi!"});
-          });
-          
-          //when I receive a message event on the chat channel, update the UI
-          chatChannel.on("message", function(args) {
-            //in a real app we'd obviously do more than just alert, but you get the idea...
-            alert("Incoming chat. Message = " + args.message);
-          });
-        })
-      }   
-    });
-  })(); 
+      /**
+       * create a page specific chat channel
+       */
+      var chatChannel = feather.socket.addChannel("chat:" + window.location.href);
+      
+      myapp.foo = feather.widget.create({
+        name: "myapp.foo",
+        path: "widgets/foo/",
+        prototype: {
+          initialize: function($super, options) {
+            $super(options);
+          },
+          onReady: function() {
+            var me = this;
+            //when one of my buttons is clicked, send a chat message on the chat channel
+            me.domEvents.bind(me.get("#someButton"), "click", function() {
+              chatChannel.fire("message", {message: "hi!"});
+            });
+            
+            //when I receive a message event on the chat channel, update the UI
+            chatChannel.on("message", function(args) {
+              //in a real app we'd obviously do more than just alert, but you get the idea...
+              alert("Incoming chat. Message = " + args.message);
+            });
+          })
+        }   
+      });
+    })(); 
   
   We've only changed 1 thing about this example, but it has a major impact of the behavior of this widget. Notice that we've now keyed the channel name by the current url, which means that only the chat widgets of clients that are currently viewing the same page will receive the messages.
   You can obviously key your channel names, as well as your message names by any number of data elements to achieve the appropriate level of segregation of publishers and subscribers for your use case.
