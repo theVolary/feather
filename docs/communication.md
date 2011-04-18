@@ -12,11 +12,11 @@ _Example_:
 
     feather.ns("myapp");    
     myapp.foo = feather.widget.create({
-	name: "myapp.foo",
-	path: "widgets/foo/",
-	prototype: {
-          initialize: function($super, options) {
-            $super(options);
-          }
-        }		
-     });
+      name: "myapp.foo",
+      path: "widgets/foo/",
+      prototype: {
+        initialize: function($super, options) {
+          $super(options);
+        }
+      }		
+    });
