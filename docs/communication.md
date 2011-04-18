@@ -9,6 +9,7 @@ If you'd like to encapsulate server-side methods within a given widget, there is
 _Example_:
 
   If your have a widget 'foo', and foo.server.js looks like this:
+
     feather.ns("myapp");    
     myapp.foo = feather.widget.create({
 	name: "myapp.foo",
