@@ -17,6 +17,12 @@ _Example_:
       prototype: {
         initialize: function($super, options) {
           $super(options);
-        }
+        },
+        doSomething: feather.widget.widgetServerMethod(function(arg1, cb) {
+          //doSomething with arg1...
+          var result = {message: "you sent me" + arg1};
+          //when ready, call back
+          cb(result);
+        })
       }		
     });
