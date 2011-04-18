@@ -57,8 +57,7 @@ The name you choose for your channel can also serve as a means of limiting the s
 _Example 1_:
   
   feather.ns("myapp");
-  (function() {
-  
+  (function() {  
     /**
      * create a generic channel named 'chat', which all clients can listen to
      */
@@ -94,8 +93,7 @@ _Example 1_:
 _Example 2 (keying the channel name)_:
 
   feather.ns("myapp");
-  (function() {
-  
+  (function() {  
     /**
      * create a page specific chat channel
      */
