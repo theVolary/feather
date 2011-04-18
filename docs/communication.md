@@ -48,3 +48,38 @@ _Example_:
         })
       }		
     });
+    
+## Channel Event-based Messaging ##
+When you need to send messages to all connected clients, or a subset thereof, it's channels to the rescue. A channel is a glorified event publisher, who just happens to publish its events across connected clients via a socket.io broadcast.
+
+The name you choose for your channel can also serve as a means of limiting the scope of which clients receive messages. The following examples illustrate the ease with which we can implement a chat widget using the concept of channels.
+
+_Example 1 (publish)_:
+
+  chat.client.js:
+  
+    feather.ns("myapp");
+    (function() {
+    
+      /**
+       * create a generic channel named 'chat', which all clients can listen to
+       */
+      var chatChannel = feather.socket.addChannel("chat");
+      
+      myapp.foo = feather.widget.create({
+        name: "myapp.foo",
+        path: "widgets/foo/",
+        prototype: {
+          initialize: function($super, options) {
+            $super(options);
+          },
+          onReady: function() {
+            var me = this;
+            //when one of my buttons is clicked, send a chat message on the chat channel
+            me.domEvents.bind(me.get("#someButton"), "click", function() {
+              chatChannel.fire("message", {message: "hi!"});
+            });
+          })
+        }   
+      });
+    })(); 

@@ -54,7 +54,7 @@
           };
           me.newMessage(data);
           chatChannel.fire("chat", data);
-        }
+        };
         
         /**
          * binding the chat button to update local ui 
