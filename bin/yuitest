@@ -169,14 +169,14 @@ TestRunner.subscribe("complete", function(event){
 
 var appName = options.appName;
 require.paths.unshift(__dirname + '/../' + appName);
-require.paths.unshift(__dirname + '/../' + appName+'/jojolib');
+require.paths.unshift(__dirname + '/../' + appName+'/featherlib');
 require.paths.unshift(__dirname + '/../' + appName+'/lib');
 
 if (!appName || appName.length == 0) {
   console.error("No application name specified");
 } else {
   
-  var baseApp = require("jojolib/base-app");
+  var baseApp = require("featherlib/base-app");
   
   var options = {
     // Any property /not/ in the environments block is global to all environments 
@@ -189,8 +189,8 @@ if (!appName || appName.length == 0) {
         data: {
           appdb: {
             hostUrl: 'http://localhost',
-            dbName:'jojoblog',
-            auth: { username:'jojoadmin', password:'password' }
+            dbName:'featherblog',
+            auth: { username:'featheradmin', password:'password' }
           }
         },
         logging: {

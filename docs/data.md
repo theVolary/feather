@@ -1,4 +1,4 @@
-# jojojs Data API Documentation #
+# feather Data API Documentation #
 ## Configuration ##
 The data API is configured right from the app options in app.js.  For application data, you will want to configure the `appdb` object within your options `data` object.  
 
@@ -8,8 +8,8 @@ The data API is configured right from the app options in app.js.  For applicatio
 	    data: {
 		    appdb: {
 			    hostUrl: 'http://localhost',
-          dbName:'jojoblog',
-          auth: { username:'jojoadmin', password:'password' }
+          dbName:'featherblog',
+          auth: { username:'featheradmin', password:'password' }
 		    }
 	    }
 	    // ...

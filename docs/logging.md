@@ -1,8 +1,8 @@
-# jojojs Logging Documentation #
+# feather Logging Documentation #
 ## Configuration ##
 Logging is currently configured through the app.js file, though hooks have been created in the logging code to eventually allow external configuration (CouchDB documents, json files, etc.).
 
-To configure logging, add an object to the jojo.init options object called "logging".
+To configure logging, add an object to the feather.init options object called "logging".
 
 ### Options ###
 * **enabled**: true / false
@@ -19,7 +19,7 @@ To configure logging, add an object to the jojo.init options object called "logg
 * **templates**: Array of Objects
 	* Templates are shortcuts for frequently used log statements
 	* Objects have two properties: id and template
-		* id: the identifier when using templates (ex: `jojo.logger.info({templateId:'blah}));`)
+		* id: the identifier when using templates (ex: `feather.logger.info({templateId:'blah}));`)
 		* template: the string or jQuery template to use in log statements
 
 ### Example Configuration ###
@@ -31,8 +31,8 @@ Here is a sample of the configuration found in the blog sample app.
 			    absorbConsoleLogging: true,  
 			    categories: {  
 			      // values: all, trace, debug, info, warn, error, fatal, off  
-			      'jojo.http': 'trace',  
-			      'jojo.fsm': 'info'  
+			      'feather.http': 'trace',  
+			      'feather.fsm': 'info'  
 				  },  
 				  appenders: [  
 				    {   
@@ -45,11 +45,11 @@ Here is a sample of the configuration found in the blog sample app.
 				      disabled: false,   
 				      options: {   
 				        layout: 'colored',   
-				        filename: 'jojoblog.log',   
+				        filename: 'featherblog.log',   
 				        maxFileSize:10*1024*1024,   
 				        numBackups:2,   
 				        filePollInterval:60,   
-				        includedCategories: ['jojo.http'] },  
+				        includedCategories: ['feather.http'] },  
 				        levelThreshold: 'info'  
 				      },  
 				    {   
@@ -61,15 +61,15 @@ Here is a sample of the configuration found in the blog sample app.
 				        maxFileSize:10*1024*1024,   
 				        numBackups:2,   
 				        filePollInterval:60,   
-				        excludedCategories: ['jojo.http'] } },  
+				        excludedCategories: ['feather.http'] } },  
 				    {   
 				      type: 'url',   
 				      disabled: true,   
 				      options: {   
 				        host: 'localhost',   
 				        port: '5984',   
-				        path:'/jojoblog_log/',   
-				        excludedCategories: ['jojo.http', 'jojo.fsm']   
+				        path:'/featherblog_log/',   
+				        excludedCategories: ['feather.http', 'feather.fsm']   
 				      }  
 				    },  
 				    // example of a custom appender.  fn should be a function that /is/ the appender.    
@@ -80,7 +80,7 @@ Here is a sample of the configuration found in the blog sample app.
 				      fn: (function() {  
 				        var http = require('http');  
 				        var connection = http.createClient(5984, 'localhost');  
-				        var path = "/jojoblog_log/";  
+				        var path = "/featherblog_log/";  
 				        var headers = {  
 				          "Content-Type": "application/json",  
 				          "Content-Length": 0   
@@ -110,9 +110,9 @@ Here is a sample of the configuration found in the blog sample app.
 ## Logging Messages ##
 Here are examples of log calls containing every possible option:
 
-`jojo.logger.info({ message: 'hi Mom!' });`  
-`jojo.logger.info({ message: 'hi ${name}!', replacements: someObjectContainingANameProperty, category:'jojo', exception: err });`  
-`jojo.logger.error({ templateId: 'errorTemplate', replacements: err, category:'jojo.error' });`  
+`feather.logger.info({ message: 'hi Mom!' });`  
+`feather.logger.info({ message: 'hi ${name}!', replacements: someObjectContainingANameProperty, category:'feather', exception: err });`  
+`feather.logger.error({ templateId: 'errorTemplate', replacements: err, category:'feather.error' });`  
 
 ## Categories / Loggers ##
 Categories (or Loggers) allow a granular setting of log level thresholds.  This is similar to other logging frameworks such as log4j.  A category is simply a unique string that is configured with a logging threshold.  Then, when logging, include the category in your log statements.
@@ -163,6 +163,6 @@ To create a custom appender, add the `fn` option to it, and set its value to a f
 ## Templates ##
 Templates are shortcuts for frequently used log statements.  They consist of an id and a template text.  The template may be a simple string, or it can use jQuery template syntax.  For example:
 
-`{ id: 'separator', template: '---------------------'}` can then be used in code via the following log statement: `jojo.logger.info({ templateId: 'separator' });`
+`{ id: 'separator', template: '---------------------'}` can then be used in code via the following log statement: `feather.logger.info({ templateId: 'separator' });`
 
-Similarly, the template `{ id: 'foo', template: 'bar is ${bar}' }` can be used in code like so: `jojo.logger.info({ templateId: 'foo', replacements: { bar: 'my bar value' } });`
+Similarly, the template `{ id: 'foo', template: 'bar is ${bar}' }` can be used in code like so: `feather.logger.info({ templateId: 'foo', replacements: { bar: 'my bar value' } });`
