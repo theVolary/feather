@@ -22,11 +22,12 @@ _Example_:
           //doSomething with arg1...
           var result = {message: "you sent me" + arg1};
           //when ready, call back
-          cb(result);
+          cb(null, result);
         })
       }		
     });
-
+  (notice we're following the 'error as first argument' nodejs callback style)
+  
   Then, in your foo.client.js, you can do something like this:
 
     feather.ns("myapp");    
@@ -41,8 +42,12 @@ _Example_:
           var me = this;
           //when one of my buttons is clicked, do something on the server...
           me.domEvents.bind(me.get("#someButton"), "click", function() {
-            me.server_doSomething("Whoaaaa Nelly!!!", function(result) {
-              alert(result.message);
+            me.server_doSomething("Whoaaaa Nelly!!!", function(args) {
+              if (args.success) {
+                alert(args.result.message);
+              } else {
+                alert("There was an error. Message: " + args.err);
+              }
             });
           });
         })
