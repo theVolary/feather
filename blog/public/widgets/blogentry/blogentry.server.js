@@ -17,22 +17,9 @@ blog.blogentry = feather.widget.create({
 		onRender: function() {
 		  this.renderOnInitScript("widget.blogId = '" + this.blogId+ "';");
 		},
-		getPost: feather.widget.serverMethod(function(params, blogId) {
+		getPost: feather.widget.serverMethod(function(blogId, cb) {
 		  var me = this;
-		  params.autoResponse = false;
-		  feather.blog.api.getPost(blogId, function(err, result) {
-		    feather.logger.trace("getPost err is " + err);
-		    debugger;
-		    if (err) {
-		      params.result.err = err;
-		      params.result.success = false;
-//		    me.blogPost = { err: err, summary:'', content:'', pubDate:'' };
-		    } else {
-//		      me.blogPost = result;
-          params.result.result = result;
-		    }
-		    params.client.send(params.result);
-		  });
+		  feather.blog.api.getPost(blogId, cb);
 		})
 	}		
 });

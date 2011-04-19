@@ -10,16 +10,12 @@ blog.signin = feather.widget.create({
     onRender: function() {
       
     },
-    verifySignin: feather.widget.serverMethod(function(params) {
+    verifySignin: feather.widget.serverMethod(function(cb) {
       if (feather.request.session && feather.request.session.user) {
-        return feather.request.session.user;
+        cb(null, feather.request.session.user);
+      } else {
+        cb("No user in session");
       }
-    }),
-    signIn: feather.widget.serverMethod(function(params, username, password) {
-      feather.auth.api.login({
-        username: username,
-        password: password
-      });
     })
 	}		
 });

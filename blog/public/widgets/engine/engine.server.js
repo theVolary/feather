@@ -7,11 +7,11 @@ blog.engine = feather.widget.create({
 		initialize: function($super, options) {
 			$super(options);
 		},
-    doSomething: feather.widget.serverMethod(function(params, arg1, arg2) {
-      return {
+    doSomething: feather.widget.serverMethod(function(arg1, arg2, cb) {
+      cb({
         clientArg1: arg1,
         clientArg2: arg2
-      };
+      });
     })
 	}		
 });
