@@ -62,6 +62,7 @@ The name you choose for your channel can also serve as a means of limiting the s
 _Example 1_:
   
   In your chat widget's client.js file...
+
     feather.ns("myapp");
     (function() {  
     
