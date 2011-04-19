@@ -8,7 +8,7 @@ blog.engine = feather.widget.create({
 			$super(options);
 		},
     doSomething: feather.widget.serverMethod(function(arg1, arg2, cb) {
-      cb({
+      cb(null, {
         clientArg1: arg1,
         clientArg2: arg2
       });
