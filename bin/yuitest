@@ -67,7 +67,7 @@ function outputHelp(){
         "\nUsage: yuitest [options] app-name [file|dir]*",
         " ",
         "Global Options",
-        "  --groups groupname  Run only tests cases that are part of groupname.",
+        "  --groups groupname  Run only test cases that are part of groupname.",
         "  --help              Displays this information.",
         "  --format <format>   Specifies output format (junitxml, tap, xunit).",
         "  --verbose           Display informational messages and warnings.",
