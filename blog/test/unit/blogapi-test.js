@@ -42,39 +42,4 @@ var tc = new YUITest.TestCase({
   }
 });
 YUITest.TestRunner.add(tc);
-/*
-vows.describe('Blog API').addBatch({
-    'when getting posts': {
-        topic: function () { return apiStub.getPosts(); },
-
-        'we get an array back': function (topic) {
-          assert.isArray(topic);
-        },
-        'the length of the test results should be 3': function(topic) {
-          assert.length(topic, 3);
-        },
-        'the items should have a key property': function(topic) {
-          assert.include(topic[0], 'key');
-        },
-        'the items should have a pubDate property': function(topic) {
-          assert.include(topic[0], 'pubDate');
-        },
-        'the pubDate property should be a Date object': function(topic) {
-          assert.typeOf(topic[0].pubDate, 'date');
-        }
-    },
-    'but when dividing zero by zero': {
-        topic: function () { return 0 / 0 },
-
-        'we get a value which': {
-            'is not a number': function (topic) {
-                assert.isNaN (topic);
-            },
-            'is not equal to itself': function (topic) {
-                assert.notEqual (topic, topic);
-            }
-        }
-    }
-}).export(module);
-*/
 })();
