@@ -1,0 +1,11 @@
+<template client_enabled="true" name="navItem">
+  
+</template>
+<ul class="navList">
+  <async method="featherdoc.getNavItems">
+    [[each(i, navItem) navItems]]
+    <li><a href="$[navItem.url]" class="navitem $[navItem.type]" type="$[navItem.type]" >$[navItem.name]</a></li>
+    <insert_template name="navItem"/>
+    [[/each]]
+  </async>
+</ul>

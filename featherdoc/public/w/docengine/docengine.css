@@ -1,0 +1,25 @@
+.featherdoc_docengine {
+  padding-top: 70px;
+}
+
+.featherdoc_docengine .nav, .featherdoc_docengine .content {
+  background-color: #fdfdef;
+  border-radius: 5px;
+  border: 1px solid #4e2c54;
+}
+
+.featherdoc_docengine .nav {
+  width: 200px;
+  float: left;
+  margin: 0px 5px 0px 5px;
+  position: fixed;
+}
+
+.featherdoc_docengine .nav ul {
+  list-style: none outside;
+  padding-left: 5px;
+}
+
+.featherdoc_docengine .content {
+  margin: 0px 5px 5px 210px;
+}
