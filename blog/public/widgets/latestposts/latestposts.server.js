@@ -28,15 +28,14 @@ blog.latestposts = feather.widget.create({
       $super(options);
       this.timestamp = (new Date()).getTime();
     },
-    getPosts: feather.widget.serverMethod(function(params) {
+    getPosts: feather.widget.serverMethod(function(cb) {
       var me = this;
-      var posts = [];
-      params.autoResponse = false; // We'll handle the sending of data back to the client.
       blog.getPosts(function(result) {
-        params.result.success = !result.error;
-        params.result.result = result;
-        params.result.err = result.error ? result.message : undefined;
-        params.client.send(params.result);
+        if (result.error) {
+          cb(result.message);
+        } else {
+          cb(null, result);
+        }
       });
     })
   } // end prototype
