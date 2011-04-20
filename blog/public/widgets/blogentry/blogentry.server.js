@@ -9,8 +9,8 @@ blog.blogentry = feather.widget.create({
 		initialize: function($super, options) {
 			$super(options);
 			var me = this;
-			if (feather.request.url) { 
-			  var params = url.parse(feather.request.url, true).query;
+			if (me.request.url) { 
+			  var params = url.parse(me.request.url, true).query;
 			  me.blogId = params.id;
 		  }
 		},

@@ -11,8 +11,8 @@ blog.signin = feather.widget.create({
       
     },
     verifySignin: feather.widget.serverMethod(function(cb) {
-      if (feather.request.session && feather.request.session.user) {
-        cb(null, feather.request.session.user);
+      if (this.request.session && this.request.session.user) {
+        cb(null, this.request.session.user);
       } else {
         cb("No user in session");
       }

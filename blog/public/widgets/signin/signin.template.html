@@ -1,6 +1,13 @@
 <template client_enabled="true" name="signedIn">
   <div id="signedin" class="welcome">
-    Welcome $[user.username].  <input type="button" id="signoutBtn" value="Sign Out" />
+    Welcome [[if session]] 
+              $[session.user.username].
+            [[else]] 
+              [[if feather.auth && feather.auth.user]]
+                $[feather.auth.user.username].
+              [[/if]]
+            [[/if]]  
+    <input type="button" id="signoutBtn" value="Sign Out" />
   </div>
 </template>
 <template client_enabled="true" name="signedOut">
@@ -14,11 +21,11 @@
   </div>
 </template>
 <div id="signInPanel">
-  <async method="feather.auth.api.getCurrentUser">
-    [[if user]]
+  <request>
+    [[if session && session.user]]
       <insert_template name="signedIn"/>
     [[else]]
       <insert_template name="signedOut"/>
     [[/if]]
-  </async>
+  </request>
 </div>
