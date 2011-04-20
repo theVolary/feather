@@ -2,7 +2,7 @@ feather.ns("blog");
 
 /**
  * global static method which can also be used from within the template via an 'async' tag
- * @param {Object} cb
+ * @param {Function} cb
  */
 blog.getPosts = function(cb) {
   var me = this;
@@ -11,11 +11,11 @@ blog.getPosts = function(cb) {
     if (!err) {
       dbResult.forEach(function(key, doc, id) {
         doc.timestamp = (new Date()).getTime(); //for testing
-        posts.push(doc); // id, key, value { pub_date, summary, post }
+        posts.push(doc);
       });
-      cb({posts: posts});
+      cb(null, {posts: posts});
     } else {
-      cb({error: true, message: err.reason});
+      cb(err.reason);
     }
   });
 };
@@ -30,9 +30,9 @@ blog.latestposts = feather.widget.create({
     },
     getPosts: feather.widget.serverMethod(function(cb) {
       var me = this;
-      blog.getPosts(function(result) {
-        if (result.error) {
-          cb(result.message);
+      blog.getPosts(function(err, result) {
+        if (err) {
+          cb(err);
         } else {
           cb(null, result);
         }

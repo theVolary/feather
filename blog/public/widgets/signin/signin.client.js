@@ -35,8 +35,13 @@ feather.ns("blog");
                 }
                 //wire the signInHandler
                 me.signOutHandler = me.domEvents.bind(me.get("#signoutBtn"), "click", function() {
-                  feather.auth.api.logout();
-                  fsm.fire("loggedOut");
+                  feather.auth.api.logout(function(err) {
+                    if (!err) {
+                      fsm.fire("loggedOut");
+                    } else {
+                      me.get('#message').append(err);
+                    }
+                  });                  
                 });
               },
               loggedOut: function(fsm, args) {
@@ -49,25 +54,24 @@ feather.ns("blog");
             }, //end loggedIn state
             loggedOut: {
               stateStartup: function(fsm, args) {
-                if (!me.get("#signinBtn").length) {
-                  me.get("#signInPanel").html("");
-                  $.tmpl(me.signedOutTemplate.tmpl).appendTo(me.get("#signInPanel"));
+                if (!me.get(".templating_error").length) {
+                  if (!me.get("#signinBtn").length) {
+                    me.get("#signInPanel").html("");
+                    $.tmpl(me.signedOutTemplate.tmpl).appendTo(me.get("#signInPanel"));
+                  }
+                  //wire the signInHandler
+                  me.signInHandler = me.domEvents.bind(me.get("#signinBtn"), "click", function() {
+                    var user = me.get('#username').val();
+                    var pass = me.get('#password').val();
+                    feather.auth.api.login(user, pass, function(err) {
+                      if (!err) {
+                        fsm.fire("loggedIn");
+                      } else {
+                        me.get('#message').append(err);
+                      }
+                    }); // end login call.
+                  }); // end signinButton click
                 }
-                //wire the signInHandler
-                me.signInHandler = me.domEvents.bind(me.get("#signinBtn"), "click", function() {
-                  var user = me.get('#username').val();
-                  var pass = me.get('#password').val();
-                  feather.auth.api.login({
-                    username: user,
-                    password: pass
-                  }, function(err) {
-                    if (!err) {
-                      fsm.fire("loggedIn");
-                    } else {
-                      me.get('#message').append(err);
-                    }
-                  }); // end login call.
-                }); // end signinButton click
               }, 
               loggedIn: function(fsm, args) {
                 return fsm.states.loggedIn;
