@@ -1,0 +1,36 @@
+.featherdoc_markdown {
+  margin: 5px;
+}
+
+.featherdoc_markdown pre {
+  font-family: Menlo, Monaco, "Courier New";
+  font-size: 12px;
+  padding: 5px;
+  border: 1px dashed #4e4955;
+  margin: 10px 0px;
+  background-color: #ece9dd; /*#d9d3bb;*/
+}
+
+.featherdoc_markdown h1, .featherdoc_markdown h2, .featherdoc_markdown h3, .featherdoc_markdown h4, .featherdoc_markdown h5 {
+  font-family: skia, sans-serif;
+}
+
+.featherdoc_markdown h1 {
+  font-size: 36px;
+}
+
+.featherdoc_markdown h2 {
+  font-size: 28px;
+}
+
+.featherdoc_markdown h3 {
+  font-size: 24px;
+}
+
+.featherdoc_markdown h4 {
+  font-size: 20px;
+}
+
+.featherdoc_markdown h5 {
+  font-size: 16px;
+}

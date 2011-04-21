@@ -5,3 +5,6 @@
 */featherlib
 *.orig
 lib/node-core-enhancements/*
+featherdoc/docs
+featherdoc/public/docs
+featherdoc/lib/node-jsdoc-toolkit/*
