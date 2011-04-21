@@ -5,3 +5,4 @@
 */featherlib
 *.orig
 lib/node-core-enhancements/*
+featherdoc/docs
