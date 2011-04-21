@@ -2,7 +2,7 @@
   padding-top: 70px;
 }
 
-.featherdoc_docengine .nav, .featherdoc_docengine .content {
+.featherdoc_docengine .nav, .featherdoc_docengine .content, .apidoc-iframe {
   background-color: #fdfdef;
   border-radius: 5px;
   border: 1px solid #4e2c54;
@@ -22,4 +22,9 @@
 
 .featherdoc_docengine .content {
   margin: 0px 5px 5px 210px;
+}
+
+.apidoc-iframe {
+  width: 100%;
+  height: 100%;
 }
