@@ -21,12 +21,14 @@ _Example_:
         doSomething: feather.widget.widgetServerMethod(function(arg1, cb) {
           //doSomething with arg1...
           var result = {message: "you sent me" + arg1};
-          //when ready, call back
+          
+          //when ready, call back 
+          //notice we're following the 'error as first argument' nodejs callback style,
+          //so pass null if there were no errors
           cb(null, result);
         })
       }		
-    });
-  (notice we're following the 'error as first argument' nodejs callback style)
+    });  
   
   Then, in your foo.client.js, you can do something like this:
 
@@ -58,6 +60,9 @@ _Example_:
 When you need to send messages to all connected clients, or a subset thereof, it's channels to the rescue. A channel is a glorified event publisher, who just happens to publish its events across connected clients via a socket.io broadcast.
 
 The name you choose for your channel can also serve as a means of limiting the scope of which clients receive messages. The following examples illustrate the ease with which we can implement a chat widget using the concept of channels.
+
+Channels are driven by the client-side. What I mean by that, is that you make your calls to feather.socket.addChannel from the client, not the server. Likewise, the actual events and messages are originated from the client. 
+So when two browsers access the same page, and they both create channels of the same name, it's.
 
 _Example 1_:
   
