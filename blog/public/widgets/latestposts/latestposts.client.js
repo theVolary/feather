@@ -34,7 +34,7 @@ feather.ns("blog");
           if (args.success) {
             me.domEvents.unbindAll(); //avoid memory leaks
             me.get("#list").html("");
-            var template = me.templates.findById("post");
+            var template = me.templates.findById("posts");
             $.tmpl(template.tmpl, args.result).appendTo(me.get("#list"));
             me.bindUI();
           }

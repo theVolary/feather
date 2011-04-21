@@ -1,4 +1,4 @@
-<template name="post" client_enabled="true">
+<template name="posts" client_enabled="true">
   [[each(i, item) posts]]
     <li class="blogentry">
       <h3>
@@ -22,14 +22,6 @@ timestamp: ${timestamp} <!-- this timestamp is the static widget-level value -->
       see latestposts.server.js for the example usage
   -->      
   <async method="blog.getPosts">
-    [[if error]]
-      <li class="error">
-        <h3>
-          An error occured while loading blog posts: $[message]
-        </h3>
-      </li>
-    [[else]]
-      <insert_template name="post" />
-    [[/if]]
+    <insert_template name="posts" />
   </async>
 </ul>
