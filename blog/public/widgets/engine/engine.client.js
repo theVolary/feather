@@ -20,6 +20,12 @@ feather.ns("blog");
         me.toolbar.on("refresh", function() {
           me.latestposts.refreshPosts();
         });
+        me.toolbar.on("new", function() {
+          me.createPost.container.show();
+        });
+        me.createPost.on("postCreated", function() {
+          me.latestposts.refreshPosts();
+        });
         feather.auth.api.on('authenticated', function() {
           me.checkUser();
         });

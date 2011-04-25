@@ -3,14 +3,14 @@ feather.ns("featherdoc");
 var md = require("node-markdown").Markdown,
     request = require("request");
 
-featherdoc.getMarkdown = function(url, cb) {
-  //var url = 'https://github.com/mikeal/request/raw/master/README.md';
+featherdoc.getMarkdown = function(cb) {
+  var url = 'https://github.com/mikeal/request/raw/master/README.md';
   feather.logger.info("In getMarkdown");
   
   var doc = featherdoc.markdownCache.get(url);
   if (doc) {
     feather.logger.info({message:"Returning cached document for "+url, category: "featherdoc"});
-    cb({doc: doc});
+    cb(null, {doc: doc});
   } else {
     feather.logger.info({message:"Requesting " + url, category: "featherdoc"});
     request({url:url}, function(err, res, body) {
@@ -19,14 +19,14 @@ featherdoc.getMarkdown = function(url, cb) {
         if (res.statusCode == 200) {
           var output = md(body);
           featherdoc.markdownCache.add(url, output);
-          cb({doc: output});
+          cb(null, {doc: output});
         } else {
           feather.logger.error("Error getting markdown doc: " + res.statusCode);
           debugger;
-          cb({doc: url + ": " + res.statusCode});
+          cb(null, {doc: url + ": " + res.statusCode});
         }
       } else {
-        cb({doc: err.reason});
+        cb(err, null);
       }
     });
   }

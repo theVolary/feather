@@ -2,7 +2,7 @@
   [[each(i, item) posts]]
     <li class="blogentry">
       <h3>
-        $[summary] (timestamp: $[timestamp]) <!-- this timestamp value should change with each refresh -->
+        $[summary] <!--(timestamp: $[timestamp]) this timestamp value should change with each refresh -->
         <span style="font-style:italic;font-size:75%;">
           Posted on $[pubDate]
         </span>
@@ -13,7 +13,7 @@
     </li>
   [[/each]]
 </template>
-timestamp: ${timestamp} <!-- this timestamp is the static widget-level value -->
+<!-- timestamp: ${timestamp} this timestamp is the static widget-level value -->
 <ul id="list">
   <!-- the async tag requires a global static method name for a function which must be in the form
          foo = function(cb) {...}
