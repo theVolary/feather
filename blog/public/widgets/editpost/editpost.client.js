@@ -1,8 +1,8 @@
 feather.ns("blog");
 (function() {	
-	blog.createpost = feather.widget.create({
-		name: "blog.createpost",
-		path: "widgets/createpost/",
+	blog.editpost = feather.widget.create({
+		name: "blog.editpost",
+		path: "widgets/editpost/",
 		prototype: {
 			initialize: function($super, options) {
 				$super(options);
@@ -13,21 +13,23 @@ feather.ns("blog");
       bindUI: function() {
         var me = this;
         
-        me.domEvents.bind(me.get("#btnCancelCreatePost"), "click", function(event) {
+        me.domEvents.bind(me.get("#btnCancelSavePost"), "click", function(event) {
           me.container.hide();
         });
         
-        me.domEvents.bind(me.get("#btnCreatePost"), "click", function(event) {
+        me.domEvents.bind(me.get("#btnSavePost"), "click", function(event) {
           var post = {
             summary: me.get("#summary").val(),
-            post:me.get("#post").val()
+            post:me.get("#post").val(),
+            id:me.get("#hdnPostId").val()
           }; 
-          me.server_createPost(post, function(args) {
+          me.server_editPost([post], function(args) {
             if (args.success) {
               me.get("#post").val('');
               me.get("#summary").val('');
+              me.get("#hdnPostId").val('');
               me.container.hide();
-              me.fire("postCreated");
+              me.fire("postSaved");
             } else {
               var msgLine = me.get("#messageLine");
               msgLine.empty();
@@ -38,12 +40,26 @@ feather.ns("blog");
                   ul.append("<li>"+args.err.validationErrors[i]+"</li>");
                 }
               } else {
-                msgLine.append(args.err);
+                msgLine.append(args.err.message);
               }
               
             }
           });
         });
+      }, // end bindUI
+      show: function(post) {
+        var me = this;
+        me.get("#messageLine").empty();
+        if (post) {
+          me.get("#post").val(post.post);
+          me.get("#summary").val(post.summary);
+          me.get("#hdnPostId").val(post.id);
+        } else {
+          me.get("#post").val('');
+          me.get("#summary").val('');
+          me.get("#hdnPostId").val('');
+        }
+        me.container.show();
       }
 		}		
 	});	

@@ -21,9 +21,12 @@ feather.ns("blog");
           me.latestposts.refreshPosts();
         });
         me.toolbar.on("new", function() {
-          me.createPost.container.show();
+          me.editPost.show();
         });
-        me.createPost.on("postCreated", function() {
+        me.latestposts.on("editPost", function(args) {
+          me.editPost.show(args);
+        });
+        me.editPost.on("postSaved", function() {
           me.latestposts.refreshPosts();
         });
         feather.auth.api.on('authenticated', function() {
