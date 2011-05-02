@@ -5,6 +5,8 @@ var path = require("path"),
 var options = {
 	debug: true,
 	appRoot: __dirname,
+  port:8088,
+  socketPort:8089,
 	daemon: {
 		runAsDaemon: false,
 		outputPath: path.basename(__dirname) + '.out',

@@ -1,0 +1,39 @@
+.blog_editpost {
+  display: none;
+  position: absolute;
+  width: 600px;
+  top: 50%;
+  left: 50%;
+  margin-top: -25%;
+  margin-left: -300px;
+  background-color: rgba(0,0,0,0.8);
+  color: #aade32;
+  border: solid 1px rgb(42,42,29);
+  border-radius: 10px;
+  -moz-border-radius: 10px;
+  padding: 5px;
+}
+
+.blog_editpost .message {
+  color: #ff0000;
+  padding: 3px;
+}
+
+.blog_editpost .dialogTitle {
+  background-color: rgba(50,147,0,0.6);
+  color: #aade32;
+  margin: -5px -5px 0px -5px;
+  padding: 10px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  -moz-border-radius: 10px;
+  border-bottom: solid 1px rgb(42,42,29);
+}
+
+.blog_editpost form {
+  margin: 5px;
+}
+
+.blog_editpost input[name="summary"] {
+  width: 500px;
+}

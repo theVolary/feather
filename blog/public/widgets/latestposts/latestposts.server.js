@@ -13,7 +13,7 @@ blog.getPosts = function(cb) {
         doc.timestamp = (new Date()).getTime(); //for testing
         posts.push(doc);
       });
-      cb(null, {posts: posts});
+      cb(null, {posts: posts, editAuthorities: ['admin', 'editor'] });
     } else {
       cb(err.reason);
     }

@@ -39,7 +39,7 @@ feather.ns("blog");
                     if (!err) {
                       fsm.fire("loggedOut");
                     } else {
-                      me.get('#message').append(err);
+                      me.get('#message').empty().append(err);
                     }
                   });                  
                 });
@@ -67,7 +67,7 @@ feather.ns("blog");
                       if (!err) {
                         fsm.fire("loggedIn");
                       } else {
-                        me.get('#message').append(err);
+                        me.get('#message').empty().append(err);
                       }
                     }); // end login call.
                   }); // end signinButton click

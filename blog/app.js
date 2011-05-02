@@ -50,7 +50,8 @@ var options = {
         categories: {
           // values: all, trace, debug, info, warn, error, fatal, off
           'feather.http': 'off',
-          'feather.fsm': 'info'
+          'feather.fsm': 'info',
+          'blog.api': 'debug'
         },
         appenders: [
           { 
