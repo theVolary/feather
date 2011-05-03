@@ -18,9 +18,6 @@ feather.ns("blog");
           states: {
             initial: {
               stateStartup: function(fsm, args) {
-                //cache the templates
-                me.signedInTemplate = me.templates.findById("signedIn");
-                me.signedOutTemplate = me.templates.findById("signedOut");
                 if (me.get("#signoutBtn").length) {
                   return fsm.states.loggedIn;
                 }
@@ -31,7 +28,7 @@ feather.ns("blog");
               stateStartup: function(fsm, args) {
                 if (!me.get("#signoutBtn").length) {
                   me.get("#signInPanel").html("");
-                  $.tmpl(me.signedInTemplate.tmpl, {user: feather.auth.user}).appendTo(me.get("#signInPanel"));
+                  $.tmpl(me.templates.signedIn, {user: feather.auth.user}).appendTo(me.get("#signInPanel"));
                 }
                 //wire the signInHandler
                 me.signOutHandler = me.domEvents.bind(me.get("#signoutBtn"), "click", function() {
@@ -57,7 +54,7 @@ feather.ns("blog");
                 if (!me.get(".templating_error").length) {
                   if (!me.get("#signinBtn").length) {
                     me.get("#signInPanel").html("");
-                    $.tmpl(me.signedOutTemplate.tmpl).appendTo(me.get("#signInPanel"));
+                    $.tmpl(me.templates.signedOut).appendTo(me.get("#signInPanel"));
                   }
                   //wire the signInHandler
                   me.signInHandler = me.domEvents.bind(me.get("#signinBtn"), "click", function() {

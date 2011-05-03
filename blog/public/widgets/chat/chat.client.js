@@ -19,9 +19,6 @@
       },
       onReady: function() {
         var me = this;
-            
-        //cache the message template
-        this.messageTemplate = this.templates.findById("message");
         
         this.bindUI();
         
@@ -85,7 +82,7 @@
       },
       newMessage: function(data) {
         var conversation = this.get("#conversation");
-        $.tmpl(this.messageTemplate.tmpl, data).appendTo(conversation);
+        $.tmpl(this.templates.message, data).appendTo(conversation);
         conversation.scrollTop(conversation.height());
         if (data.remote && this.notifier) {
           this.notifier.load();
