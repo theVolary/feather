@@ -2,15 +2,7 @@
   
   feather.ns("blog");
   
-  //create a comm channel to route chat messages through
-  var chatChannel = feather.socket.addChannel("blog.chat"); //NOTE: the name could be keyed by page name/etc... 
-  
-  var messageTemplate = [
-    '<div class="message">',
-      '<span class="namelabel">${name} :</span>',
-      '<span>${message}</span>',
-    '</div>'
-  ].join('');
+  var chatChannel = feather.socket.subscribe("blog:chat");
 
   blog.chat = feather.widget.create({
     name: "blog.chat",
@@ -26,14 +18,34 @@
         }
       },
       onReady: function() {
+        var me = this;
+        
+        this.bindUI();
+        
+        /**
+         * update the UI when other clients connect
+         */
+        chatChannel.on("connection", function(args) {
+          alert("connection");
+        });
+        
+        /**
+         * respond to other clients' messages
+         */
+        chatChannel.on("chat", function(args) {
+          me.newMessage({
+            name: args.name,
+            message: args.message,
+            remote: true
+          });
+        });
+      },
+      bindUI: function() {
         var me = this,
             domEvents = this.domEvents,
             namebox = me.get("#namebox"),
             chatbox = me.get("#chatbox");
-        
-        /**
-         * simple ui behaviors
-         */
+
         namebox.focus(function() {
           namebox.unbind();
           namebox[0].value = "";
@@ -53,7 +65,7 @@
             remote: false
           };
           me.newMessage(data);
-          chatChannel.fire("chat", data);
+          chatChannel.send("chat", data);
         };
         
         /**
@@ -67,21 +79,10 @@
             sendMessage();
           }
         });
-        
-        /**
-         * resond to other clients' messages
-         */
-        chatChannel.on("chat", function(args) {
-          me.newMessage({
-            name: args.name,
-            message: args.message,
-            remote: true
-          });
-        });
       },
       newMessage: function(data) {
         var conversation = this.get("#conversation");
-        $.tmpl(messageTemplate, data).appendTo(conversation);
+        $.tmpl(this.templates.message, data).appendTo(conversation);
         conversation.scrollTop(conversation.height());
         if (data.remote && this.notifier) {
           this.notifier.load();
