@@ -35,7 +35,7 @@ exports.BlogApi = Class.create({
     var dbDoc = {
       summary:post.summary,
       post:post.post,
-      pub_date:(new Date()).serialize()
+      pub_date:(new Date()).toArray()
     };
     var errors = this.postIsInvalid(post);
     if (errors) {
