@@ -1,5 +1,5 @@
 <template name="posts" client_enabled="true">
-  [[each(i, item) posts]]
+  [[each(i, item) result.posts]]
     <li class="blogentry">
       <h3 postId="$[id]">
         <span id="$[id]-summary">$[summary]</span> <!--(timestamp: $[timestamp]) this timestamp value should change with each refresh -->
@@ -19,7 +19,7 @@
       be used in the template (via jQuery.tmpl)
       see latestposts.server.js for the example usage
   -->      
-  <async method="blog.getPosts">
+  <dynamic method="blog.getPosts">
     <insert_template name="posts" />
-  </async>
+  </dynamic>
 </ul>

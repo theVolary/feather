@@ -1,8 +1,8 @@
 <template client_enabled="true" name="signedIn">
   <div id="signedin" class="welcome">
-    Welcome [[if session]] 
-              $[session.user.username].
-            [[else]] 
+    Welcome [[if request]] <!-- for the server-side -->
+              $[request.session.user.username].
+            [[else]] <!-- the else case handles the client side -->
               [[if feather.auth && feather.auth.user]]
                 $[feather.auth.user.username].
               [[/if]]
@@ -21,11 +21,11 @@
   </div>
 </template>
 <div id="signInPanel">
-  <request>
-    [[if session && session.user]]
+  <dynamic>
+    [[if request.session && request.session.user]]
       <insert_template name="signedIn"/>
     [[else]]
       <insert_template name="signedOut"/>
     [[/if]]
-  </request>
+  </dynamic>
 </div>
