@@ -33,6 +33,7 @@ exports.BlogApi = Class.create({
   savePost: function(post, callback) {
     feather.logger.info({message: 'Creating post titled ${summary} with id ${id}', replacements:post, category:'blog.api'});
     var dbDoc = {
+      id: post.id,
       summary:post.summary,
       post:post.post,
       pub_date:(new Date()).toArray()
@@ -41,15 +42,9 @@ exports.BlogApi = Class.create({
     if (errors) {
       callback && callback({message:"Post has validation errors.", validationErrors:errors});
     } else {
-      if (post.id) {
-        feather.data.appdb.save(post.id, dbDoc, function(err, results) {
-          callback && callback(err, results);
-        });
-      } else {
-        feather.data.appdb.save(dbDoc, function(err, results) {
-          callback && callback(err, results);
-        });
-      }
+      feather.data.appdb.saveOrUpdate(dbDoc, function(err, results) {
+        callback && callback(err, results);
+      });
     }
   },
   postIsInvalid: function(post) {
