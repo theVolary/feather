@@ -40,7 +40,7 @@ feather.ns("blog");
           if (args.success) {
             me.domEvents.unbindAll(); //avoid memory leaks
             me.get("#list").html("");
-            $.tmpl(me.templates.posts, args.result).appendTo(me.get("#list"));
+            $.tmpl(me.templates.posts, {result: args.result}).appendTo(me.get("#list"));
             me.bindUI();
             me.checkUser();
           }

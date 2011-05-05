@@ -28,7 +28,7 @@ feather.ns("blog");
               stateStartup: function(fsm, args) {
                 if (!me.get("#signoutBtn").length) {
                   me.get("#signInPanel").html("");
-                  $.tmpl(me.templates.signedIn, {user: feather.auth.user}).appendTo(me.get("#signInPanel"));
+                  $.tmpl(me.templates.signedIn, {}).appendTo(me.get("#signInPanel"));
                 }
                 //wire the signInHandler
                 me.signOutHandler = me.domEvents.bind(me.get("#signoutBtn"), "click", function() {

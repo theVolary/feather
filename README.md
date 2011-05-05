@@ -37,7 +37,7 @@ Thus, I'm going to include some workflow instructions.
     - $: `cd feather`
     - $: `git remote add upstream git@github.com:ryedin/feather.git`
   - Dependencies (this list will change, so please continue to check it, especially as a first place to look if you do an update and run into errors that look like missing dependencies) (NOTE: yes, we plan on create a complete npm-encapsulated package to ease this pain, but for now we're still playing with things too much)
-    - $: `npm install connect`
+    - $: `npm install connect` (version 1.4 is required)
     - $: `npm install jsdom`
     - $: `npm install socket.io`
     - $: `npm install cradle`
