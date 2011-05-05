@@ -1,0 +1,59 @@
+#!/usr/bin/env node
+
+var fs = require("fs"),
+    path = require("path"),
+    spawn = require("child_process").spawn;
+
+if (!process.env.FEATHER_HOME) {
+  console.error("The environment variables FEATHER_HOME is required.");
+  process.exit(1);
+} else {
+  var stat = fs.statSync(process.env.FEATHER_HOME);
+  if (!stat.isDirectory()) {
+    console.error("The FEATHER_HOME variable location is not a directory.");
+    process.exit(2);
+  }
+}
+
+console.log("Install Ok.");
+
+var cmd = process.argv[2];
+var debug = (process.argv.length >= 3 && process.argv[2].toLowerCase() === "debug");
+if (debug) cmd = process.argv[3];
+var appIndex = (debug) ? 4 : 3;
+
+switch (cmd) {
+  case "run":
+    var args = [];
+    if (debug) args.push('debug');
+    args.push(process.env.FEATHER_HOME + '/lib/app.js');
+    
+    var appDir = "";
+    
+    if (process.argv.length < (appIndex+1) || process.argv[appIndex] === "") {
+      
+      // Assume cwd for app folder.
+      appDir = process.cwd();
+      console.log("No app specified.  Looking in " + appDir);
+      //console.error("No application specified.");
+      //process.exit(1);
+      
+    } else {
+      appDir = process.argv[appIndex];
+      if (! fs.statSync(appDir).isDirectory()) {
+        console.error(appDir + " is not a directory.");
+        process.exit(1);
+      }
+      args.push(appDir);
+    }
+    
+    console.info("Spawning server: node " + args);
+    var stdio = process.binding("stdio"), 
+        fds = [ stdio.stdinFD, stdio.stdoutFD, stdio.stderrFD ],
+        child = spawn("node", args, { cwd: appDir, customFds:fds });
+    break;
+  default: 
+    console.info("Help goes here.");
+    break;
+  
+} // end switch.

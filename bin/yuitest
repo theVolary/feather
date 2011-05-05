@@ -7,7 +7,7 @@ var sys     = require("sys"),
     YUITest = require("yuitest"),
     TestRunner = YUITest.TestRunner,
     stdout  = process.stdout,
-    stderr  = process.stderr || stdout,
+    stderr  = process.stderr,
     formatter = null;
 
 var arg, 
@@ -121,26 +121,26 @@ files = files.map(function(filename){
 switch(options.format){
     case "junitxml":
         if (options.verbose){
-            stderr.write("[INFO] Using JUnitXML output format.\n");
+            stdout.write("[INFO] Using JUnitXML output format.\n");
         }
         YUITest.Node.CLI.Format(YUITest.TestFormat.JUnitXML);
         formatter = YUITest.TestFormat.JUnitXML;
         break;
     case "xunit":
       if (options.verbose) {
-        stderr.write("[INFO] Using XUnit output format.\n");
+        stdout.write("[INFO] Using XUnit output format.\n");
       }
       break;
     case "tap":
         if (options.verbose){
-            stderr.write("[INFO] Using TAP output format.\n");
+            stdout.write("[INFO] Using TAP output format.\n");
         }
         YUITest.Node.CLI.Format(YUITest.TestFormat.TAP);
         formatter = YUITest.TestFormat.TAP;
         break;
     default:
         if (options.verbose){
-            stderr.write("[INFO] Using XUnit output format.\n");
+            stdout.write("[INFO] Using XUnit output format.\n");
         }
         YUITest.Node.CLI.XUnit();
         formatter = YUITest.TestFormat.TAP;
@@ -188,19 +188,18 @@ if (!appName || appName.length == 0) {
       test: {
         data: {
           appdb: {
-            hostUrl: 'http://localhost',
-            dbName:'featherblog',
-            auth: { username:'featheradmin', password:'password' }
+            provider:'test'
           }
         },
         logging: {
           enabled: true,
-          defaultLevel: 'all',// values: all, trace, debug, info, warn, error, fatal, off
+          defaultLevel: 'debug',// values: all, trace, debug, info, warn, error, fatal, off
           absorbConsoleLogging: true,
           categories: {
             // values: all, trace, debug, info, warn, error, fatal, off
             'feather.http': 'off',
-            'feather.fsm': 'info'
+            'feather.fsm': 'info',
+            'feather.respack':'off'
           },
           appenders: [
             { 
@@ -226,7 +225,7 @@ if (!appName || appName.length == 0) {
 			    for (i=0, len=files.length; i < len; i++){
 
 			        if (options.verbose){
-			            stderr.write("[INFO] Loading " + files[i] + "\n");
+			            stdout.write("[INFO] Loading " + files[i] + "\n");
 			        }
 
 			        if (options.webcompat){
