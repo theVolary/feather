@@ -1,4 +1,5 @@
 feather.ns("blog");
+
 blog.emptytemplate = feather.widget.create({
   name : "blog.emptytemplate",
   path : "widgets/emptytemplate/",

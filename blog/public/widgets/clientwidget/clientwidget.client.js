@@ -10,7 +10,7 @@ feather.ns("blog");
       },
       onReady : function(args) {
         var me = this;
-        alert("a clientwidget instance was created!");
+        //alert("a clientwidget instance was created!");
       }
     }
   });

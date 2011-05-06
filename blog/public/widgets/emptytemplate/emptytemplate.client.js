@@ -11,7 +11,6 @@ feather.ns("blog");
       onReady : function(args) {
         var me = this;
         var id = feather.id();
-        $("<div id='" + id + "Container'></div>").appendTo(me.container);
         
         feather.widget.load({
           path: "widgets/clientwidget/",
@@ -20,10 +19,15 @@ feather.ns("blog");
           },
           clientOptions: {
             id: id,
-            container: $("#" + id + "Container"),
+            containerOptions: {
+              title: "test",
+              width: 500,
+              height: 500,
+              modal: true
+            },
             on: {
-              ready: function(args){
-                alert("on ready: " + args.sender.id);
+              ready: function(args){ //args.sender here will be the new widget instance
+                //alert("on ready: " + args.sender.id);
               }
             }
           }

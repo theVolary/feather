@@ -30,10 +30,6 @@
   border-bottom: solid 1px rgb(42,42,29);
 }
 
-.blog_editpost form {
-  margin: 5px;
-}
-
 .blog_editpost input[name="summary"] {
   width: 500px;
 }
