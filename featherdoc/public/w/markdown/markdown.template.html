@@ -1,7 +1,7 @@
 {{if doc}}
   {{html doc}}
 {{else}}
-<async method="featherdoc.getMarkdown" params="${options.url}">
+<dynamic method="featherdoc.getMarkdown" params="${options.url}">
 	[[html doc]]
-</async>
+</dynamic>
 {{/if}}

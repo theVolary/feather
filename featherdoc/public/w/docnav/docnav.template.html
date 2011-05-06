@@ -1,10 +1,10 @@
-<template client_enabled="true" name="navItem">
+<template name="navItem">
   <li><a href="$[navItem.url]" class="navitem $[navItem.type]" type="$[navItem.type]" >$[navItem.name]</a></li>
 </template>
 <ul class="navList">
-  <async method="featherdoc.getNavItems">
-    [[each(i, navItem) navItems]]
+  <dynamic method="featherdoc.getNavItems">
+    [[each(i, navItem) result.navItems]]
     <insert_template name="navItem"/>
     [[/each]]
-  </async>
+  </dynamic>
 </ul>

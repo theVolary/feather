@@ -1,0 +1,71 @@
+{
+  "debug": true,
+  "port":8088,
+  "socketPort":8089,
+  "daemon": {
+    "runAsDaemon": false
+  },
+  "environments": {
+    "dev": {
+      "auth": {
+        "enabled": false
+      },
+      "logging": {
+        "enabled": true,
+        "defaultLevel": "all",
+        "absorbConsoleLogging": true,
+        "categories": {
+          "feather.http": "off",
+          "feather.fsm": "info"
+        },
+        "appenders": [
+          {
+            "type": "console",
+            "options": {
+              "layout": "colored"
+            }
+          }, 
+          {
+            "type": "file",
+            "disabled": true,
+            "options": {
+              "layout": "colored",
+              "filename": "featherblog.log",
+              "maxFileSize": 10485760,
+              "numBackups": 2,
+              "filePollInterval": 60,
+              "includedCategories": ["feather.http"],
+              "levelThreshold": "info"
+            }
+          }, 
+          {
+            "type": "file",
+            "disabled": true,
+            "options": {
+              "layout": "colored",
+              "filename": "nonhttp.log",
+              "maxFileSize": 10485760,
+              "numBackups": 2,
+              "filePollInterval": 60,
+              "excludedCategories": ["feather.http"]
+            }
+          }, 
+          {
+            "type": "url",
+            "disabled": true,
+            "options": {
+              "host": "localhost",
+              "port": "5984",
+              "path": "/featherblog_log/",
+              "excludedCategories": ["feather.http", "feather.fsm"]
+            }
+          }
+        ],
+        "templates": [{
+          "id": "separator",
+          "template": "-------------------------------------------------------------------------"
+        }]
+      }
+    }
+  }
+}

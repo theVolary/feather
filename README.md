@@ -43,8 +43,14 @@ Thus, I'm going to include some workflow instructions.
     - $: `npm install cradle`
     - $: `npm install yuitest`
     - $: `npm install daemon`
+    - $: `cd featherdoc`
+    - $: `mkdir node_modules` (If this step is omitted, npm will install it in feather's copy of node_modules rather than create the folder for you.)
     - $: `npm install node-markdown` (required for the featherdoc app)
+    - $: `cd ..`
+  - Setup
+    - $: `bin/setup.sh` This will create the FEATHER_HOME environment variable in your user's `~/.profile` file.  It will also add feather's bin dir to your path.
   - Symlink Requirements (this section is also subject to change)
+    - 5/5/2011: as of today, the symlinks are no longer required.
     - in order to break out of Connect.static's security model, we currently have a symlink requirement for each app (/blog and /test are examples of apps)
     - the symlink must point to the /feather/lib directory and must be named 'featherlib'
       - $: `cd blog`

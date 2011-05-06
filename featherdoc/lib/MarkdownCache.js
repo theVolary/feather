@@ -25,6 +25,4 @@ MarkdownCache.prototype = {
       return null;
     }
   }
-  
 };
-
