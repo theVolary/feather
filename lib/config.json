@@ -1,0 +1,32 @@
+{
+  "debug": false,
+  "useEnv": "dev",
+  "featherRoot": "",
+  "appRoot": "",
+  "daemon": {
+    "runAsDaemon": false,
+    "outputPath": "feather-app.out",
+    "pidPath": "/tmp/feather-app.pid"
+  },
+  "auth": {
+    "enabled": false,
+    "userIdPrefix": "org.couchdb.user:"
+  },
+  "domPoolSize": {
+    "min": 10, 
+    "max": 20
+  }, 
+  "session": {
+    "config": {
+      "key": "featherblog.sid",
+      "cookie": { "path": "/", "httpOnly": false, "maxAge": 14400000 },
+      "secret": "feather app key"
+    },
+    "ignorePaths": ["/robots.txt"]
+  },
+  "environments": {
+    "dev": {},
+    "test": {}, 
+    "prod": {}
+  }
+}

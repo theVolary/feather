@@ -37,14 +37,20 @@ Thus, I'm going to include some workflow instructions.
     - $: `cd feather`
     - $: `git remote add upstream git@github.com:ryedin/feather.git`
   - Dependencies (this list will change, so please continue to check it, especially as a first place to look if you do an update and run into errors that look like missing dependencies) (NOTE: yes, we plan on create a complete npm-encapsulated package to ease this pain, but for now we're still playing with things too much)
-    - $: `npm install connect`
+    - $: `npm install connect` (version 1.4 is required)
     - $: `npm install jsdom`
     - $: `npm install socket.io`
     - $: `npm install cradle`
     - $: `npm install yuitest`
     - $: `npm install daemon`
+    - $: `cd featherdoc`
+    - $: `mkdir node_modules` (If this step is omitted, npm will install it in feather's copy of node_modules rather than create the folder for you.)
     - $: `npm install node-markdown` (required for the featherdoc app)
+    - $: `cd ..`
+  - Setup
+    - $: `bin/setup.sh` This will create the FEATHER_HOME environment variable in your user's `~/.profile` file.  It will also add feather's bin dir to your path.
   - Symlink Requirements (this section is also subject to change)
+    - 5/5/2011: as of today, the symlinks are no longer required.
     - in order to break out of Connect.static's security model, we currently have a symlink requirement for each app (/blog and /test are examples of apps)
     - the symlink must point to the /feather/lib directory and must be named 'featherlib'
       - $: `cd blog`

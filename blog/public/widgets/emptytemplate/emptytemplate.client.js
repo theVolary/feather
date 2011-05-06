@@ -11,14 +11,14 @@ feather.ns("blog");
       onReady : function(args) {
         var me = this;
         var id = feather.id();
-        
+
         feather.widget.load({
+          id: id,
           path: "widgets/clientwidget/",
           serverOptions: {
             foo: "bar"
           },
           clientOptions: {
-            id: id,
             containerOptions: {
               title: "test",
               width: 500,
@@ -27,7 +27,7 @@ feather.ns("blog");
             },
             on: {
               ready: function(args){ //args.sender here will be the new widget instance
-                //alert("on ready: " + args.sender.id);
+                alert("on ready: " + args.sender.id);
               }
             }
           }

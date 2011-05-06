@@ -13,7 +13,7 @@ feather.ns("blog");
         var me = this;
         feather.auth.api.on('authenticated', function() {
           me.checkUser();
-        });
+        }, me); //pass disposable object to track disposal to clean up handlers (disposable objects are expected to fire a 'disposed' event)
         this.bindUI();
       },
       bindUI: function() {
@@ -60,7 +60,7 @@ feather.ns("blog");
               summary: $('#'+postId+'-summary').text(),
               post: $('#'+postId+'-post').text()
             };
-            me.fire("editPost", post);
+            me.fire("editPost", {post: post});
           });
         }
       }

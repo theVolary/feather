@@ -22,7 +22,6 @@ featherdoc.getMarkdown = function(cb) {
           cb(null, {doc: output});
         } else {
           feather.logger.error("Error getting markdown doc: " + res.statusCode);
-          debugger;
           cb(null, {doc: url + ": " + res.statusCode});
         }
       } else {

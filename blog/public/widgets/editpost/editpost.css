@@ -29,7 +29,3 @@
   -moz-border-radius: 10px;
   border-bottom: solid 1px rgb(42,42,29);
 }
-
-.blog_editpost input[name="summary"] {
-  width: 500px;
-}

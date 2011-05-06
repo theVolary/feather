@@ -21,19 +21,48 @@ feather.ns("blog");
           me.latestposts.refreshPosts();
         });
         me.toolbar.on("new", function() {
-          me.editPost.show();
+          me.editPost();
         });
         me.latestposts.on("editPost", function(args) {
-          me.editPost.show(args);
-        });
-        me.editPost.on("postSaved", function() {
-          me.latestposts.refreshPosts();
+          me.editPost(args.post);
         });
         feather.auth.api.on('authenticated', function() {
           me.checkUser();
         });
         feather.auth.api.on('loggedOut', function() {
           me.toolbar.removeButton({name:'new'});
+        });
+      },
+      editPost: function(post) {
+        var me = this;
+        var id = feather.id();
+        feather.widget.load({
+          id: id,
+          path: "widgets/editpost/",
+          clientOptions: {
+            post: post,
+            containerOptions: {
+              title: "Edit Post",
+              width: 800,
+              height: 350,
+              modal: true,
+              buttons: {
+                SAVE: function() {
+                  var w = feather.widget.widgets.findById(id);
+                  w.savePost(function(err) {
+                    if (!err) {
+                      w.dispose();
+                      me.latestposts.refreshPosts();
+                    }
+                  });
+                },
+                Cancel: function() {
+                  var w = feather.widget.widgets.findById(id);
+                  w.dispose();
+                }
+              }
+            }
+          }
         });
       }
     }

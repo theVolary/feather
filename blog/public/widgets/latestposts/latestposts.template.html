@@ -13,11 +13,13 @@
 </template>
 <!-- timestamp: ${timestamp} this timestamp is the static widget-level value -->
 <ul id="list">
-  <!-- the async tag requires a global static method name for a function which must be in the form
+  <!-- When using the dynamic tag to invoke a function, a global static function is required.
+       The function must be in the form
          foo = function(cb) {...}
-      where cb is a callback function that is called, passing a result object that will then
+      where cb is a callback function that is called (with the 'error as first argument' pattern), 
+      passing a result object as the 2nd argument that will then
       be used in the template (via jQuery.tmpl)
-      see latestposts.server.js for the example usage
+      see latestposts.server.js for the example usage (the blog.getPosts contrived example)
   -->      
   <dynamic method="blog.getPosts">
     <insert_template name="posts" />

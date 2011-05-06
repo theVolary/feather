@@ -1,0 +1,47 @@
+{
+  "debug":true,
+  "environments": {
+    "dev": {
+      "data": {
+        "authdb": {
+        },
+        "metadb": {
+        },
+        "appdb": {
+          "hostUrl": "http://localhost",
+          "dbName":"featherblog",
+          "auth": { "username":"featheradmin", "password":"password" }
+        },
+        "authdb": {
+          "hostUrl": "http://localhost",
+          "dbName": "_users",
+          "auth": { "username":"featheradmin", "password":"password" }
+        }
+      },
+      "auth": {
+        "enabled": true,
+        "userIdPrefix": "org.couchdb.user:"
+      },
+      "logging": {
+        "enabled": true,
+        "defaultLevel": "all",
+        "absorbConsoleLogging": true,
+        "categories": {
+          "feather.http": "off",
+          "feather.fsm": "info",
+          "blog.api": "debug",
+          "feather.respack":"warn"
+        },
+        "appenders": [
+          { 
+            "type": "console", 
+            "options": { "layout":"colored" } 
+          }
+        ],
+        "templates": [
+          {"id":"separator", "template":"-------------------------------------------------------------------------"}
+        ]
+      }
+    }
+  }
+}
