@@ -18,27 +18,36 @@ feather.ns("featherdoc");
       },
       loadDoc: function(options) {
         var me = this;
-        var docContainer = me.get('#documentContainer');
-        docContainer.addClass('shadow');
         var widgetName = "markdown";
-        if (options.type === "api") {
-          widgetName = null;
-          docContainer.empty().append('<iframe src="'+options.url+'" name="apidoc" id="apidoc-iframe" class="apidoc-iframe" />');
-          var iframe = jQuery('#apidoc-iframe');
-          iframe.height(window.innerHeight - iframe.offset().top - 10); 
+        var docContainer = me.get('#documentContainer');
+        if (! docContainer.hasClass('shadow'))
+          docContainer.addClass('shadow');
+        if (currWidget && currWidget.dispose) {
+          console.log("Disposing widget");
+          currWidget.dispose();
+          currWidget = null;
+          console.log("Widget disposed.");
+        } else {
+          docContainer.empty();
         }
         
-        if (currWidget) {
-          currWidget.dispose();
+        if (options.type === "api") {
+          widgetName = null;
+          docContainer.append('<iframe src="'+options.path+'" name="apidoc" id="apidoc-iframe" class="apidoc-iframe" />');
+          var iframe = jQuery('#apidoc-iframe');
+          iframe.height(window.innerHeight - iframe.offset().top - 10);
         }
+        
         if (widgetName) {        
           feather.widget.load({
+            id: feather.id(),
             path:"w/"+widgetName+"/",
             serverOptions: {
-              url: options.url
+              path: options.path,
+              method: options.method
             },
             clientOptions: {
-              container: me.get('#documentContainer'),
+              container: docContainer,
               keepContainerOnDispose: true,
               on: {
                 ready: function(args) {
