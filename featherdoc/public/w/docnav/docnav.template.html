@@ -1,5 +1,5 @@
 <template name="navItem">
-  <li><a href="$[navItem.url]" class="navitem $[navItem.type]" type="$[navItem.type]" >$[navItem.name]</a></li>
+  <li><a href="$[navItem.path]" class="navitem $[navItem.type]" type="$[navItem.type]" method="$[navItem.method]" >$[navItem.name]</a></li>
 </template>
 <ul class="navList">
   <dynamic method="featherdoc.getNavItems">

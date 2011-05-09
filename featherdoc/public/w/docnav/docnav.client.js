@@ -13,7 +13,12 @@ feather.ns("featherdoc");
         me.domEvents.bind(me.get('.navitem'), 'click', function(e) {
           e.preventDefault();
           var el = $(this);
-          me.fire('nav', {url: el.attr('href'), type:el.attr('type')});
+          var navOptions = {
+            type:el.attr('type'),
+            method:el.attr('method'),
+            path:el.attr('href')
+          };
+          me.fire('nav', navOptions);
         });
       }
 		}		

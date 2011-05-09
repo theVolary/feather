@@ -1,33 +1,50 @@
 feather.ns("featherdoc");
 
 var md = require("node-markdown").Markdown,
-    request = require("request");
+    fs = require("fs");
+    //request = require("request");
 
-featherdoc.getMarkdown = function(cb) {
-  var url = 'https://github.com/mikeal/request/raw/master/README.md';
+featherdoc.getMarkdown = function(path, method, cb) {
   feather.logger.info("In getMarkdown");
-  
-  var doc = featherdoc.markdownCache.get(url);
+  debugger;
+  var myPath = (method === "fs") ? (feather.appOptions.appRoot + '/' + path) : path;
+  var doc = featherdoc.markdownCache.get(myPath);
   if (doc) {
-    feather.logger.info({message:"Returning cached document for "+url, category: "featherdoc"});
+    feather.logger.info({message:"Returning cached document for "+myPath, category: "featherdoc"});
     cb(null, {doc: doc});
   } else {
-    feather.logger.info({message:"Requesting " + url, category: "featherdoc"});
-    request({url:url}, function(err, res, body) {
-      debugger;
-      if (!err) {
-        if (res.statusCode == 200) {
-          var output = md(body);
-          featherdoc.markdownCache.add(url, output);
+    feather.logger.info({message:"Loading " + myPath, category:"featherdoc"});
+    if (method === "fs") {
+      fs.readFile(myPath, "utf-8", function(err, data) {
+        if (!err) {
+          var output = md(data);
+          featherdoc.markdownCache.add(myPath, output);
           cb(null, {doc: output});
         } else {
-          feather.logger.error("Error getting markdown doc: " + res.statusCode);
-          cb(null, {doc: url + ": " + res.statusCode});
+          feather.logger.error({message:"Error getting markdown doc: " + err.reason, exception:err, category:"featherdoc"});
+          cb(err, null);
         }
-      } else {
-        cb(err, null);
-      }
-    });
+      });
+    } else if (method === "url") {
+      feather.logger.info({message:"Requesting " + myPath, category: "featherdoc"});
+      request({url:myPath}, function(err, res, body) {
+        if (!err) {
+          if (res.statusCode == 200) {
+            var output = md(body);
+            featherdoc.markdownCache.add(myPath, output);
+            cb(null, {doc: output});
+          } else {
+            feather.logger.error("Error getting markdown doc: " + res.statusCode);
+            cb(null, {doc: myPath + ": " + res.statusCode});
+          }
+        } else {
+          cb(err);
+        }
+      });
+    } else {
+      feather.logger.error({message:"Unknown doc lookup method: " + method, category: "featherdoc"});
+      cb("Unknown doc lookup method: " + method);
+    }
   }
 };
 
@@ -37,12 +54,6 @@ featherdoc.markdown = feather.widget.create({
 	prototype: {
 		initialize: function($super, options) {
 			$super(options);
-			this.url = options.url;
-      if (options.url) {
-        featherdoc.getMarkdown(options.url, function(result) {
-          this.doc = result.doc;
-        });
-      }
 		}
 	}		
 });
