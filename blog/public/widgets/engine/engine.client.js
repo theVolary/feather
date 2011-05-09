@@ -40,7 +40,7 @@ feather.ns("blog");
           id: id,
           path: "widgets/editpost/",
           clientOptions: {
-            post: post,
+            model: {post: post},
             containerOptions: {
               title: "Edit Post",
               width: 800,
