@@ -12,6 +12,23 @@
     "enabled": false,
     "userIdPrefix": "org.couchdb.user:"
   },
+  "data": {
+    "datalinking": {
+      "enabled": true
+    }
+  },
+  "ui": {
+    "enabled": true,
+    "provider": {
+      "jsFiles": [
+        "feather-client/lib/jqueryUI-1.8.12/js/jquery-ui.js",
+        "feather-client/ui.js"
+      ],
+      "cssFiles": [
+        "feather-client/lib/jqueryUI-1.8.12/css/black-tie/jquery-ui-1.8.12.custom.css"
+      ]
+    }
+  },
   "domPoolSize": {
     "min": 10, 
     "max": 20
