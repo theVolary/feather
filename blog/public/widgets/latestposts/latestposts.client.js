@@ -53,7 +53,7 @@ feather.ns("blog");
             return '<input type="button" value="Edit" postid="' + $($('.blogentry h3')[index]).attr('postid') + '" class="btnEditPost" />';
           });
           me.domEvents.bind(me.get(".btnEditPost"), "click", function(event) {
-            event.preventDefault();
+            event.stopPropagation();
             var postId = $(this).attr('postId');
             var post = {
               id: postId,
