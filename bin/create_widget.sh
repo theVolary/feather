@@ -16,15 +16,15 @@ FULLPATH="${APP}/public/${LOCATION}/${NAME}"
 CLIENT_TEMPLATE=$(cat <<EOF
 feather.ns("${APP}");
 (function() {	
-	${APP}.${NAME} = feather.widget.create({
-		name: "${APP}.${NAME}",
-		path: "${LOCATION}/${NAME}/",
-		prototype: {
-			initialize: function(\$super, options) {
-				\$super(options);
-			}
-		}		
-	});	
+  ${APP}.${NAME} = feather.widget.create({
+    name: "${APP}.${NAME}",
+    path: "${LOCATION}/${NAME}/",
+    prototype: {
+      initialize: function(\$super, options) {
+        \$super(options);
+      }
+    }	
+  });	
 })();
 EOF
 )
@@ -32,15 +32,14 @@ EOF
 SERVER_TEMPLATE=$(cat <<EOF
 feather.ns("${APP}");
 ${APP}.${NAME} = feather.widget.create({
-	name: "${APP}.${NAME}",
-	path: "${LOCATION}/${NAME}/",
-	prototype: {
-		initialize: function(\$super, options) {
-			\$super(options);
-		}
-	}		
+  name: "${APP}.${NAME}",
+  path: "${LOCATION}/${NAME}/",
+  prototype: {
+    initialize: function(\$super, options) {
+      \$super(options);
+    }
+  }	
 });
-
 EOF
 )
 
