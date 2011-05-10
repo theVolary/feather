@@ -15,45 +15,86 @@ if (!process.env.FEATHER_HOME) {
   }
 }
 
-console.log("Install Ok.");
-
 var cmd = process.argv[2];
 var debug = (process.argv.length >= 3 && process.argv[2].toLowerCase() === "debug");
 if (debug) cmd = process.argv[3];
 var appIndex = (debug) ? 4 : 3;
 
-switch (cmd) {
-  case "run":
+var commands = {
+  run: function() {
     var args = [];
     if (debug) args.push('debug');
     args.push(process.env.FEATHER_HOME + '/lib/app.js');
     
-    var appDir = "";
+    var appDir = getAppDir();
     
-    if (process.argv.length < (appIndex+1) || process.argv[appIndex] === "") {
-      
-      // Assume cwd for app folder.
-      appDir = process.cwd();
-      console.log("No app specified.  Looking in " + appDir);
-      //console.error("No application specified.");
-      //process.exit(1);
-      
-    } else {
-      appDir = process.argv[appIndex];
-      if (! fs.statSync(appDir).isDirectory()) {
-        console.error(appDir + " is not a directory.");
-        process.exit(1);
-      }
-      args.push(appDir);
-    }
+    args.push(appDir);
     
     console.info("Spawning server: node " + args);
-    var stdio = process.binding("stdio"), 
-        fds = [ stdio.stdinFD, stdio.stdoutFD, stdio.stderrFD ],
-        child = spawn("node", args, { cwd: appDir, customFds:fds });
-    break;
-  default: 
-    console.info("Help goes here.");
-    break;
+    runChild("node", args, appDir);
+  },
+  test: function() {
+    var args = [];
+    if (debug) args.push('debug');
+    var appDir = getAppDir();
+    args.push(process.env.FEATHER_HOME + '/bin/yuitest');
+    var otherArgs = process.argv.slice(appIndex);
+    Array.prototype.push.apply(args, otherArgs);
+    console.info("Spawning test process node " + args);
+    runChild("node", args, appDir);
+  },
+  help: function() {
+    outputUsage();
+  }
+};
+commands.usage = commands.help;
+
+if (commands.hasOwnProperty(cmd)) {
+  commands[cmd].call();
+} else {
+  outputUsage();
+}
+
+// switch (cmd) {
+//   case "run":
+//     commands.run();    
+//     break;
+//   case "test":
+//     commands.test();
+//     break;
+//   default: 
+//     console.info("Help goes here.");
+//     break;
   
-} // end switch.
+// } // end switch.
+
+function getAppDir() {
+  var appDir = "";
+    
+  if (process.argv.length < (appIndex+1) || process.argv[appIndex] === "") {
+    
+    // Assume cwd for app folder.
+    appDir = process.cwd();
+    console.log("No app specified.  Looking in " + appDir);    
+  } else {
+    appDir = process.argv[appIndex];
+    if (! fs.statSync(appDir).isDirectory()) {
+      console.error(appDir + " is not a directory.");
+      process.exit(1);
+    }
+  }
+  return appDir;
+}
+
+function runChild(cmd, args, childCwd) {
+  if (!childCwd) {
+    childCwd = process.cwd();
+  }
+  var stdio = process.binding("stdio"),
+      fds = [ stdio.stdinFD, stdio.stdoutFD, stdio.stderrFD ],
+      child = spawn(cmd, args, { cwd: childCwd, customFds:fds });
+}
+
+function outputUsage() {
+  console.info("Usage goes here.");
+}
