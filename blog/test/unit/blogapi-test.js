@@ -1,9 +1,9 @@
 (function() {
 var assert = require("assert"),
-    sys = require("sys"),
+    sys = require("util"),
     sinon = require("sinon"),
     cradle = require("cradle"),
-    blogapi = require("blogapi").BlogApi,
+    blogapi = require("../../lib/blogapi").BlogApi,
     Y = YUITest = this.YUITest || require("yuitest");
 var testEntries = {"total_rows":3,"offset":0,"rows":[
     {"id":"T07c6a417c9d30cbe8daff66d26f9adff","key":[2011,2,3,22,30,0],"value":{"pubDate":{},"summary":"Test: The feather Blog is Born","post":"Today the feather Blog was born.  Long may it live."}},
