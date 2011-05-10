@@ -4,8 +4,7 @@ Each app should have a test folder with two folders inside: unit, and integratio
 
 ## Running Tests ##
 The bin folder of the feather framework contains a shell-executable node script that can be used to run tests.  This script starts the user's application, and when it is in the ready state, starts executing tests.  By having the server running, this allows all features of a feather app to be tested.  Script usage is as follows:  
-  
-`cd $feather_HOME`  
-`bin/yuitest app-name [options] test-folder-path`  
-_for example_  
-`bin/yuitest blog --format junitxml blog/test/unit/*` will run the tests for the blog sample app.
+
+`feather [debug] test path/to/app [options] test-folder-path-relative-to-app-path`  
+_for example, when in the feather home folder_  
+`feather test blog --format junitxml test/unit/*` will run the tests for the blog sample app.  
