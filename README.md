@@ -30,12 +30,15 @@ I assume the Windows/cygwin flavors of node builds should also work but we aren'
 Thus, I'm going to include some workflow instructions.
   - This is obviously not a requirement, but for sake of convenience I'm basing paths of the following root folder (just because that's our internal convention): ~/mainline
 - Setup 
-  - first, fork the project (via your github account) from [https://github.com/ryedin/feather](https://github.com/ryedin/feather)
+  - first, fork the project (via your github account) from [https://github.com/ryedin/jojojs](https://github.com/ryedin/jojojs)
   - clone locally (and recursively to auto pull the submodules), and remember to add the remote to 'upstream' as explained here: [http://help.github.com/fork-a-repo/](http://help.github.com/fork-a-repo/)
     - $: `cd ~/mainline`
     - $: `git clone --recursive [your-fork-url]`
     - $: `cd feather`
     - $: `git remote add upstream git@github.com:ryedin/feather.git`
+  -it has been noted that the recursive argument when cloning the repo does not always work so run the following commands
+    - $: `git submodule init`
+    - $: `git submodule update`
   - Dependencies (this list will change, so please continue to check it, especially as a first place to look if you do an update and run into errors that look like missing dependencies) (NOTE: yes, we plan on create a complete npm-encapsulated package to ease this pain, but for now we're still playing with things too much)
     - $: `npm install connect` (version 1.4 is required)
     - $: `npm install jsdom`
@@ -49,6 +52,7 @@ Thus, I'm going to include some workflow instructions.
     - $: `cd ..`
   - Setup
     - $: `bin/setup.sh` This will create the FEATHER_HOME environment variable in your user's `~/.profile` file.  It will also add feather's bin dir to your path.
+    - open .bashrc and ensure the PATH var in Feather Vars section looks like "export PATH=$FEATHER_HOME/bin:$PATH"
   - Symlink Requirements (this section is also subject to change)
     - 5/5/2011: as of today, the symlinks are no longer required.
     - in order to break out of Connect.static's security model, we currently have a symlink requirement for each app (/blog and /test are examples of apps)
