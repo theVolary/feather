@@ -170,5 +170,16 @@ function runChild(cmd, args, childCwd) {
 }
 
 function outputUsage() {
-  console.info("Usage goes here.");
+  var out = [
+    '\n#bold[#green[SYNOPSIS]]',
+    '\t#bold[feather (debug) command app/path (options)]',
+    '\tOptions in parentheses () are optional.',
+    '\n#bold[#green[COMMANDS]]',
+    '\t#green[run]:           Runs a feather app. Ex: #bold[feather (debug) run path/to/app]',
+    '\t#green[test]:          Runs tests in an app.  Ex: #bold[feather (debug) test path/to/app (options) test/folder/in/app]',
+    '\t#green[create-app]:    Creates a new app.  Ex: #bold[feather create-app app/parent/path app-name]',
+    '\t#green[create-widget]: Creates a widget in an app.  Ex: #bold[feather create-widget path/to/app widget-name]',
+    ']'
+  ];
+  console.info(color.ansify(out.join('\n').replace(/\*debug\*/g, '(debug)')));
 }
