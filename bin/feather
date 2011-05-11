@@ -1,59 +1,185 @@
 #!/usr/bin/env node
 
-var fs = require("fs"),
-    path = require("path"),
-    spawn = require("child_process").spawn;
+var fs    = require("fs"),
+    path  = require("path"),
+    spawn = require("child_process").spawn,
+    ffs   = require("../lib/util"),
+    color = require("colorize");
 
 if (!process.env.FEATHER_HOME) {
-  console.error("The environment variables FEATHER_HOME is required.");
+  logError("The environment variables #white[FEATHER_HOME] is required.");
   process.exit(1);
 } else {
   var stat = fs.statSync(process.env.FEATHER_HOME);
   if (!stat.isDirectory()) {
-    console.error("The FEATHER_HOME variable location is not a directory.");
+    logError("The FEATHER_HOME variable location is not a directory.");
     process.exit(2);
   }
 }
 
-console.log("Install Ok.");
-
+var numArgs = process.argv.length;
 var cmd = process.argv[2];
-var debug = (process.argv.length >= 3 && process.argv[2].toLowerCase() === "debug");
+var debug = (numArgs >= 3 && process.argv[2].toLowerCase() === "debug");
 if (debug) cmd = process.argv[3];
+cmd = resolveCmd(cmd);
 var appIndex = (debug) ? 4 : 3;
 
-switch (cmd) {
-  case "run":
+var commands = {
+  run: function() {
     var args = [];
     if (debug) args.push('debug');
     args.push(process.env.FEATHER_HOME + '/lib/app.js');
     
-    var appDir = "";
+    var appDir = getAppDir();
     
-    if (process.argv.length < (appIndex+1) || process.argv[appIndex] === "") {
-      
-      // Assume cwd for app folder.
-      appDir = process.cwd();
-      console.log("No app specified.  Looking in " + appDir);
-      //console.error("No application specified.");
-      //process.exit(1);
-      
-    } else {
-      appDir = process.argv[appIndex];
-      if (! fs.statSync(appDir).isDirectory()) {
-        console.error(appDir + " is not a directory.");
-        process.exit(1);
-      }
-      args.push(appDir);
-    }
+    args.push(appDir);
     
     console.info("Spawning server: node " + args);
-    var stdio = process.binding("stdio"), 
-        fds = [ stdio.stdinFD, stdio.stdoutFD, stdio.stderrFD ],
-        child = spawn("node", args, { cwd: appDir, customFds:fds });
-    break;
-  default: 
-    console.info("Help goes here.");
-    break;
-  
-} // end switch.
+    runChild("node", args, appDir);
+  },
+  test: function() {
+    var args = [];
+    if (debug) args.push('debug');
+    var appDir = getAppDir();
+    args.push(process.env.FEATHER_HOME + '/bin/yuitest');
+    var otherArgs = process.argv.slice(appIndex);
+    Array.prototype.push.apply(args, otherArgs);
+    console.info("Spawning test process node " + args);
+    runChild("node", args, appDir);
+  },
+  createApp: function() {
+    var loc = process.cwd();
+    var name = process.argv[appIndex];
+    if (numArgs === appIndex+2) {
+      loc = process.argv[appIndex];
+      name = process.argv[appIndex+1];
+    }
+    
+    var fullPath = path.join(loc, name);
+    checkResult(ffs.mkdirpSync(fullPath));
+    checkResult(ffs.mkdirpSync(path.join(fullPath, 'public', 'widgets')));
+    checkResult(ffs.mkdirpSync(path.join(fullPath, 'lib')));
+    checkResult(ffs.mkdirpSync(path.join(fullPath, 'node_modules')));
+    fs.writeFileSync(path.join(fullPath, 'lib', 'README.txt'), "Add your own js libraries here.", "utf-8");
+    fs.writeFileSync(path.join(fullPath, 'app.js'), "exports.onReady = function() {\n  \n}", "utf-8");
+    fs.writeFileSync(path.join(fullPath, 'config.json'), "{}\n");
+    fs.writeFileSync(path.join(fullPath, 'public', 'index.feather.html'), "<html>\n<head>\n  <title>Index.feather.html</title\n  <resources />\n</head>\n<body>\n  <h1>Light as a Feather</h1>\n</body>\n</html>", "utf-8");
+    console.info(color.ansify("\n#bold[#green[App #white[" + name + "] created at #white[" + fullPath + "]]]\n"));
+  },
+  createWidget: function() {
+    var appDir = getAppDir(), 
+        widgetName,
+        appName = path.basename(appDir);
+    if (numArgs < appIndex+2) {
+      logError("No widget name specified.");
+      process.exit(0);
+    } else {
+      widgetName = process.argv[appIndex+1];
+    }
+    var fullPath = path.join(appDir, 'public', 'widgets', widgetName);
+    if (path.existsSync(fullPath)) {
+      logError("Widget #white[" + widgetName + "] already exists!");
+      process.exit(0);
+    }
+    ffs.mkdirpSync(fullPath);
+    var serverTemplate = [
+      'feather.ns("' + appName + '");',
+      appName+'.'+widgetName+' = feather.widget.create({',
+      '  name: "'+appName+'.'+widgetName+'",',
+      '  path: "/widgets/'+widgetName+'/",',
+      '  prototype: {',
+      '    initialize: function($super, options) {',
+      '      $super(options);',
+      '    }',
+      '  }',
+      '});'
+    ];
+    var clientTemplate = [
+      'feather.ns("' + appName + '");',
+      '(function() {',
+      '  '+appName+'.'+widgetName+' = feather.widget.create({',
+      '    name: "'+appName+'.'+widgetName+'",',
+      '    path: "/widgets/'+widgetName+'/",',
+      '    prototype: {',
+      '      initialize: function($super, options) {',
+      '        $super(options);',
+      '      }',
+      '    }',
+      '  });',
+      '})();'
+    ];
+    fs.writeFileSync(path.join(fullPath, widgetName+'.client.js'), clientTemplate.join('\n'), "utf-8");
+    fs.writeFileSync(path.join(fullPath, widgetName+'.server.js'), serverTemplate.join('\n'), "utf-8");
+    fs.writeFileSync(path.join(fullPath, widgetName+'.template.html'), "", "utf-8");
+    fs.writeFileSync(path.join(fullPath, widgetName+'.css'), "", "utf-8");
+    console.log(color.ansify("\n#bold[#green[Widget #white["+widgetName+"] created at #white["+fullPath+"].]]\n"));
+  },
+  help: function() {
+    outputUsage();
+  }
+};
+commands.usage = commands.help;
+
+if (commands.hasOwnProperty(cmd)) {
+  commands[cmd].call();
+} else {
+  console.log("cmd is " + cmd);
+  outputUsage();
+}
+
+function checkResult(result) {
+  if (!result.result) {
+    logError(result.err);
+    process.exit(1);
+  }
+}
+
+function logError(error) {
+  console.info(color.ansify("#bold[#red[" + error + "]]"));
+}
+
+function resolveCmd(cmd) {
+  return cmd.replace(/-([a-z])/, function(m) { return m[1].toUpperCase(); });
+}
+
+function getAppDir() {
+  var appDir = "";
+    
+  if (process.argv.length < (appIndex+1) || process.argv[appIndex] === "") {
+    
+    // Assume cwd for app folder.
+    appDir = process.cwd();
+    console.log("No app specified.  Looking in " + appDir);    
+  } else {
+    appDir = process.argv[appIndex];
+    if (! fs.statSync(appDir).isDirectory()) {
+      logError(appDir + " is not a directory.");
+      process.exit(1);
+    }
+  }
+  return appDir;
+}
+
+function runChild(cmd, args, childCwd) {
+  if (!childCwd) {
+    childCwd = process.cwd();
+  }
+  var stdio = process.binding("stdio"),
+      fds = [ stdio.stdinFD, stdio.stdoutFD, stdio.stderrFD ],
+      child = spawn(cmd, args, { cwd: childCwd, customFds:fds });
+}
+
+function outputUsage() {
+  var out = [
+    '\n#bold[#green[SYNOPSIS]]',
+    '\t#bold[feather (debug) command app/path (options)]',
+    '\tOptions in parentheses () are optional.',
+    '\n#bold[#green[COMMANDS]]',
+    '\t#green[run]:           Runs a feather app. Ex: #bold[feather (debug) run path/to/app]',
+    '\t#green[test]:          Runs tests in an app.  Ex: #bold[feather (debug) test path/to/app (options) test/folder/in/app]',
+    '\t#green[create-app]:    Creates a new app.  Ex: #bold[feather create-app app/parent/path app-name]',
+    '\t#green[create-widget]: Creates a widget in an app.  Ex: #bold[feather create-widget path/to/app widget-name]',
+    ']'
+  ];
+  console.info(color.ansify(out.join('\n').replace(/\*debug\*/g, '(debug)')));
+}

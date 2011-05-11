@@ -1,13 +1,13 @@
 .featherdoc_markdown {
-  margin: 5px;
+  margin: 10px;
 }
 
-.featherdoc_markdown pre {
+.featherdoc_markdown pre, .featherdoc_markdown p code {
   font-family: Menlo, Monaco, "Courier New";
-  font-size: 12px;
-  padding: 5px;
+  font-size: 14px;
+  padding: 3px;
   border: 1px dashed #4e4955;
-  margin: 10px 0px;
+  margin: 5px 0px;
   background-color: #ece9dd; /*#d9d3bb;*/
 }
 

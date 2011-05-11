@@ -11,3 +11,5 @@ echo "" >> ~/.profile
 echo "# Feather Vars" >> ~/.profile 
 echo "export FEATHER_HOME=$FINSTALL" >> ~/.profile
 echo "export PATH=$FEATHER_HOME/bin:$PATH" >> ~/.profile
+export FEATHER_HOME=$FINSTALL
+export PATH=$FEATHER_HOME/bin:$PATH

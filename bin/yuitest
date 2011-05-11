@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-var sys     = require("sys"),
-		fs      = require("fs"),
+var util    = require("util"),
+    fs      = require("fs"),
     path    = require("path"),
     vm      = null,
     YUITest = require("yuitest"),
@@ -41,6 +41,7 @@ function getFiles(dir){
     }
 
     function traverse(dir, stack){
+        console.log("Traversing " + dir);
         stack.push(dir);
         fs.readdirSync(stack.join("/")).forEach(function(file){
             var path = stack.concat([file]).join("/");
@@ -83,17 +84,19 @@ while (arg = argv.shift()) {
   if (arg === __filename) { continue }
 
   if (arg[0] !== '-') {
-		if (first) {
-		  options.appName = arg;
-			first = false;
-		} else {
-		  //see if it's a directory or a file
-	    if (fs.statSync(arg).isDirectory()){
-	        files = files.concat(getFiles(arg));
-	    } else {
-	        files.push(arg);
-	    }
-		}
+    if (first) {
+      options.appName = arg;
+      first = false;
+    } else {
+      //see if it's a directory or a file
+      if (fs.statSync(arg).isDirectory()){
+          console.log("getting files in " + arg);
+          files = files.concat(getFiles(arg));
+      } else {
+        console.log("Pushing file " + arg);
+        files.push(arg);
+      }
+    }
   } else {
       arg = arg.match(/^--?(.+)/)[1];
       if (arg == 'format') {
@@ -121,26 +124,26 @@ files = files.map(function(filename){
 switch(options.format){
     case "junitxml":
         if (options.verbose){
-            stdout.write("[INFO] Using JUnitXML output format.\n");
+            console.info("Using JUnitXML output format.\n");
         }
         YUITest.Node.CLI.Format(YUITest.TestFormat.JUnitXML);
         formatter = YUITest.TestFormat.JUnitXML;
         break;
     case "xunit":
       if (options.verbose) {
-        stdout.write("[INFO] Using XUnit output format.\n");
+        console.info("Using XUnit output format.\n");
       }
       break;
     case "tap":
         if (options.verbose){
-            stdout.write("[INFO] Using TAP output format.\n");
+            console.info("Using TAP output format.\n");
         }
         YUITest.Node.CLI.Format(YUITest.TestFormat.TAP);
         formatter = YUITest.TestFormat.TAP;
         break;
     default:
         if (options.verbose){
-            stdout.write("[INFO] Using XUnit output format.\n");
+            console.info("Using XUnit output format.\n");
         }
         YUITest.Node.CLI.XUnit();
         formatter = YUITest.TestFormat.TAP;
@@ -153,37 +156,64 @@ switch(options.format){
 
 TestRunner.subscribe("complete", function(event){
 
-	// Write test results to file.
-	var output = formatter(event.results);
-	var path = __dirname + '/../' + appName + '/reports/test-results.xml';
-	sys.puts("Writing " + output + " to " + path);
-	fs.writeFileSync(path, output);
-	
-	feather.shutdown();
-	
-	//if there are failed tests, exit with code 1
-	if (event.results.failed){
-		process.exit(1);
-	}
+  // Write test results to file.
+  var output = formatter(event.results);
+  var path = process.cwd() + '/reports/test-results.xml';
+  util.puts("Writing report to " + path);
+  fs.writeFileSync(path, output);
+  
+  feather.shutdown();
 });
 
 var appName = options.appName;
-require.paths.unshift(__dirname + '/../' + appName);
-require.paths.unshift(__dirname + '/../' + appName+'/featherlib');
-require.paths.unshift(__dirname + '/../' + appName+'/lib');
 
 if (!appName || appName.length == 0) {
-  console.error("No application name specified");
+  console.error("No application specified");
 } else {
-  
-  var baseApp = require("featherlib/base-app");
   
   var options = {
     // Any property /not/ in the environments block is global to all environments 
     // and is the default.  Each environment may still override.
     debug: true,
     useEnv: 'test',
-    appRoot: __dirname + '/../' + appName,
+    featherRoot:process.env.FEATHER_HOME + "/lib",
+    appRoot: process.cwd(),
+    auth: {
+      enabled: false,
+      userIdPrefix: "ord.couchdb.user:"
+    },
+    data: {
+      datalinking: {
+        enabled: true
+      }
+    },
+    daemon: {
+      runAsDaemon: false
+    },
+    domPoolSize: {
+      min: 10,
+      max: 20
+    },
+    session: {
+      config: {
+        key: "feather.sid",
+        cookie: { path: "/", httpOnly: false, maxAge: 14400000 },
+        secret: "feather app key"
+      },
+      ignorePaths: ["/robots.txt"]
+    },
+    ui: {
+      enabled: true,
+      provider: {
+        jsFiles: [
+          "feather-client/lib/jqueryUI-1.8.12/js/jquery-ui.js",
+          "feather-client/ui.js"
+        ],
+        cssFiles: [
+          "feather-client/lib/jqueryUI-1.8.12/css/black-tie/jquery-ui-1.8.12.custom.css"
+        ]
+      }
+    },
     environments: {
       test: {
         data: {
@@ -214,48 +244,53 @@ if (!appName || appName.length == 0) {
         }
       }
     },
-    onReady: function() {
-			//-----------------------------------------------------------------------------
-			// Include test files
-			//-----------------------------------------------------------------------------
-			stdout.write("[INFO] Reading test files\n");
-			var i, len, output;
+    onStartup: function() {
+      //-----------------------------------------------------------------------------
+      // Include test files
+      //-----------------------------------------------------------------------------
+      feather.logger.info({message:"Reading test files\n"});
+      var i, len, output, ready = true;
 
-			if (files.length){
-			    for (i=0, len=files.length; i < len; i++){
+      if (files.length > 0){
+          for (i=0, len=files.length; i < len; i++){
 
-			        if (options.verbose){
-			            stdout.write("[INFO] Loading " + files[i] + "\n");
-			        }
+              if (options.verbose){
+                  feather.logger.info("Loading " + files[i] + "\n");
+              }
 
-			        if (options.webcompat){
-			            output = fs.readFileSync(files[i]);
-			            if (vm){
-			                vm.runInThisContext("(function(YUITest){\n" + output + "\n})", files[i])(YUITest);
-			            } else {
-			                process.compile("(function(YUITest){\n" + output + "\n})", files[i])(YUITest);
-			            }
-			        } else {
-			            try {
-			                require(files[i]);
-			            } catch (ex) {
-			                stderr.write("[ERROR] " + ex.stack);
-			                stderr.write("\n[ERROR] No tests loaded from " + files[i] + ". If you're not using CommonJS module format, try running with --webcompat option.\n");
-			                process.exit(1);
-			            }            
-			        }
-			    }
-			} else {
-			  stderr.write("[ERROR] No tests to run, exiting.\n");
-				process.exit(1);
-			}
+              if (options.webcompat){
+                  output = fs.readFileSync(files[i]);
+                  if (vm){
+                      vm.runInThisContext("(function(YUITest){\n" + output + "\n})", files[i])(YUITest);
+                  } else {
+                      process.compile("(function(YUITest){\n" + output + "\n})", files[i])(YUITest);
+                  }
+              } else {
+                  try {
+                      require(files[i]);
+                  } catch (ex) {
+                      feather.logger.error({message:ex.reason, exception: ex, immediately: true});
+                      feather.logger.error({message:"\nNo tests loaded from " + files[i] + ". If you're not using CommonJS module format, try running with --webcompat option.", immediately: true});
+                      feather.shutdown();
+                      ready = false;
+                  }            
+              }
+          }
+      } else {
+        feather.logger.error({message:"No tests to run, exiting.\n", category:"feather.test"});
+        feather.shutdown();
+        ready = false;
+      }
 
-      // Kick off the test runner.
-			stdout.write("[INFO] Running tests.\n");
-      TestRunner.run({
-          groups: options.groups ? options.groups.split(",") : null
-      });
+      if (ready) {
+        // Kick off the test runner.
+        feather.logger.info("Running tests.\n");
+        TestRunner.run({
+            groups: options.groups ? options.groups.split(",") : null
+        });
+      }
     }
   };
+  require(process.env.FEATHER_HOME + "/lib/core").bootstrap();
   feather.start(options);
 } // end else arg length != 0
