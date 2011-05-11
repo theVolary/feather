@@ -43,6 +43,7 @@ Thus, I'm going to include some workflow instructions.
     - $: `npm install cradle`
     - $: `npm install yuitest`
     - $: `npm install daemon`
+    = $: `npm install colorize` (Added 5/10/2011; used by the CLI)
     - $: `cd featherdoc`
     - $: `mkdir node_modules` (If this step is omitted, npm will install it in feather's copy of node_modules rather than create the folder for you.)
     - $: `npm install node-markdown` (required for the featherdoc app)
@@ -66,9 +67,6 @@ Thus, I'm going to include some workflow instructions.
       - browse to [http://localhost:8080/](http://localhost:8080/) and press the Go button where it says "Import the database"
       - refresh the page in your browser.  You should now see 3 sample blog entries.  If you click on them they should expand to show the full blog post.
 - Starting the Sample App
-At this point you should be able to run the blog app and hit it from a browser:
-  - $: cd ~/mainline/feather/blog
-  - $: node app.js
-  - in a browser: [http://localhost:8080/](http://localhost:8080/)  (replace localhost with the appropriate IP address or hostname if running on a VM... obviously :P)
-      
-**NOTE**: AS OF NOW (3/11/2011), you must run the 'app.js' file for your app (/blog, /test, etc.) from within that directory!
+At this point you should be able to run the blog app and hit it from a browser:  
+  - $: `feather run ~/mainline/feather/blog`  
+  - in a browser: [http://localhost:8080/](http://localhost:8080/)  (replace localhost with the appropriate IP address or hostname if running on a VM... obviously :P)  
