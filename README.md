@@ -36,7 +36,7 @@ Thus, I'm going to include some workflow instructions.
     - $: `git clone --recursive [your-fork-url]`
     - $: `cd feather`
     - $: `git remote add upstream git@github.com:ryedin/feather.git`
-  -it has been noted that the recursive argument when cloning the repo does not always work so run the following commands
+    -it has been noted that the recursive argument when cloning the repo does not always work so run the following commands
     - $: `git submodule init`
     - $: `git submodule update`
   - Dependencies (this list will change, so please continue to check it, especially as a first place to look if you do an update and run into errors that look like missing dependencies) (NOTE: yes, we plan on create a complete npm-encapsulated package to ease this pain, but for now we're still playing with things too much)
