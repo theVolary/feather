@@ -7,4 +7,4 @@ lib/node-core-enhancements/*
 featherdoc/public/docs
 featherdoc/lib/node-jsdoc-toolkit/*
 node_modules
-*.sublime-project.sublime-project
+*.sublime-project
