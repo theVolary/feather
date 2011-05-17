@@ -12,6 +12,7 @@ feather.ns("featherdoc");
 //];
 featherdoc.navItems = [
   // Paths should be local to featherdoc, not public.
+  {type:'markdown', name:'Setup README', method:'fs', path:'../README.md'},
   {type:'markdown', name:'Data', method:'fs', path:'docs/data.md'},
   {type:'markdown', name:'Applications', method:'fs', path:'docs/applications.md'},
   {type:'markdown', name:'Auth', method:'fs', path:'docs/auth.md'},

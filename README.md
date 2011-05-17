@@ -39,29 +39,30 @@ Thus, I'm going to include some workflow instructions.
     - it has been noted that the recursive argument when cloning the repo does not always work so run the following commands
     - $: `git submodule init`
     - $: `git submodule update`
-  - Dependencies (this list will change, so please continue to check it, especially as a first place to look if you do an update and run into errors that look like missing dependencies) (NOTE: yes, we plan on create a complete npm-encapsulated package to ease this pain, but for now we're still playing with things too much)
-    - $: `npm install connect` (version 1.4 is required)
-    - $: `npm install jsdom`
-    - $: `npm install socket.io`
-    - $: `npm install cradle`
-    - $: `npm install yuitest`
-    - $: `npm install daemon`
-    = $: `npm install colorize` (Added 5/10/2011; used by the CLI)
-    - $: `cd featherdoc`
-    - $: `mkdir node_modules` (If this step is omitted, npm will install it in feather's copy of node_modules rather than create the folder for you.)
-    - $: `npm install node-markdown` (required for the featherdoc app)
-    - $: `cd ..`
+  - Feather relies on several dependencies.  Most are installed by the setup script mentioned below, but in case any fail, they are listed here. **DO NOT RUN THESE MANUALLY UNLESS setup.sh FAILS!**
+      - Dependencies (this list will change, so please continue to check it, especially as a first place to look if you do an update and run into errors that look like missing dependencies) (NOTE: yes, we plan on create a complete npm-encapsulated package to ease this pain, but for now we're still playing with things too much)
+        - $: `npm install connect` (version 1.4 is required)
+        - $: `npm install jsdom`
+        - $: `npm install socket.io`
+        - $: `npm install cradle`
+        - $: `npm install yuitest`
+        - $: `npm install daemon`
+        - $: `npm install colorize` (Added 5/10/2011; used by the CLI)
+    - In featherdoc app
+      - $: `mkdir node_modules` (If this step is omitted, npm will install it in feather's copy of node_modules rather than create the folder for you.)
+      - $: `npm install node-markdown` (required for the featherdoc app)
   - Setup
-    - $: `bin/setup.sh` This will create the FEATHER_HOME environment variable in your user's `~/.profile` file.  It will also add feather's bin dir to your path.
-    - open .bashrc and ensure the PATH var in Feather Vars section looks like "export PATH=$FEATHER_HOME/bin:$PATH"
+    - $: `bin/setup.sh` This will create the FEATHER_HOME environment variable in your user's `~/.bashrc` file if it exists.  Otherwise it will add them to your `~/.profile` file.  It will also add feather's bin dir to your path.  Finally it will attempt to install all of the dependencies of the framework.
+    - open `~/.bashrc` and ensure the PATH var in Feather Vars section looks like "export PATH=$FEATHER_HOME/bin:$PATH"
+    - At this point, you should be able to run "feather help" and get the usage of the CLI.
   - Symlink Requirements (this section is also subject to change)
     - 5/5/2011: as of today, the symlinks are no longer required.
-    - in order to break out of Connect.static's security model, we currently have a symlink requirement for each app (/blog and /test are examples of apps)
-    - the symlink must point to the /feather/lib directory and must be named 'featherlib'
-      - $: `cd blog`
-      - $: `ln -s ../lib featherlib`
-      - $: `cd ../test`
-      - $: `ln -s ../lib featherlib`
+      - in order to break out of Connect.static's security model, we currently have a symlink requirement for each app (/blog and /test are examples of apps)
+      - the symlink must point to the /feather/lib directory and must be named 'featherlib'
+        - $: `cd blog`
+        - $: `ln -s ../lib featherlib`
+        - $: `cd ../test`
+        - $: `ln -s ../lib featherlib`
 - Data
   - 3/15/2011: as of today, the blog app now requires CouchDB.
       - install couch via the instructions for your OS ([http://wiki.apache.org/couchdb/Installation](http://wiki.apache.org/couchdb/Installation))
@@ -70,7 +71,7 @@ Thus, I'm going to include some workflow instructions.
       - start the blog application (See Starting the Sample App below)
       - browse to [http://localhost:8080/](http://localhost:8080/) and press the Go button where it says "Import the database"
       - refresh the page in your browser.  You should now see 3 sample blog entries.  If you click on them they should expand to show the full blog post.
-- Starting the Sample App
+- Starting the Sample App  
 At this point you should be able to run the blog app and hit it from a browser:  
   - $: `feather run ~/mainline/feather/blog`  
   - in a browser: [http://localhost:8080/](http://localhost:8080/)  (replace localhost with the appropriate IP address or hostname if running on a VM... obviously :P) 

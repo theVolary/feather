@@ -40,8 +40,16 @@ cli.readline = function (encoding, callback) {
 };
 
 var options = cli.parse({
-    debug: ['d', 'Starts the app in debug mode', 'boolean', false],
-    path: ['p', 'The path to the application to apply this command to', 'path', process.cwd()]
+    daemonize: ['z', 'Daemonize this server so it runs in the background (run command only)', 'boolean', null],
+    debug: ['d', 'Starts the app in debug mode (i.e. "node debug")', 'boolean', false],
+    dompoolmax: ['x', 'The max size of the dom pool to use', 'number', null],
+    dompoolmin: ['n', 'The min size of the dom pool to use', 'number', null],
+    env: ['e', 'The environment to run in (e.g. dev, prod)', 'string', "dev"],
+    loglevel: ['l', 'The default logging level to use.  Options are: all, trace, debug, info, warn, error, off', 'string', null],
+    outputpath: ['o', 'Path to write std output to when running as a daemon (run command only)', 'path', null],
+    path: ['p', 'The path to the application to apply this command to', 'path', process.cwd()],
+    pidpath: ['i', 'The path of the pid file to use when running as a daemon (run command only)', 'path', null]
+    
   },
   ['run', 'test', 'create-app', 'create-widget', 'help']);
 
@@ -58,11 +66,16 @@ var commands = {
     fn: function() {
       var args = [];
       if (options.debug) args.push('debug');
+
       args.push(process.env.FEATHER_HOME + '/lib/app.js');
       
       var appDir = getAppDir();
+
+
       
       args.push(appDir);
+
+      addAdditionalOptions(args);
       
       runChild("node", args, appDir);
     }
@@ -173,11 +186,50 @@ function resolveCmd(cmd) {
 
 function getAppDir() {
   var appDir = path.normalize(options.path);
+  if (appDir[0] !== '/') {
+    appDir = path.resolve(process.cwd(), appDir);
+  }
 
+  if (! path.existsSync(appDir)) {
+    cli.fatal("Path " + appDir + " does not exist.");
+  }
   if (! fs.statSync(appDir).isDirectory()) {
     cli.fatal(appDir + " is not a directory.");
   }
+  if (! path.existsSync(appDir + '/public')) {
+    cli.fatal(appDir + " does not appear to be a feather application.");
+  }
   return appDir;
+}
+
+function addAdditionalOptions(args) {
+  if (options.env) {
+    args.push("env");
+    args.push(options.env);
+  }
+  if (options.daemonize) {
+    args.push("daemonize");
+  }
+  if (options.outputpath) {
+    args.push("outputpath");
+    args.push(options.outputpath);
+  }
+  if (options.pidpath) {
+    args.push("pidpath");
+    args.push(options.pidpath);
+  }
+  if (options.dompoolmin) {
+    args.push("dompoolmin");
+    args.push(options.dompoolmin);
+  }
+  if (options.dompoolmax) {
+    args.push("dompoolmax");
+    args.push(options.dompoolmax);
+  }
+  if (options.loglevel) {
+    args.push("loglevel");
+    args.push(options.loglevel);
+  }
 }
 
 function runChild(cmd, args, childCwd) {

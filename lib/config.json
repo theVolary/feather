@@ -1,21 +1,61 @@
 {
-  "debug": false,
-  "useEnv": "dev",
-  "featherRoot": "",
-  "appRoot": "",
+  "auth": {
+    "enabled": false,
+    "userIdPrefix": "org.couchdb.user:"
+  },
   "daemon": {
     "runAsDaemon": false,
     "outputPath": "feather-app.out",
     "pidPath": "/tmp/feather-app.pid"
   },
-  "auth": {
-    "enabled": false,
-    "userIdPrefix": "org.couchdb.user:"
-  },
   "data": {
     "datalinking": {
       "enabled": true
     }
+  },
+  "domPoolSize": {
+    "min": 10, 
+    "max": 20
+  },
+  "environments": {
+    "dev": {},
+    "test": {}, 
+    "prod": {}
+  },
+  "logging": {
+    "enabled": true,
+    "defaultLevel": "all",
+    "absorbConsoleLogging": true,
+    "appenders": [
+      {
+        "type": "console",
+        "options": { "layout": "colored" }
+      }
+    ]
+  },
+  "resources": {
+    "consolidateAll": false,
+    "minifyAll": false,
+    "packages": [
+      { 
+        "name":"feather-client-core.js",
+        "consolidate": true,
+        "minify": true
+      },
+      {
+        "name": "feather-client-core.css",
+        "consolidate": true,
+        "minify": true
+      }
+    ]
+  },
+  "session": {
+    "config": {
+      "key": "featherblog.sid",
+      "cookie": { "path": "/", "httpOnly": false, "maxAge": 14400000 },
+      "secret": "feather app key"
+    },
+    "ignorePaths": ["/robots.txt"]
   },
   "ui": {
     "enabled": true,
@@ -28,22 +68,5 @@
         "feather-client/lib/jqueryUI-1.8.12/css/black-tie/jquery-ui-1.8.12.custom.css"
       ]
     }
-  },
-  "domPoolSize": {
-    "min": 10, 
-    "max": 20
-  }, 
-  "session": {
-    "config": {
-      "key": "featherblog.sid",
-      "cookie": { "path": "/", "httpOnly": false, "maxAge": 14400000 },
-      "secret": "feather app key"
-    },
-    "ignorePaths": ["/robots.txt"]
-  },
-  "environments": {
-    "dev": {},
-    "test": {}, 
-    "prod": {}
   }
 }
