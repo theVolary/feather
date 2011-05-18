@@ -56,7 +56,7 @@ _Example_:
       }   
     });
 
-Notice there is one little formatting gotcha when making calls to the `.server_XYZ` methods (`me.server_doSomething` in the above example), and that is that the arguments must be wrapped in an array. Since feather is pre v1.0 still, this API is subject to change, but for now, just remember to pass the arguments in an array.
+Notice there is one little formatting gotcha when making calls to the `.server_XYZ` methods (`me.server_doSomething` in the above example), and that is that the arguments must be wrapped in an array. Since feather is pre v1.0 still this API is subject to change, but for now just remember to pass the arguments in an array.
 
 In general, this is a simple yet powerful mechanism you can use when the communication needs fit nicely into an encapsulated method of a given widget. It is often necessary, however, to facilitate communications outside of the tidy confines of a widget (i.e. client to client communications)...
     
@@ -204,6 +204,7 @@ At this point I'd also like to point out that because the semantics of listening
  - `connection` (tells an already subscribed client that another client has connected to the channel)
  - `subscribe` (tells a client when its own subscribtion has been made successfully)
  - `disconnection` (tells a client that another client has disconnected from the channel)
+ - `error` (sent back to the client that originated the message; the `data` property of the return object contains the error message.)
 
 ### Channel Groups and Invitations ###
 Now how about some more complex scenarios? For example, what if you wanted to limit the message propagation to only send to clients that are connected from the same page or base URL? Or how about if you wanted to allow two or more clients to communicate in private amongst themselves? 
@@ -327,7 +328,7 @@ _Example 3 server.js_:
        * cares about the disconnect event. 
        * 
        * Remember: as is the case with all these event hooks, if you implement this handler
-       * you must call the callback function in order to propagate the event to the other clients.
+       * you must invoke the callback function in order to propagate the event to the other clients.
        *
        * @param {Object} args
        *    {
