@@ -206,10 +206,17 @@ At this point I'd also like to point out that because the semantics of listening
  - `disconnection` (tells a client that another client has disconnected from the channel)
  - `error` (sent back to the client that originated the message; the `data` property of the return object contains the error message.)
 
-### Channel Groups and Invitations ###
-Now how about some more complex scenarios? For example, what if you wanted to limit the message propagation to only send to clients that are connected from the same page or base URL? Or how about if you wanted to allow two or more clients to communicate in private amongst themselves? 
+Another very important, but potentially subtle thing to notice about our chat widget in its current form is that you could add instances of this widget on many pages of your application, and all clients across all pages would receive all of the chat messages. This might be desirable for some applications, but there are certainly a lot of use cases for limiting who gets what messages on a given channel. 
 
-The channel setting `allowGroups` lets you configure the channel to allow clients to subscribe to the channel as a whole as well as groups within the channel. The higher level channel constraints will still apply to groups (like allowed messages, etc.), but messages sent to a group will only propagate to clients that are active `members` of that group. This is how you could add a private messaging feature to your chat widget, as well as limit the message routing scope to a given page or URL.
+### Private Messages, Groups and Invitations ###
+Now how about some more complex scenarios? Let's refactor our chat widget to accomplish the following stated goals:
+ - Limit the default message propagation to only send to clients that are connected from the same page or base URL.
+ - Allow users to send private messages directly to a single other user.
+ - Allow two or more clients to communicate in private amongst themselves as an invitation-only group. 
+
+There are two main channel-level configuration settings that enable all three scenarios. The simple one is `allowDirectMessaging` (defaulted to `false`), and when set to `true` will let clients send messages directly to other clients. These direct messages are only visible to the two clients involved (and of course the server). These messages are also governed by any other configuration you may have placed on the channel. Direct messaging comes with no inherent opt-in or opt-out process, so if you want to add an 'ignore this user' function, you'll have to implement the `message` handler on the server and track an ignore list yourself.
+
+The channel setting `allowGroups` (defaulted to false) lets you configure the channel to allow clients to create and join groups within the channel. The higher level channel constraints will still apply to groups (like allowed messages, etc.), but messages sent to a group will only propagate to clients that are active `members` of that group. This is how you could limit the message routing scope to a given page or URL as well as implement a private group chat feature for a chat widget.
 
 When multiple clients have joined a group with the same name and that group has _not_ been configured as `secure`, there is no requirement for an invite step, since the clients have already explicitly stated that it's ok for other clients to communicate with them in that group. This will be the case for our group that's named by the current page's URL. In other words, the default behavior for a group is to not ask questions but to simply route messages amongst a subset of clients.
 
@@ -222,7 +229,7 @@ The final bit of the puzzle is how a given client will know how to issue an invi
 
 With all that in mind, in this next example we'll achieve both goals of 1) limiting the main `chat` messages by URL and 2) allowing users to send private messages to each other. As explained above both goals will be met via the `groups` mechanism. 
 
-This example will also fill in a lot of other information in terms of the capabilities of channels, so please excuse the verbosity.
+This example will also fill in a lot of other information in terms of the capabilities of channels. I've opted to add more documentation into the code sample in the form of comments, so please excuse the verbosity...
 
 _Example 3 server.js_:
 
@@ -235,6 +242,7 @@ _Example 3 server.js_:
       id: "chat",
       messages: ["chat"],
       allowGroups: true,
+      allowDirectMessaging: true,
         
       /**
        * Defining handlers for various channel hooks lets you control the channel's behavior
@@ -364,6 +372,8 @@ _Example 3 server.js_:
        *    {
        *      client:   Object,    //the client that originated the message
        *      message:  String,    //the message type being transmitted (i.e. 'chat')
+       *      groupName: String,   //this contains the group name if this message is associated with a group; undefined otherwise
+       *      directedTo: Object (client),  //if this is a direct message, this will be the client that the message is being sent to; undefined otherwise
        *      data:     Object     //the message payload (which could be a flat string or an object deserialized from JSON)
        *    }
        *
@@ -478,18 +488,22 @@ _Example 3 server.js_:
        *      groupName:      String,   //the name of the group 
        *    }
        *
-       * @param {Function} cb - The callback function to invoke to either pass the invitation on, or prevent it
+       * @param {Function} cb - The callback function to invoke to either pass the invitation on or prevent it
        */
       invite: function(args, cb) {
-
+        if (myapp.pseudocode.invitationAllowed(args)) {
+          cb();
+        } else {
+          cb("You are not allowed to send invites to that person because they don't like you.");
+        }
       },
 
       /**
        * The 'invitationAccepted' handler is invoked any time an invitation has been accepted. This is an
-       * informational hook which you can handle for logging or other logic-branching purposes,
-       * but there is no callback function to call for this one as we are not supporting the interruption
-       * of this event (the intent to invite and to accept has already been declared, therefore to prevent
-       * propagation would only serve to confuse).
+       * informational hook which you can handle for logging or other logic-branching purposes. There is no 
+       * callback function to call for this one as we are not supporting the interruption
+       * of this event. The intent to invite and to accept has already been declared by both parties, 
+       * therefore to prevent propagation at this point would only serve to confuse.
        *
        * @param {Object} args
        *    {
@@ -497,27 +511,27 @@ _Example 3 server.js_:
        *      targetClient:   Object,   //the client that has just accepted the invitation
        *      groupName:      String    //the name of the group 
        *    }
-       *
-       * @param {Function} cb - The callback function to invoke to either pass the invitation on, or prevent it
        */
       invitationAccepted: function(args, cb) {
-        
+        feather.logger.info("An invitation has been accepted for the group '" + args.groupName + "'");
       },
 
       /**
-       * The 'invitationDeclined' handler...
+       * The 'invitationDeclined' handler is invoked any time an invitation has been declined. This is an
+       * informational hook which you can handle for logging or other logic-branching purposes. There is no 
+       * callback function to call for this one as we are not supporting the interruption
+       * of this event. The intent to invite and to decline has already been declared by both parties, 
+       * therefore to prevent propagation at this point would only serve to confuse.
        *
        * @param {Object} args
        *    {
        *      sourceClient:   Object,   //the client that originated the invitation
-       *      targetClient:   Object    //the client being invited to join the group
-       *      groupName:      String,   //the name of the group 
+       *      targetClient:   Object,   //the client that has just declined the invitation
+       *      groupName:      String    //the name of the group 
        *    }
-       *
-       * @param {Function} cb - The callback function to invoke to either pass the invitation on, or prevent it
        */
       invitationDeclined: function(args, cb) {
-
+        feather.logger.info("An invitation has been declined for the group '" + args.groupName + "'");
       }
     });
     
@@ -537,10 +551,13 @@ _Example 3 client.js_:
     (function() {  
     
       /**
-       * subscribe to the channel
+       * Subscribe to the channel.
+       *
+       * Notice that you can create/join 'public' groups at subscribe-time.
+       * In this example we're joining the group on the chat channel for "this page, by URL".
        */
       var chatChannel = feather.socket.subscribe("chat", {
-        groups: [window.location.href, feather.auth.user.username]
+        groups: [window.location.href]
       });
       
       myapp.chat = feather.widget.create({
@@ -551,26 +568,30 @@ _Example 3 client.js_:
             $super(options);
           },
           onReady: function() {
-            var me = this;            
+            
+            this.bindUI();
+            this.setupChannel();
+            
+          },
+          bindUI: function() {
+            var me = this;
 
-            //when one of my buttons is clicked, send a chat message on the chat channel
-            me.domEvents.bind(me.get("#someButton"), "click", function() {
-              
+            //handle the main 'send message' button
+            me.domEvents.bind(me.get("#sendMessageBtn"), "click", function() {              
               //send a message to only those clients that are connected via the same URL
               chatChannel.sendGroup(window.location.href, "chat", {message: "hi!"});
             });
 
             //When a different button is clicked (next to another user's screen name, for example),
-            //send an invite to that user to join this user's private group. If the other client
-            //accepts the invitation, send a private message. If they decline, alert the originating
-            //user of that fact.
+            //
             me.domEvents.bind(me.get("#pm_button_next_to_another_connected_client", "click", function() {
               //figure out which user they clicked on
-              var username = getUsernameClickedOn(); //pseudo-code
+              var username = getUsernameClickedOn();
 
 
             }));
-
+          },
+          setupChannel: function() {
             //when other clients connect, do something
             chatChannel.on("connection", function(args) {
               alert("another client has connected");
@@ -581,7 +602,7 @@ _Example 3 client.js_:
               //in a real app we'd obviously do more than just alert, but you get the idea...
               alert("Incoming chat. Message = " + args.message);
             });
-          })
+          }
         }   
       });
     })();
