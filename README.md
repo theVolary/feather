@@ -19,8 +19,9 @@ Short of that
   - In
 
 ### Setup and Contribution Instructions
-First of all, not to be too obvious but this project requires node.js. Specifically, we intend to support node.js on *nix platforms.
-I assume the Windows/cygwin flavors of node builds should also work but we aren't going to go out of our way to support it.
+First of all, not to be too obvious but this project requires node.js. Specifically, we intend to support node.js on *nix platforms. I assume the Windows/cygwin flavors of node builds should also work but we aren't going to go out of our way to support it.
+
+_Note: these instructions are intended for use during the early stages of the project, until we stabilize things a bit and have a nice build script or npm package to give you._
 
 - Assumptions
   - you have a github account and understand git and github basics (forking, cloning, etc.)
@@ -30,13 +31,13 @@ I assume the Windows/cygwin flavors of node builds should also work but we aren'
 Thus, I'm going to include some workflow instructions.
   - This is obviously not a requirement, but for sake of convenience I'm basing paths of the following root folder (just because that's our internal convention): ~/mainline
 - Setup 
-  - first, fork the project (via your github account) from [https://github.com/ryedin/jojojs](https://github.com/ryedin/jojojs)
+  - first, fork the project (via your github account) from [https://github.com/theVolary/feather](https://github.com/theVolary/feather)
   - clone locally (and recursively to auto pull the submodules), and remember to add the remote to 'upstream' as explained here: [http://help.github.com/fork-a-repo/](http://help.github.com/fork-a-repo/)
     - $: `cd ~/mainline`
     - $: `git clone --recursive [your-fork-url]`
     - $: `cd feather`
-    - $: `git remote add upstream git@github.com:ryedin/feather.git`
-    - it has been noted that the recursive argument when cloning the repo does not always work so run the following commands
+    - $: `git remote add upstream git@github.com:theVolary/feather.git`
+    - if you forget the --recursive argument when cloning the repo you can also run the following commands
     - $: `git submodule init`
     - $: `git submodule update`
   - Feather relies on several dependencies.  Most are installed by the setup script mentioned below, but in case any fail, they are listed here. **DO NOT RUN THESE MANUALLY UNLESS setup.sh FAILS!**
@@ -55,14 +56,6 @@ Thus, I'm going to include some workflow instructions.
     - $: `bin/setup.sh` This will create the FEATHER_HOME environment variable in your user's `~/.bashrc` file if it exists.  Otherwise it will add them to your `~/.profile` file.  It will also add feather's bin dir to your path.  Finally it will attempt to install all of the dependencies of the framework.
     - open `~/.bashrc` and ensure the PATH var in Feather Vars section looks like "export PATH=$FEATHER_HOME/bin:$PATH"
     - At this point, you should be able to run "feather help" and get the usage of the CLI.
-  - Symlink Requirements (this section is also subject to change)
-    - 5/5/2011: as of today, the symlinks are no longer required.
-      - in order to break out of Connect.static's security model, we currently have a symlink requirement for each app (/blog and /test are examples of apps)
-      - the symlink must point to the /feather/lib directory and must be named 'featherlib'
-        - $: `cd blog`
-        - $: `ln -s ../lib featherlib`
-        - $: `cd ../test`
-        - $: `ln -s ../lib featherlib`
 - Data
   - 3/15/2011: as of today, the blog app now requires CouchDB.
       - install couch via the instructions for your OS ([http://wiki.apache.org/couchdb/Installation](http://wiki.apache.org/couchdb/Installation))
