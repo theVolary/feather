@@ -4,138 +4,180 @@ var fs    = require("fs"),
     path  = require("path"),
     spawn = require("child_process").spawn,
     ffs   = require("../lib/util"),
-    color = require("colorize");
+    color = require("colorize"),
+    util  = require("util"),
+    cli   = require("cli").enable('version').setApp('feather', '0.1');
 
 if (!process.env.FEATHER_HOME) {
-  logError("The environment variables #white[FEATHER_HOME] is required.");
-  process.exit(1);
+  cli.fatal("The environment variables #white[FEATHER_HOME] is required.");
 } else {
   var stat = fs.statSync(process.env.FEATHER_HOME);
   if (!stat.isDirectory()) {
-    logError("The FEATHER_HOME variable location is not a directory.");
-    process.exit(2);
+    cli.fatal("The FEATHER_HOME variable location is not a directory.");
   }
 }
 
-var numArgs = process.argv.length;
-var cmd = process.argv[2];
-var debug = (numArgs >= 3 && process.argv[2].toLowerCase() === "debug");
-if (debug) cmd = process.argv[3];
-cmd = resolveCmd(cmd);
-var appIndex = (debug) ? 4 : 3;
+cli.readline = function (encoding, callback) {
+    if (typeof encoding === 'function') {
+        callback = encoding;
+        encoding = 'utf8';
+    }
+    var stream = process.openStdin(), data = '';
+    stream.setEncoding(encoding);
+    var listener = function (chunk) {
+        data += chunk;
+        if (data.indexOf('\n') >= 0) {
+          var endIndex = data.indexOf('\n');
+          var output = data.substr(0, endIndex).replace(/(\r)+$/, '');
+          // Cleanup the stream.
+          stream.removeListener('data', listener);
+          stream.pause();
+          // Return the output.
+          callback(output);
+        }
+    };
+    stream.on('data', listener);
+};
+
+var options = cli.parse({
+    daemonize: ['z', 'Daemonize this server so it runs in the background (run command only)', 'boolean', null],
+    debug: ['d', 'Starts the app in debug mode (i.e. "node debug")', 'boolean', false],
+    dompoolmax: ['x', 'The max size of the dom pool to use', 'number', null],
+    dompoolmin: ['n', 'The min size of the dom pool to use', 'number', null],
+    env: ['e', 'The environment to run in (e.g. dev, prod)', 'string', "dev"],
+    loglevel: ['l', 'The default logging level to use.  Options are: all, trace, debug, info, warn, error, off', 'string', null],
+    outputpath: ['o', 'Path to write std output to when running as a daemon (run command only)', 'path', null],
+    path: ['p', 'The path to the application to apply this command to', 'path', process.cwd()],
+    pidpath: ['i', 'The path of the pid file to use when running as a daemon (run command only)', 'path', null]
+    
+  },
+  ['run', 'test', 'create-app', 'create-widget', 'help']);
+
+if (options.debug) {
+  cli.debug("Parsed options are: " + util.inspect(options));
+  cli.debug("Command is " + cli.command);
+  cli.debug("Args are " + util.inspect(cli.args));
+}
 
 var commands = {
-  run: function() {
-    var args = [];
-    if (debug) args.push('debug');
-    args.push(process.env.FEATHER_HOME + '/lib/app.js');
-    
-    var appDir = getAppDir();
-    
-    args.push(appDir);
-    
-    console.info("Spawning server: node " + args);
-    runChild("node", args, appDir);
-  },
-  test: function() {
-    var args = [];
-    if (debug) args.push('debug');
-    var appDir = getAppDir();
-    args.push(process.env.FEATHER_HOME + '/bin/yuitest');
-    var otherArgs = process.argv.slice(appIndex);
-    Array.prototype.push.apply(args, otherArgs);
-    console.info("Spawning test process node " + args);
-    runChild("node", args, appDir);
-  },
-  createApp: function() {
-    var loc = process.cwd();
-    var name = process.argv[appIndex];
-    if (numArgs === appIndex+2) {
-      loc = process.argv[appIndex];
-      name = process.argv[appIndex+1];
+  run: {
+    desc: "Runs a feather app.  If the path option is omitted, the default is attempted.  (See feather --help)",
+    usage: "feather [OPTIONS] run",
+    fn: function() {
+      var args = [];
+      if (options.debug) args.push('debug');
+
+      args.push(process.env.FEATHER_HOME + '/lib/app.js');
+      
+      var appDir = getAppDir();
+
+
+      
+      args.push(appDir);
+
+      addAdditionalOptions(args);
+      
+      runChild("node", args, appDir);
     }
-    
-    var fullPath = path.join(loc, name);
-    checkResult(ffs.mkdirpSync(fullPath));
-    checkResult(ffs.mkdirpSync(path.join(fullPath, 'public', 'widgets')));
-    checkResult(ffs.mkdirpSync(path.join(fullPath, 'lib')));
-    checkResult(ffs.mkdirpSync(path.join(fullPath, 'node_modules')));
-    fs.writeFileSync(path.join(fullPath, 'lib', 'README.txt'), "Add your own js libraries here.", "utf-8");
-    fs.writeFileSync(path.join(fullPath, 'app.js'), "exports.onReady = function() {\n  \n}", "utf-8");
-    fs.writeFileSync(path.join(fullPath, 'config.json'), "{}\n");
-    fs.writeFileSync(path.join(fullPath, 'public', 'index.feather.html'), "<html>\n<head>\n  <title>Index.feather.html</title\n  <resources />\n</head>\n<body>\n  <h1>Light as a Feather</h1>\n</body>\n</html>", "utf-8");
-    console.info(color.ansify("\n#bold[#green[App #white[" + name + "] created at #white[" + fullPath + "]]]\n"));
   },
-  createWidget: function() {
-    var appDir = getAppDir(), 
-        widgetName,
-        appName = path.basename(appDir);
-    if (numArgs < appIndex+2) {
-      logError("No widget name specified.");
-      process.exit(0);
-    } else {
-      widgetName = process.argv[appIndex+1];
+  test: {
+    desc: "Runs the tests for an app.  If the path option is omitted, the default is used.",
+    usage: "feather [OPTIONS] test [--format] test/(unit/integration)",
+    fn: function() {
+      var args = [];
+      if (options.debug) args.push('debug');
+      var appDir = getAppDir();
+      args.push(process.env.FEATHER_HOME + '/bin/yuitest');
+      for (var p in options) { 
+        if (p !== 'app') {
+          args.push('--'+p);
+        }
+      }
+      args.push(appDir);
+      Array.prototype.push.apply(args, cli.args);
+      if (options.debug) cli.debug("Spawning test process node " + args);
+      runChild("node", args, appDir);
     }
-    var fullPath = path.join(appDir, 'public', 'widgets', widgetName);
-    if (path.existsSync(fullPath)) {
-      logError("Widget #white[" + widgetName + "] already exists!");
-      process.exit(0);
-    }
-    ffs.mkdirpSync(fullPath);
-    var serverTemplate = [
-      'feather.ns("' + appName + '");',
-      appName+'.'+widgetName+' = feather.widget.create({',
-      '  name: "'+appName+'.'+widgetName+'",',
-      '  path: "/widgets/'+widgetName+'/",',
-      '  prototype: {',
-      '    initialize: function($super, options) {',
-      '      $super(options);',
-      '    }',
-      '  }',
-      '});'
-    ];
-    var clientTemplate = [
-      'feather.ns("' + appName + '");',
-      '(function() {',
-      '  '+appName+'.'+widgetName+' = feather.widget.create({',
-      '    name: "'+appName+'.'+widgetName+'",',
-      '    path: "/widgets/'+widgetName+'/",',
-      '    prototype: {',
-      '      initialize: function($super, options) {',
-      '        $super(options);',
-      '      }',
-      '    }',
-      '  });',
-      '})();'
-    ];
-    fs.writeFileSync(path.join(fullPath, widgetName+'.client.js'), clientTemplate.join('\n'), "utf-8");
-    fs.writeFileSync(path.join(fullPath, widgetName+'.server.js'), serverTemplate.join('\n'), "utf-8");
-    fs.writeFileSync(path.join(fullPath, widgetName+'.template.html'), "", "utf-8");
-    fs.writeFileSync(path.join(fullPath, widgetName+'.css'), "", "utf-8");
-    console.log(color.ansify("\n#bold[#green[Widget #white["+widgetName+"] created at #white["+fullPath+"].]]\n"));
   },
-  help: function() {
-    outputUsage();
+  createApp: {
+    desc:"Creates a new feather application at the specified directory.  If NAME is omitted, the current directory is assumed, but it will prompt you for confirmation.",
+    usage:"feather [OPTIONS] create-app [NAME]",
+    fn: function() {
+      var dir = getAppDir(), name;
+      if (cli.argc < 1) {
+        name = path.basename(dir);
+        if (fs.readdirSync(dir).length == 0) {
+          cli.info("No app name specified.  Assuming \"" + name + "\".  Is that ok? (y/n)");
+          cli.readline(function(data) {
+            if (data.toLowerCase()[0] === 'y') {
+              createApp(path.dirname(dir), name);
+            } else {
+              cli.fatal("I can't create an app without a name.  Please specify one next time.");
+            }
+          });
+        } else {
+          cli.fatal("No app name specified, and \"" + name + "\" is not empty.");
+        }
+      } else {
+        createApp(dir, cli.args[0]);
+      }
+    }
+  },
+  createWidget: {
+    desc:"Creates a new widget in a feather app.  If namespace is omitted, the name of the app's directory is assumed.",
+    usage:"feather [OPTIONS] create-widget [namespace] widgetName",
+    fn:function() {
+      var namespace, widgetName, appDir = getAppDir();
+      if (cli.argc < 1) {
+        cli.fatal("No widget name specified");
+      } else {
+        widgetName = cli.args[0];
+        if (cli.argc > 1) {
+          namespace = widgetName;
+          widgetName = cli.args[1];
+        }
+      }
+      if (!namespace) {
+        namespace = path.basename(appDir);
+        cli.info("No namespace specified.  Assuming \"" + namespace + "\".  Is that ok? (y/n)");
+        cli.readline(function(data) {
+          if (data.toLowerCase()[0] === 'y') {
+            startCreateWidget(appDir, namespace, widgetName);
+          } else {
+            cli.fatal("I can't create a widget without knowing the namespace.  Please specify one next time.");
+          }
+        });
+      } else {
+        startCreateWidget(appDir, namespace, widgetName);
+      }
+    }
+  },
+  help: {
+    desc:"Displays general help, or help on a specific command.  If you're reading this, you already know that.",
+    usage:"feather help <command>",
+    fn: function() {
+      if (cli.argc < 1) {
+        cli.getUsage();
+      } else {
+        // Provide help on a specific command.
+        var cmd = commands[resolveCmd(cli.args[0])]; 
+        var output = [
+          color.ansify("#bold[Description:]"),
+          "  " + cmd.desc,
+          color.ansify("\n#bold[Usage:]"),
+          "  " + cmd.usage + "\n"
+        ];
+        console.log(output.join('\n'));
+      }
+    }
   }
 };
-commands.usage = commands.help;
-
-if (commands.hasOwnProperty(cmd)) {
-  commands[cmd].call();
-} else {
-  console.log("cmd is " + cmd);
-  outputUsage();
-}
+commands[resolveCmd(cli.command)].fn.call();
 
 function checkResult(result) {
   if (!result.result) {
-    logError(result.err);
-    process.exit(1);
+    cli.fatal(result.err);
   }
-}
-
-function logError(error) {
-  console.info(color.ansify("#bold[#red[" + error + "]]"));
 }
 
 function resolveCmd(cmd) {
@@ -143,21 +185,51 @@ function resolveCmd(cmd) {
 }
 
 function getAppDir() {
-  var appDir = "";
-    
-  if (process.argv.length < (appIndex+1) || process.argv[appIndex] === "") {
-    
-    // Assume cwd for app folder.
-    appDir = process.cwd();
-    console.log("No app specified.  Looking in " + appDir);    
-  } else {
-    appDir = process.argv[appIndex];
-    if (! fs.statSync(appDir).isDirectory()) {
-      logError(appDir + " is not a directory.");
-      process.exit(1);
-    }
+  var appDir = path.normalize(options.path);
+  if (appDir[0] !== '/') {
+    appDir = path.resolve(process.cwd(), appDir);
+  }
+
+  if (! path.existsSync(appDir)) {
+    cli.fatal("Path " + appDir + " does not exist.");
+  }
+  if (! fs.statSync(appDir).isDirectory()) {
+    cli.fatal(appDir + " is not a directory.");
+  }
+  if (! path.existsSync(appDir + '/public')) {
+    cli.fatal(appDir + " does not appear to be a feather application.");
   }
   return appDir;
+}
+
+function addAdditionalOptions(args) {
+  if (options.env) {
+    args.push("env");
+    args.push(options.env);
+  }
+  if (options.daemonize) {
+    args.push("daemonize");
+  }
+  if (options.outputpath) {
+    args.push("outputpath");
+    args.push(options.outputpath);
+  }
+  if (options.pidpath) {
+    args.push("pidpath");
+    args.push(options.pidpath);
+  }
+  if (options.dompoolmin) {
+    args.push("dompoolmin");
+    args.push(options.dompoolmin);
+  }
+  if (options.dompoolmax) {
+    args.push("dompoolmax");
+    args.push(options.dompoolmax);
+  }
+  if (options.loglevel) {
+    args.push("loglevel");
+    args.push(options.loglevel);
+  }
 }
 
 function runChild(cmd, args, childCwd) {
@@ -169,17 +241,67 @@ function runChild(cmd, args, childCwd) {
       child = spawn(cmd, args, { cwd: childCwd, customFds:fds });
 }
 
-function outputUsage() {
-  var out = [
-    '\n#bold[#green[SYNOPSIS]]',
-    '\t#bold[feather (debug) command app/path (options)]',
-    '\tOptions in parentheses () are optional.',
-    '\n#bold[#green[COMMANDS]]',
-    '\t#green[run]:           Runs a feather app. Ex: #bold[feather (debug) run path/to/app]',
-    '\t#green[test]:          Runs tests in an app.  Ex: #bold[feather (debug) test path/to/app (options) test/folder/in/app]',
-    '\t#green[create-app]:    Creates a new app.  Ex: #bold[feather create-app app/parent/path app-name]',
-    '\t#green[create-widget]: Creates a widget in an app.  Ex: #bold[feather create-widget path/to/app widget-name]',
-    ']'
+function createApp(dir, name) {
+  var fullPath = path.join(dir, name);
+  checkResult(ffs.mkdirpSync(fullPath));
+  checkResult(ffs.mkdirpSync(path.join(fullPath, 'public', 'widgets')));
+  checkResult(ffs.mkdirpSync(path.join(fullPath, 'lib')));
+  checkResult(ffs.mkdirpSync(path.join(fullPath, 'node_modules')));
+  fs.writeFileSync(path.join(fullPath, 'lib', 'README.txt'), "Add your own js libraries here.", "utf-8");
+  fs.writeFileSync(path.join(fullPath, 'app.js'), "exports.onReady = function() {\n  \n}", "utf-8");
+  fs.writeFileSync(path.join(fullPath, 'config.json'), "{}\n");
+  fs.writeFileSync(path.join(fullPath, 'public', 'index.feather.html'), "<html>\n<head>\n  <title>Index.feather.html</title\n  <resources />\n</head>\n<body>\n  <h1>Light as a Feather</h1>\n</body>\n</html>", "utf-8");
+  cli.ok(color.ansify(" #green[App #white[" + name + "] created at #white[" + fullPath + "]]\n"));
+}
+
+function startCreateWidget(appDir, namespace, widgetName) {
+  var fullPath = path.join(appDir, 'public', 'widgets', widgetName);
+  if (path.existsSync(fullPath)) {
+    cli.info("Widget \"" + widgetName + "\" already exists!  Replace it? (y/n)");
+    cli.readline(function(data) {
+      if (data.toLowerCase()[0] === 'y') {
+        createWidget(appDir, namespace, widgetName);
+      } else {
+        cli.ok("Aborting.");
+      }
+    });
+  } else {
+    createWidget(appDir, namespace, widgetName);
+  }
+}
+
+function createWidget(appDir, namespace, widgetName) {
+  var fullPath = path.join(appDir, 'public', 'widgets', widgetName);
+  ffs.mkdirpSync(fullPath);
+  var serverTemplate = [
+    'feather.ns("' + namespace + '");',
+    namespace+'.'+widgetName+' = feather.widget.create({',
+    '  name: "'+namespace+'.'+widgetName+'",',
+    '  path: "widgets/'+widgetName+'/",',
+    '  prototype: {',
+    '    initialize: function($super, options) {',
+    '      $super(options);',
+    '    }',
+    '  }',
+    '});'
   ];
-  console.info(color.ansify(out.join('\n').replace(/\*debug\*/g, '(debug)')));
+  var clientTemplate = [
+    'feather.ns("' + namespace + '");',
+    '(function() {',
+    '  '+namespace+'.'+widgetName+' = feather.widget.create({',
+    '    name: "'+namespace+'.'+widgetName+'",',
+    '    path: "widgets/'+widgetName+'/",',
+    '    prototype: {',
+    '      initialize: function($super, options) {',
+    '        $super(options);',
+    '      }',
+    '    }',
+    '  });',
+    '})();'
+  ];
+  fs.writeFileSync(path.join(fullPath, widgetName+'.client.js'), clientTemplate.join('\n'), "utf-8");
+  fs.writeFileSync(path.join(fullPath, widgetName+'.server.js'), serverTemplate.join('\n'), "utf-8");
+  fs.writeFileSync(path.join(fullPath, widgetName+'.template.html'), "", "utf-8");
+  fs.writeFileSync(path.join(fullPath, widgetName+'.css'), "", "utf-8");
+  cli.ok(color.ansify("#green[Widget #white["+widgetName+"] created at #white["+fullPath+"].]\n"));
 }

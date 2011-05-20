@@ -1,13 +1,13 @@
 feather.ns("featherdoc");
 
 var md = require("node-markdown").Markdown,
-    fs = require("fs");
+    fs = require("fs"),
+    path = require("path");
     //request = require("request");
 
-featherdoc.getMarkdown = function(path, method, cb) {
+featherdoc.getMarkdown = function(filePath, method, cb) {
   feather.logger.info("In getMarkdown");
-  debugger;
-  var myPath = (method === "fs") ? (feather.appOptions.appRoot + '/' + path) : path;
+  var myPath = (method === "fs") ? path.normalize(feather.appOptions.appRoot + '/' + filePath) : filePath;
   var doc = featherdoc.markdownCache.get(myPath);
   if (doc) {
     feather.logger.info({message:"Returning cached document for "+myPath, category: "featherdoc"});
