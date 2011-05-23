@@ -3,16 +3,10 @@ feather.ns("api_tester");
 var fs = require("fs");
 var path = require("path");
 
-var testDir = path.join(feather.appOptions.appRoot, "public", "tests");
+var configPath = path.join(feather.appOptions.appRoot, "tests.json");
 function getTests() {
-  var files = fs.readdirSync(testDir);
-  var fileObjects = [];
-  files.each(function(file) {
-    fileObjects.push({
-      name: file
-    });
-  });
-  return fileObjects;
+  var tests = eval("(" + fs.readFileSync(configPath) + ")");
+  return tests;
 }
 
 api_tester.testPicker = feather.widget.create({
@@ -22,6 +16,9 @@ api_tester.testPicker = feather.widget.create({
     initialize: function($super, options) {
       $super(options);
       this.tests = getTests();
+    },
+    onRender: function() {
+      this.scripts.push("widget.tests = " + JSON.stringify(this.tests) + ";");
     }
   }
 });

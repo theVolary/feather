@@ -1,0 +1,4 @@
+[
+  {"name": "channels", "path": "widgets/channelTests/"},
+  {"name": "session", "path": "widgets/sessionTests/"}
+]

@@ -1,8 +1,7 @@
 <input type="checkbox" id="checkAll" /> - all
 {{each(i, test) tests}}
   <div>
-    <input type="checkbox" id="${name}_test" class="testCB" /> - ${name}
+    <input type="checkbox" id="${name}" class="testCB" /> - ${name}
   </div>
 {{/each}}
 <input type="button" id="runBtn" value="Run"/>
-<div class="yuiconsole" id="console"></div>

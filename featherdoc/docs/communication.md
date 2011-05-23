@@ -135,7 +135,7 @@ _Example 2 server.js_:
     feather.ns("myapp");
     
     /**
-     * create a channel with id 'chat', with no restrictions
+     * create a channel with id 'chat'; don't announce connections; limit messages to 'chat'
      */
     var chatChannel = feather.socket.addChannel({
       id: "chat",
@@ -203,6 +203,7 @@ _Example 2 client.js_:
 At this point I'd also like to point out that because the semantics of listening to messages are the same as listening for the `connection` events (by design), you cannot send your own `connection` messages. The following is the short list of _reserved_ messages, including `connection`:
  - `connection` (tells an already subscribed client that another client has connected to the channel)
  - `subscribe` (tells a client when its own subscribtion has been made successfully)
+ - `unsubscribe` (tells a client when its own subscribtion has been removed)
  - `disconnection` (tells a client that another client has disconnected from the channel)
  - `error` (sent back to the client that originated the message; the `data` property of the return object contains the error message.)
 

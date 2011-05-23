@@ -6,10 +6,11 @@ feather.ns("api_tester");
     prototype: {
       initialize: function($super, options) {
         $super(options);
+        this.testWidgets = [];
       },
       onReady: function() {
         var me = this;
-
+        
         this.bindUI();
         this.setupYUI();
 
@@ -50,17 +51,51 @@ feather.ns("api_tester");
             var yconsole = new Y.Console({
                 newestOnTop: false                   
             });
-            yconsole.render(me.get("#console")[0]);
+            yconsole.render();
         });
       },
       runTests: function() {
         var me = this;
         var tests = [];
         me.get(".testCB").each(function(i, el) {
-          
+          if (el.checked) {
+            tests.push(me.tests.find(function(t) {
+              return t.name === el.id;
+            }));
+          }
         });
+        var sem = new feather.lang.semaphore(function() {
+          Y.Test.Runner.run();
+        });
+        sem.semaphore = tests.length;
         me.YUIFSM.onceState("ready", function() {
-          
+          Y.Test.Runner.clear();
+          tests.each(function(test) {
+            var widget = me.testWidgets.find(function(w) {
+              return w.widgetPath === test.path;
+            });
+            if (widget) {
+              widget.addTests();
+              sem.execute();
+            } else {
+              feather.widget.load({
+                id: feather.id(),
+                path: test.path,
+                clientOptions: {
+                  containerOptions: {
+                    containerizer: "empty"
+                  },
+                  on: {
+                    ready: function(args) {
+                      me.testWidgets.push(args.sender);
+                      args.sender.addTests();
+                      sem.execute();
+                    }
+                  }
+                }
+              });
+            }
+          });
         });
       }
     }
