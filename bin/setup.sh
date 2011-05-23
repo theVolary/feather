@@ -5,7 +5,7 @@ if [ -d "$FEATHER_HOME" ]; then
   exit 0
 fi
 
-MODULES=( connect jsdom socket.io cradle yuitest daemon colorize )
+MODULES=( connect jsdom socket.io cradle yuitest daemon colorize cli underscore inherits )
 
 echo -n "Where is your feather installation? [`pwd`]"
 read FEATHER_HOME
