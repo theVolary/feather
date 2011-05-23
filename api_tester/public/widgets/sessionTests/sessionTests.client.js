@@ -21,8 +21,9 @@ feather.ns("api_tester");
           testSetSessionFoo: function () {
             var test = this;
             me.server_setSessionFoo(function(args) {
-              test.resume();
-              Y.Assert.areEqual("foo set", args.result, "Expected 'foo set'.");
+              test.resume(function() {
+                Y.Assert.areEqual("foo set", args.result, "Expected 'foo set'.");
+              });
             });
             test.wait(2000);
           },
@@ -30,8 +31,9 @@ feather.ns("api_tester");
           testGetSessionFoo: function () {
             var test = this;
             me.server_getSessionFoo(function(args) {
-              test.resume();
-              Y.Assert.areEqual("server foo", args.result, "Expected 'server foo'.");
+              test.resume(function() {
+                Y.Assert.areEqual("server foo", args.result, "Expected 'server foo'.");
+              });
             });
             test.wait(2000);
           }  

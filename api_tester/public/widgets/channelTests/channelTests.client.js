@@ -109,10 +109,11 @@ feather.ns("api_tester");
       testSendOtherClient: function () {
         var test = this;
         this.channel.once("connection", function() {
-          test.channel.once("ack", function(args) {
-            Y.Assert.areEqual("got it", args.message, "Expected 'got it' back from other client");
+          test.channel.once("ack", function(args) {            
             test.popup.close();  
-            test.resume();          
+            test.resume(function() {
+              Y.Assert.areEqual("got it", args.message, "Expected 'got it' back from other client");
+            });          
           });
           test.channel.send("test", {message: "hi"});      
         });
@@ -146,15 +147,16 @@ feather.ns("api_tester");
       testNoAnnounce: function () {
         var test = this;
         this.channel.once("connection", function() {
-          test.resume();
-          Y.Assert.areEqual(1, 2, "Connection event should not have happened.");
-          test.popup.close();        
+          test.popup.close();   
+          test.resume(function() {
+            Y.Assert.areEqual(1, 2, "Connection event should not have happened.");
+          });               
         });
         this.popup = window.open("/channelClient", "channelClient", "width=200, height=200");
         this.popup.focus();
         setTimeout(function() {
-          test.resume();
           test.popup.close();
+          test.resume();
         }, 2000);  
         test.wait(3000);  
       },
@@ -162,14 +164,16 @@ feather.ns("api_tester");
       testRestrictedMessage: function () {
         var test = this;
         this.channel.once("notAllowed", function() {
-          test.resume();
-          Y.Assert.areEqual(1, 2, "'notAllowed' message should not have been allowed.");
           test.popup.close();      
+          test.resume(function() {
+            Y.Assert.areEqual(1, 2, "'notAllowed' message should not have been allowed.");
+          });
         });
-        this.channel.once("error", function(args) {
-          test.resume();
-          Y.Assert.areEqual("Unsupported Messag", args.type, "Expected 'Unsupported Message'");
+        this.channel.once("error", function(args) {          
           test.popup.close();      
+          test.resume(function() {
+            Y.Assert.areEqual("Unsupported Message", args.type);
+          });
         });
         this.popup = window.open("/channelClient", "channelClient", "width=200, height=200");
         this.popup.focus();  
@@ -189,9 +193,10 @@ feather.ns("api_tester");
         this.popup.focus();  
         test.channel.send("test", {message: "hi"}); 
         timer = setTimeout(function() {
-          test.resume();
-          Y.Assert.areEqual(1, 2, "'test' message should have been allowed.");
           test.popup.close();
+          test.resume(function() {
+            Y.Assert.areEqual(1, 2, "'test' message should have been allowed.");
+          });
         }, 2000);
         test.wait(3000); 
       }
