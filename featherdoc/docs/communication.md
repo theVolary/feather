@@ -200,12 +200,13 @@ _Example 2 client.js_:
       });
     })(); 
 
-At this point I'd also like to point out that because the semantics of listening to messages are the same as listening for the `connection` events (by design), you cannot send your own `connection` messages. The following is the short list of _reserved_ messages, including `connection`:
+At this point I'd also like to point out that because the semantics of listening to messages are the same as listening for the various channel events (for convenience and by design), there are some messages that you cannot send because they are reserved. The following is the short list of _reserved_ messages:
  - `connection` (tells an already subscribed client that another client has connected to the channel)
+ - `disconnection` (tells a client that another client has disconnected from the channel)
  - `subscribe` (tells a client when its own subscribtion has been made successfully)
  - `unsubscribe` (tells a client when its own subscribtion has been removed)
- - `disconnection` (tells a client that another client has disconnected from the channel)
  - `error` (sent back to the client that originated the message; the `data` property of the return object contains the error message.)
+ - `groupJoined` (tells a client that it has successfully joined a group, or that another client has joined a group that it is a member of)
 
 Another very important, but potentially subtle thing to notice about our chat widget in its current form is that you could add instances of this widget on many pages of your application, and all clients across all pages would receive all of the chat messages. This might be desirable for some applications, but there are certainly a lot of use cases for limiting who gets what messages on a given channel. 
 
@@ -215,7 +216,7 @@ Now how about some more complex scenarios? Let's refactor our chat widget to acc
  - Allow users to send private messages directly to a single other user.
  - Allow two or more clients to communicate in private amongst themselves as an invitation-only group. 
 
-There are two main channel-level configuration settings that enable all three scenarios. The simple one is `allowDirectMessaging` (defaulted to `false`), and when set to `true` will let clients send messages directly to other clients. These direct messages are only visible to the two clients involved (and of course the server). These messages are also governed by any other configuration you may have placed on the channel. Direct messaging comes with no inherent opt-in or opt-out process, so if you want to add an 'ignore this user' function, you'll have to implement the `message` handler on the server and track an ignore list yourself.
+There are two main channel-level configuration settings that enable all three scenarios. The simple one is `allowDirectMessaging` (defaulted to `false`), and when set to `true` will let clients send messages directly to other clients. These direct messages are only visible to the clients involved (and of course the server). These messages are also governed by any other configuration you may have placed on the channel. Direct messaging comes with no inherent opt-in or opt-out process, so if you want to add an 'ignore this user' function, you'll have to implement the `message` handler on the server and track an ignore list yourself, or alternatively you could implement similar logic on the client side (using the channel specific `clientId` that's passed along with the `connection` events).
 
 The channel setting `allowGroups` (defaulted to false) lets you configure the channel to allow clients to create and join groups within the channel. The higher level channel constraints will still apply to groups (like allowed messages, etc.), but messages sent to a group will only propagate to clients that are active `members` of that group. This is how you could limit the message routing scope to a given page or URL as well as implement a private group chat feature for a chat widget.
 
@@ -558,7 +559,8 @@ _Example 3 client.js_:
        * In this example we're joining the group on the chat channel for "this page, by URL".
        */
       var chatChannel = feather.socket.subscribe("chat", {
-        groups: [window.location.href]
+        groups: [window.location.href],
+        data: {foo: "bar"} //illustration of passing data at subscribe-time (other clients will receive this data via the connection event)
       });
       
       myapp.chat = feather.widget.create({
@@ -568,11 +570,16 @@ _Example 3 client.js_:
           initialize: function($super, options) {
             $super(options);
           },
-          onReady: function() {
+          onReady: function() {            
+            this.bindUI();   
             
-            this.bindUI();
-            this.setupChannel();
-            
+            //add a secure group using a pseudo-random name (in practice, you might want to use a true uuid generator)
+            //using a random group name simply bolsters security a bit, and also can help avoid naming collisions
+            //since group names are first come first serve.
+            chatChannel.joinGroup({
+              name: feather.auth.user.username + "_" + (new Date()).getTime(),
+              secure: true
+            });
           },
           bindUI: function() {
             var me = this;
@@ -583,19 +590,25 @@ _Example 3 client.js_:
               chatChannel.sendGroup(window.location.href, "chat", {message: "hi!"});
             });
 
-            //When a different button is clicked (next to another user's screen name, for example),
-            //
-            me.domEvents.bind(me.get("#pm_button_next_to_another_connected_client", "click", function() {
-              //figure out which user they clicked on
-              var username = getUsernameClickedOn();
-
-
-            }));
-          },
-          setupChannel: function() {
             //when other clients connect, do something
             chatChannel.on("connection", function(args) {
               alert("another client has connected");
+
+              //add some UI to the page to allow direct messages and group invites, etc.
+              //you can use args.clientId to bake into your button ids in order to properly route direct messages and invites
+              //note: use args.data here to get at any data the other client-side or the server-side hooks have added (like username)
+              me.get("#userList").append("some HTML, including the username, a 'send direct message', and 'invite to group(s)' button");
+
+              //use the clientId to bind button handlers
+              me.domEvents.bind(me.get("#dmBtn_" + args.clientId, "click", function() {
+                //pass an array of clientIds to .send() to route direct messages
+                chatChannel.send("chat", {message: "direct hi!"}, [args.clientId]);
+              }));
+
+              me.domEvents.bind(me.get("#inviteBtn_" + args.clientId, "click", function() {
+                //pass an array of clientIds to .send() to route direct messages
+                chatChannel.send("chat", {message: "direct hi!"}, [args.clientId]);
+              }));
             });
             
             //when I receive a chat event on the chat channel, update the UI

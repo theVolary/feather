@@ -125,7 +125,7 @@ feather.ns("api_tester");
 
     new Y.Test.Case({
  
-      name: "Channel Restrictions",
+      name: "No Connection Announcements",
 
       //---------------------------------------------
       // Setup and tear down
@@ -133,11 +133,15 @@ feather.ns("api_tester");
 
       setUp : function () {
         this.channel = feather.socket.subscribe({id: "channel3"});
+        this.popup = window.open("/channelClient", "channelClient", "width=200, height=200");
+        this.popup.focus();
       },
 
       tearDown : function () { 
         this.channel.unsubscribe();
-        delete this.channel;             
+        this.popup.close();
+        delete this.channel;  
+        delete this.popup;           
       },
 
       //---------------------------------------------
@@ -145,60 +149,154 @@ feather.ns("api_tester");
       //---------------------------------------------
 
       testNoAnnounce: function () {
-        var test = this;
+        var test = this,
+          timer;;
         this.channel.once("connection", function() {
-          test.popup.close();   
+          clearTimeout(timer);  
           test.resume(function() {
             Y.Assert.areEqual(1, 2, "Connection event should not have happened.");
           });               
         });
-        this.popup = window.open("/channelClient", "channelClient", "width=200, height=200");
-        this.popup.focus();
-        setTimeout(function() {
-          test.popup.close();
+        timer = setTimeout(function() {
           test.resume();
         }, 2000);  
         test.wait(3000);  
+      }
+    }),
+
+    new Y.Test.Case({
+ 
+      name: "Messaging Restrictions",
+
+      //---------------------------------------------
+      // Setup and tear down
+      //---------------------------------------------
+
+      setUp : function () {
+        this.channel = feather.socket.subscribe({id: "channel4"});
+        this.popup = window.open("/channelClient", "channelClient", "width=200, height=200");
+        this.popup.focus();
       },
+
+      tearDown : function () { 
+        this.channel.unsubscribe();
+        this.popup.close();
+        delete this.channel;  
+        delete this.popup;           
+      },
+
+      //---------------------------------------------
+      // Tests
+      //---------------------------------------------
 
       testRestrictedMessage: function () {
         var test = this;
         this.channel.once("notAllowed", function() {
-          test.popup.close();      
           test.resume(function() {
             Y.Assert.areEqual(1, 2, "'notAllowed' message should not have been allowed.");
           });
         });
-        this.channel.once("error", function(args) {          
-          test.popup.close();      
+        this.channel.once("error", function(args) {
           test.resume(function() {
             Y.Assert.areEqual("Unsupported Message", args.type);
           });
         });
-        this.popup = window.open("/channelClient", "channelClient", "width=200, height=200");
-        this.popup.focus();  
         test.channel.send("notAllowed", {message: "hi"}); 
         test.wait(3000); 
       },
 
       testAllowedMessage: function () {
-        var test = this,
-          timer;
-        this.channel.once("test", function() {
-          clearTimeout(timer);
-          test.resume();
-          test.popup.close();      
-        });
-        this.popup = window.open("/channelClient", "channelClient", "width=200, height=200");
-        this.popup.focus();  
-        test.channel.send("test", {message: "hi"}); 
-        timer = setTimeout(function() {
-          test.popup.close();
-          test.resume(function() {
-            Y.Assert.areEqual(1, 2, "'test' message should have been allowed.");
+        var test = this;
+        test.channel.once("connection", function() {
+          test.channel.once("ack", function(args) {
+            test.resume(function() {
+              Y.Assert.areEqual("got it", args.message, "Expected 'got it' back from other client");
+            });          
           });
-        }, 2000);
-        test.wait(3000); 
+          test.channel.send("test", {message: "hi"});
+        });        
+        test.wait(2000);
+      },
+
+      testDirectMessageNotAllowed: function () {
+        var test = this;
+        test.channel.once("connection", function(connectionArgs) {
+          test.channel.once("ack", function(args) {
+            test.resume(function() {
+              Y.Assert.fail("Direct Messaging should not have been allowed");
+            });          
+          });
+          test.channel.once("error", function(args) {
+            test.resume(function() {
+              Y.Assert.areEqual("Direct Messages Not Allowed", args.type);
+            }); 
+          });
+          test.channel.send("test", {message: "hi"}, [connectionArgs.clientId]);
+        });        
+        test.wait(2000);
+      }
+    }),
+
+    new Y.Test.Case({
+ 
+      name: "Direct Messaging & Groups",
+
+      //---------------------------------------------
+      // Setup and tear down
+      //---------------------------------------------
+
+      setUp : function () {
+        this.channel = feather.socket.subscribe({id: "channel5"});
+        this.popup1 = window.open("/channelClient", "channelClient", "width=200, height=200");
+        this.popup2 = window.open("/channelClient2", "channelClient2", "width=200, height=200");
+      },
+
+      tearDown : function () { 
+        this.channel.unsubscribe();
+        this.popup1.close();
+        this.popup2.close();
+        delete this.channel;  
+        delete this.popup1;     
+        delete this.popup2;           
+      },
+
+      //---------------------------------------------
+      // Tests
+      //---------------------------------------------
+
+      testDirectMessage: function () {
+        var test = this;
+        var error = false;
+        test.channel.on("connection", function(connectionArgs) {
+          if (connectionArgs.data && connectionArgs.data.clientMessage === "client2") {
+            test.channel.once("ack2", function(args) {
+              setTimeout(function() {
+                if (!error) {
+                  test.resume(function() {
+                    Y.Assert.areEqual("got it", args.message, "Expected 'got it' back from other client");
+                  }); 
+                }
+              }, 2000);         
+            });
+            test.channel.once("ack", function(args) {
+              error = true;
+              test.resume(function() {
+                Y.Assert.areEqual(1, 2, "Only 1 client should have received the direct message.");
+              })
+            })
+            test.channel.send("test", {message: "hi"}, [connectionArgs.clientId]);
+          }
+        });        
+        test.wait(4000);
+      },
+
+      testPublicGroup: function() {
+        var test = this;
+        test.channel.once("groupJoined", function(args) {
+          
+        });
+        test.channel.joinGroup("")
+        test.wait(2000);
       }
     })
   ];
