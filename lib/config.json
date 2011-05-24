@@ -31,6 +31,9 @@
         "type": "console",
         "options": { "layout": "colored" }
       }
+    ],
+    "templates": [
+      {"id":"separator", "template":"-------------------------------------------------------------------------"}
     ]
   },
   "resources": {
