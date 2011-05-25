@@ -29,9 +29,9 @@ feather.ns("api_tester");
         });
 
         window.onbeforeunload = function() {
-          channel2.unsubscribe();
-          channel4.unsubscribe();
-          channel5.unsubscribe();
+          channel2.dispose();
+          channel4.dispose();
+          channel5.dispose();
         };
       }
     }

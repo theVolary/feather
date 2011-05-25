@@ -203,12 +203,12 @@ _Example 2 client.js_:
 At this point I'd also like to point out that because the semantics of listening to messages are the same as listening for the various channel events (for convenience and by design), there are some messages that you cannot send because they are reserved. The following is the short list of _reserved_ messages:
  - `connection` (tells an already subscribed client that another client has connected to the channel)
  - `disconnection` (tells a client that another client has disconnected from the channel)
- - `subscribe` (tells a client when its own subscribtion has been made successfully)
- - `unsubscribe` (tells a client when its own subscribtion has been removed)
+ - `subscribed` (tells a client when its own subscription has been made successfully)
+ - `unsubscribed` (tells a client when its own subscription has been removed)
  - `error` (sent back to the client that originated the message; the `data` property of the return object contains the error message.)
- - `groupJoined` (tells a client that it has successfully joined a group, or that another client has joined a group that it is a member of)
+ - `group:*` (group communications are done via the `group:*` namespace. Clients using `group:group_name:message_name` syntax must be members of group `group_name` first. The .sendGroup() client side method is a convenience alias for sending messages in this format.)
 
-Another very important, but potentially subtle thing to notice about our chat widget in its current form is that you could add instances of this widget on many pages of your application, and all clients across all pages would receive all of the chat messages. This might be desirable for some applications, but there are certainly a lot of use cases for limiting who gets what messages on a given channel. 
+Another very important, but potentially subtle thing to notice about our chat widget in its current form is that you could add instances of this widget on many pages of your application and all clients across all pages would receive all of the chat messages. This might be desirable for some applications, but there are certainly a lot of use cases for limiting who gets what messages on a given channel. 
 
 ### Private Messages, Groups and Invitations ###
 Now how about some more complex scenarios? Let's refactor our chat widget to accomplish the following stated goals:

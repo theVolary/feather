@@ -18,6 +18,7 @@ var channel4 = feather.socket.addChannel({
 var channel5 = feather.socket.addChannel({
   id: "channel5",
   allowDirectMessaging: true,
+  allowGroups: true,
   messages: ["test", "ack", "ack2"]
 });
 

@@ -36,7 +36,7 @@ feather.ns("api_tester");
           });
           channel.unsubscribe();
         });  
-        test.wait(200000); 
+        test.wait(2000); 
       }  
     }),
 
@@ -53,7 +53,7 @@ feather.ns("api_tester");
       },
 
       tearDown : function () { 
-        this.channel.unsubscribe();
+        this.channel.dispose();
         delete this.channel;             
       },
 
@@ -88,7 +88,7 @@ feather.ns("api_tester");
       },
 
       tearDown : function () { 
-        this.channel.unsubscribe();
+        this.channel.dispose();
         delete this.channel;             
       },
 
@@ -112,7 +112,7 @@ feather.ns("api_tester");
           test.channel.once("ack", function(args) {            
             test.popup.close();  
             test.resume(function() {
-              Y.Assert.areEqual("got it", args.message, "Expected 'got it' back from other client");
+              Y.Assert.areEqual("got it", args.data.message, "Expected 'got it' back from other client");
             });          
           });
           test.channel.send("test", {message: "hi"});      
@@ -138,7 +138,7 @@ feather.ns("api_tester");
       },
 
       tearDown : function () { 
-        this.channel.unsubscribe();
+        this.channel.dispose();
         this.popup.close();
         delete this.channel;  
         delete this.popup;           
@@ -154,7 +154,7 @@ feather.ns("api_tester");
         this.channel.once("connection", function() {
           clearTimeout(timer);  
           test.resume(function() {
-            Y.Assert.areEqual(1, 2, "Connection event should not have happened.");
+            Y.Assert.fail("Connection event should not have happened.");
           });               
         });
         timer = setTimeout(function() {
@@ -179,7 +179,7 @@ feather.ns("api_tester");
       },
 
       tearDown : function () { 
-        this.channel.unsubscribe();
+        this.channel.dispose();
         this.popup.close();
         delete this.channel;  
         delete this.popup;           
@@ -193,7 +193,7 @@ feather.ns("api_tester");
         var test = this;
         this.channel.once("notAllowed", function() {
           test.resume(function() {
-            Y.Assert.areEqual(1, 2, "'notAllowed' message should not have been allowed.");
+            Y.Assert.fail("'notAllowed' message should not have been allowed.");
           });
         });
         this.channel.once("error", function(args) {
@@ -210,7 +210,7 @@ feather.ns("api_tester");
         test.channel.once("connection", function() {
           test.channel.once("ack", function(args) {
             test.resume(function() {
-              Y.Assert.areEqual("got it", args.message, "Expected 'got it' back from other client");
+              Y.Assert.areEqual("got it", args.data.message, "Expected 'got it' back from other client");
             });          
           });
           test.channel.send("test", {message: "hi"});
@@ -252,7 +252,7 @@ feather.ns("api_tester");
       },
 
       tearDown : function () { 
-        this.channel.unsubscribe();
+        this.channel.dispose();
         this.popup1.close();
         this.popup2.close();
         delete this.channel;  
@@ -273,7 +273,7 @@ feather.ns("api_tester");
               setTimeout(function() {
                 if (!error) {
                   test.resume(function() {
-                    Y.Assert.areEqual("got it", args.message, "Expected 'got it' back from other client");
+                    Y.Assert.areEqual("got it", args.data.message, "Expected 'got it' back from other client");
                   }); 
                 }
               }, 2000);         
@@ -281,22 +281,60 @@ feather.ns("api_tester");
             test.channel.once("ack", function(args) {
               error = true;
               test.resume(function() {
-                Y.Assert.areEqual(1, 2, "Only 1 client should have received the direct message.");
-              })
-            })
+                Y.Assert.fail("Only 1 client should have received the direct message.");
+              });
+            });
             test.channel.send("test", {message: "hi"}, [connectionArgs.clientId]);
           }
         });        
         test.wait(4000);
       },
 
-      testPublicGroup: function() {
+      testPublicGroupSelfJoin: function() {
         var test = this;
-        test.channel.once("groupJoined", function(args) {
-          
-        });
-        test.channel.joinGroup("")
+        test.channel.once("subscribe", function(subscribeArgs) {
+          test.channel.on("group:publicGroup1", function(args) {
+            if (args.clientId === subscribeArgs.clientId) { //test for my own join event (vs. another client joining the group)
+              test.resume();
+            }
+          });
+          test.channel.joinGroup("publicGroup1");
+        });        
         test.wait(2000);
+      },
+
+      testLeaveGroup: function() {
+        var test = this;
+        test.channel.once("subscribe", function(subscribeArgs) {
+          test.channel.on("group:publicGroup1", function(joinArgs) {
+            if (joinArgs.clientId === subscribeArgs.clientId) { //test for my own join event (vs. another client joining the group)
+              test.channel.on("group:publicGroup1:leave:", function(leaveArgs) {
+                if (leaveArgs.clientId === subscribeArgs.clientId) {
+                  test.resume();
+                }
+              });
+              test.channel.leaveGroup("publicGroup1");
+            }
+          });
+          test.channel.joinGroup("publicGroup1");
+        });        
+        test.wait(2000);
+      },
+
+      testSendGroup: function() {
+        var test = this;
+        test.channel.once("subscribe", function(subscribeArgs) {
+          test.channel.on("group:publicGroup1", function(args) {
+            if (args.memberCount === 2) { //wait until at least one other client has joined the group
+              test.channel.once("group:publicGroup1:ack", function() {
+                test.resume();
+              });
+              test.channel.sendGroup("publicGroup1", "test", {message: "hi"});
+            }
+          });
+          test.channel.joinGroup("publicGroup1");
+        });        
+        test.wait(4000);
       }
     })
   ];
