@@ -95,7 +95,7 @@ var commands = {
         }
       }
       var testDir = process.env.FEATHER_HOME+"/test/unit";
-      console.log("getting files in " + testDir);
+      if (options.verbose) cli.info("Getting files in " + testDir);
       var files = [].concat(getFiles(testDir));
 
       // Read the test files
@@ -170,6 +170,7 @@ var commands = {
       });
 
       if (ready) {
+        cli.info("Running tests...");
         // Start testing
         testRunner.run({
           groups: options.groups ? options.groups.split(",") : null
@@ -413,7 +414,7 @@ function getFiles(dir){
     }
 
     function traverse(dir, stack){
-        console.log("Traversing " + dir);
+        if (options.verbose) cli.info("Traversing " + dir);
         stack.push(dir);
         fs.readdirSync(stack.join("/")).forEach(function(file){
             var path = stack.concat([file]).join("/");
