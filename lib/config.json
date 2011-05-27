@@ -1,4 +1,5 @@
 {
+  "appNamespace":"featherapp",
   "auth": {
     "enabled": false,
     "userIdPrefix": "org.couchdb.user:"
