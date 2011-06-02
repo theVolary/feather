@@ -10,7 +10,7 @@
     setUp: function() {
       this.defaultStates = {
         initial: {
-          stateStartup: function(fsm, args) {
+          stateStartup: function() {
             
           }
         }
@@ -34,7 +34,7 @@
     testGotoState: function() {
       var fsm = this.getFsm({
         testPassed: {
-            stateStartup: function(fsm, args) {}
+          stateStartup: function() {}
         }
       });
 
@@ -45,7 +45,7 @@
     testOnState: function() {
       var fsm = this.getFsm({
         initial: {
-          gotoReady: function(fsm, args) {
+          gotoReady: function() {
             return fsm.states.ready;
           }
         },
@@ -65,7 +65,7 @@
     testOnceState: function() {
       var fsm = this.getFsm({
         initial: {
-          gotoReady: function(fsm, args) {
+          gotoReady: function() {
             return fsm.states.ready;
           }
         },
