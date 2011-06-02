@@ -1,3 +1,5 @@
+var feather = require(process.env.FEATHER_HOME+"/lib/feather").feather;
+
 feather.ns("blog");
 
 blog.engine = feather.widget.create({
