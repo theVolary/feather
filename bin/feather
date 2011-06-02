@@ -9,7 +9,7 @@ var fs    = require("fs"),
     cli   = require("cli").enable('version').setApp('feather', '0.1');
 
 if (!process.env.FEATHER_HOME) {
-  cli.fatal("The environment variables #white[FEATHER_HOME] is required.");
+  cli.fatal("The environment variable #white[FEATHER_HOME] is required.");
 } else {
   var stat = fs.statSync(process.env.FEATHER_HOME);
   if (!stat.isDirectory()) {
@@ -50,8 +50,8 @@ var options = cli.parse({
     path: ['p', 'The path to the application to apply this command to', 'path', process.cwd()],
     pidpath: ['i', 'The path of the pid file to use when running as a daemon (run command only)', 'path', null],
     verbose: ['V', 'Verbose output', 'boolean', null],
-    format: ['f', 'Used for test commands to denote the output format.  Valid formats are "tap", "xunit", and "junitxml".', 'string', null]
-    
+    format: ['f', 'Used for test commands to denote the output format.  Valid formats are "tap", "xunit", and "junitxml".', 'string', null],
+    testsuite: ['t', 'Specify the name of a single test suite to run inside of feather/test/unit (omit the file extension)', 'string', null]
   },
   ['run', 'test', 'api-test', 'create-app', 'create-widget', 'help']);
 
@@ -96,7 +96,12 @@ var commands = {
       }
       var testDir = process.env.FEATHER_HOME+"/test/unit";
       if (options.verbose) cli.info("Getting files in " + testDir);
-      var files = [].concat(getFiles(testDir));
+      var files = [];
+      if (options.testsuite) {
+        files.push(path.join(testDir, options.testsuite));
+      } else {
+        files.concat(getFiles(testDir));
+      }
 
       // Read the test files
       var i, len, output, ready = true;
@@ -121,10 +126,6 @@ var commands = {
         ready = false;
       }
 
-      //args.push(process.env.FEATHER_HOME + "/test/unit");
-      //Array.prototype.push.apply(args, cli.args);
-      //if (options.debug) cli.debug("Spawning test process node " + args);
-      //runChild("node", args, process.env.FEATHER_HOME);
       var Y = require("yuitest"),
           testRunner = Y.TestRunner,
           formatter = null;

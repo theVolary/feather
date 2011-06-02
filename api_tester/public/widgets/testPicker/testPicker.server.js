@@ -1,5 +1,3 @@
-feather.ns("api_tester");
-
 var fs = require("fs");
 var path = require("path");
 
@@ -9,16 +7,15 @@ function getTests() {
   return tests;
 }
 
-api_tester.testPicker = feather.widget.create({
+exports.widget = {
   name: "api_tester.testPicker",
-  path: "widgets/testPicker/",
   prototype: {
-    initialize: function($super, options) {
-      $super(options);
+    init: function(options) {
+      api_tester.testPicker.super.apply(this, arguments);
       this.tests = getTests();
     },
-    onRender: function() {
-      this.scripts.push("widget.tests = " + JSON.stringify(this.tests) + ";");
+    onRender: function(ctx) {
+      ctx.scripts.push("widget.tests = " + JSON.stringify(this.tests) + ";");
     }
   }
-});
+};
