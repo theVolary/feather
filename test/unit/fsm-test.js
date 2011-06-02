@@ -103,7 +103,7 @@
       var fsm = new FSM({});
       fsm.onState("initial", function() {});
       fsm.dispose();
-      Y.Assert.isNull(fsm.listeners('stateStartup'), "The listeners array should have been null by now.");
+      Y.Assert.isNull(fsm.listeners, "The listeners array should have been null by now.");
       // TODO: Other assertions to verify disposal?
     }
 
