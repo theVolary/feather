@@ -100,7 +100,7 @@ var commands = {
       if (options.testsuite) {
         files.push(path.join(testDir, options.testsuite));
       } else {
-        files.concat(getFiles(testDir));
+        files = files.concat(getFiles(testDir));
       }
 
       // Read the test files
