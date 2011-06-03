@@ -76,6 +76,18 @@
           });
         }
       });
+    },
+
+    testGetItems: function() {
+      var test = this;
+      cache.getItems(["item1", "item2"], function(err, _items) {
+        if (err) {
+          Y.Assert.fail(err);
+        } else {
+          Y.Assert.areSame(test.item1, _items.item1, "items should be the same");
+          Y.Assert.areEqual(test.item2.value, _items.item2.value, "item values should be equal");
+        }
+      });
     }
 
   }));
