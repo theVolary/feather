@@ -39,12 +39,16 @@
   },
   "resources": {
     "consolidateAll": false,
-    "minifyAll": false,
+    "minifyAll": false, 
+    "mangleAllJs": false, 
+    "minifyJs": false,
+    "minifjCss": false, 
     "packages": [
       { 
         "name":"feather-client-core.js",
         "consolidate": false,
-        "minify": false
+        "minify": false,
+        "mangle": false
       },
       {
         "name": "feather-client-core.css",
