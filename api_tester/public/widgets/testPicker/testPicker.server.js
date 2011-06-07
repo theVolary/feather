@@ -1,21 +1,26 @@
-var fs = require("fs");
-var path = require("path");
+var fs = require("fs"),
+   path = require("path");
 
-var configPath = path.join(feather.appOptions.appRoot, "tests.json");
-function getTests() {
+
+function getTests(path) {
   var tests = eval("(" + fs.readFileSync(configPath) + ")");
   return tests;
 }
 
-exports.widget = {
-  name: "api_tester.testPicker",
-  prototype: {
-    init: function(options) {
-      api_tester.testPicker.super.apply(this, arguments);
-      this.tests = getTests();
-    },
-    onRender: function(ctx) {
-      ctx.scripts.push("widget.tests = " + JSON.stringify(this.tests) + ";");
+exports.getWidget = function(appOptions, cb) {
+  var configPath = path.join(appOptions.appRoot, "tests.json");
+
+  cb(null, {
+    name: "api_tester.testPicker",
+    path: "widgets/testPicker/",
+    prototype: {
+      init: function(options) {
+        api_tester.testPicker.super.apply(this, arguments);
+        this.tests = getTests(configPath);
+      },
+      onRender: function() {
+        this.scripts.push("widget.tests = " + JSON.stringify(this.tests) + ";");
+      }
     }
-  }
+  });
 };
