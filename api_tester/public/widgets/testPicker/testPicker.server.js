@@ -1,24 +1,25 @@
-feather.ns("api_tester");
+var fs = require("fs"),
+   path = require("path");
 
-var fs = require("fs");
-var path = require("path");
 
-var configPath = path.join(feather.appOptions.appRoot, "tests.json");
-function getTests() {
-  var tests = eval("(" + fs.readFileSync(configPath) + ")");
+function getTests(path) {
+  var tests = eval("(" + fs.readFileSync(path) + ")");
   return tests;
 }
 
-api_tester.testPicker = feather.widget.create({
-  name: "api_tester.testPicker",
-  path: "widgets/testPicker/",
-  prototype: {
-    initialize: function($super, options) {
-      $super(options);
-      this.tests = getTests();
-    },
-    onRender: function() {
-      this.scripts.push("widget.tests = " + JSON.stringify(this.tests) + ";");
+exports.getWidget = function(appOptions, cb) {
+  var configPath = path.join(appOptions.appRoot, "tests.json");
+  
+  cb(null, {
+    name: "api_tester.testPicker",
+    path: "widgets/testPicker/",
+    prototype: {
+      onInit: function(options) {
+        this.tests = getTests(configPath);
+      },
+      onRender: function() {
+        this.scripts.push("widget.tests = " + JSON.stringify(this.tests) + ";");
+      }
     }
-  }
-});
+  });
+};

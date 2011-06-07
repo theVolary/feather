@@ -42,16 +42,15 @@ feather.ns("api_tester");
       },
       setupYUI: function() {
         var me = this;
-        YUI({ logInclude: { TestRunner: true } }).use("test", "console", function(Y){
- 
-            window.Y = Y;
-            me.YUIFSM.fire("ready");
-         
-            //initialize the console
-            var yconsole = new Y.Console({
-                newestOnTop: false                   
-            });
-            yconsole.render();
+        YUI({ logInclude: { TestRunner: true } }).use("test", "console", function(Y){ 
+          window.Y = Y;
+          me.YUIFSM.fire("ready");
+       
+          //initialize the console
+          var yconsole = new Y.Console({
+            newestOnTop: false                   
+          });
+          yconsole.render();
         });
       },
       runTests: function() {
