@@ -1,4 +1,8 @@
-exports.BlogApi = Class.create({
+
+
+exports.BlogApi = function() {
+  
+};
   initialize: function(options) {
     options = options || {};
   },  

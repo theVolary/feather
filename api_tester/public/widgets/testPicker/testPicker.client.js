@@ -77,7 +77,6 @@ feather.ns("api_tester");
               widget.addTests();
               sem.execute();
             } else {
-              debugger;
               feather.widget.load({
                 id: feather.id(),
                 path: test.path,
