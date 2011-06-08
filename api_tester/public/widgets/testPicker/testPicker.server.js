@@ -7,8 +7,8 @@ function getTests(path) {
   return tests;
 }
 
-exports.getWidget = function(appOptions, cb) {
-  var configPath = path.join(appOptions.appRoot, "tests.json");
+exports.getWidget = function(feather, cb) {
+  var configPath = path.join(feather.appOptions.appRoot, "tests.json");
   
   cb(null, {
     name: "api_tester.testPicker",
