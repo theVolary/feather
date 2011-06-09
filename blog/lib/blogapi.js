@@ -1,12 +1,9 @@
-
-
-exports.BlogApi = function() {
-  
+var blogApi = exports.BlogApi = function(feather) {
+  this.feather = feather;
 };
-  initialize: function(options) {
-    options = options || {};
-  },  
+blogApi.prototype = {
   getPosts: function(callback) {
+    var feather = this.feather;
     feather.logger.info({message:'Getting posts by date from couch.',category:'blog.api'});
     feather.data.appdb.view("blogentry/posts_by_date", { descending: true }, function(err, dbResult) {
       if (!err) {
@@ -26,6 +23,7 @@ exports.BlogApi = function() {
     }); // end couch.db.view
   },
   getPost:function(id, callback) {
+    var feather = this.feather;
     feather.logger.info("Getting post " + id);
     feather.data.appdb.get(id, function(err, doc) {
       if (!err) {
@@ -35,6 +33,7 @@ exports.BlogApi = function() {
     });
   },
   savePost: function(post, callback) {
+    var feather = this.feather;
     feather.logger.info({message: 'Creating post titled ${summary} with id ${id}', replacements:post, category:'blog.api'});
     var dbDoc = {
       id: post.id,
@@ -52,6 +51,7 @@ exports.BlogApi = function() {
     }
   },
   postIsInvalid: function(post) {
+    var feather = this.feather;
     var result = [];
     if (!post) {
       return ["Post is not a valid document."]; 
@@ -68,6 +68,5 @@ exports.BlogApi = function() {
     }
     if (result.length === 0) return null;
     return result;
-  }
-  
-});
+  }  
+};
