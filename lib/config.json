@@ -38,7 +38,16 @@
     ]
   },
   "resources": {
-    "consolidateAll": false,
+    "consolidation": {
+      "consolidateAll": false,
+      "enabled": false,
+      "serveStatic": {
+        "enabled": true,
+        "urlPrefix": "/feather-res-cache",
+        "method": "disk",
+        "diskPath": null,
+      }
+    },
     "minifyAll": false, 
     "mangleAllJs": false, 
     "minifyJs": false,
