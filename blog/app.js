@@ -1,5 +1,6 @@
-exports.onReady = function() {
-  feather.ns("feather.blog");
+exports.onReady = function(feather) {
   var BlogApi = require("./lib/blogapi").BlogApi;
-  feather.blog.api = new BlogApi();
+  feather.blog = {
+    api: new BlogApi(feather)
+  };
 };

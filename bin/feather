@@ -9,7 +9,7 @@ var fs    = require("fs"),
     cli   = require("cli").enable('version').setApp('feather', '0.1');
 
 if (!process.env.FEATHER_HOME) {
-  cli.fatal("The environment variables #white[FEATHER_HOME] is required.");
+  cli.fatal("The environment variable #white[FEATHER_HOME] is required.");
 } else {
   var stat = fs.statSync(process.env.FEATHER_HOME);
   if (!stat.isDirectory()) {
@@ -48,10 +48,12 @@ var options = cli.parse({
     loglevel: ['l', 'The default logging level to use.  Options are: all, trace, debug, info, warn, error, off', 'string', null],
     outputpath: ['o', 'Path to write std output to when running as a daemon (run command only)', 'path', null],
     path: ['p', 'The path to the application to apply this command to', 'path', process.cwd()],
-    pidpath: ['i', 'The path of the pid file to use when running as a daemon (run command only)', 'path', null]
-    
+    pidpath: ['i', 'The path of the pid file to use when running as a daemon (run command only)', 'path', null],
+    verbose: ['V', 'Verbose output', 'boolean', null],
+    format: ['f', 'Used for test commands to denote the output format.  Valid formats are "tap", "xunit", and "junitxml".', 'string', null],
+    testsuite: ['t', 'Specify the name of a single test suite to run inside of feather/test/unit (omit the file extension)', 'string', null]
   },
-  ['run', 'test', 'create-app', 'create-widget', 'help']);
+  ['run', 'test', 'api-test', 'create-app', 'create-widget', 'help']);
 
 if (options.debug) {
   cli.debug("Parsed options are: " + util.inspect(options));
@@ -78,6 +80,103 @@ var commands = {
       addAdditionalOptions(args);
       
       runChild("node", args, appDir);
+    }
+  },
+  apiTest: {
+    desc: "Runs the unit tests for the framework itself.",
+    usage: "feather [OPTIONS] api-test",
+    fn: function() {
+      var args = [];
+      if (options.debug) args.push('debug');
+      args.push(process.env.FEATHER_HOME + '/bin/yuitest');
+      for (var p in options) { 
+        if (p !== 'app') {
+          args.push('--'+p);
+        }
+      }
+      var testDir = process.env.FEATHER_HOME+"/test/unit";
+      if (options.verbose) cli.info("Getting files in " + testDir);
+      var files = [];
+      if (options.testsuite) {
+        files.push(path.join(testDir, options.testsuite));
+      } else {
+        files = files.concat(getFiles(testDir));
+      }
+
+      // Read the test files
+      var i, len, output, ready = true;
+
+      if (files.length > 0){
+        for (i=0, len=files.length; i < len; i++){
+
+          if (options.verbose){
+            cli.info("Loading " + files[i] + "\n");
+          }
+
+          try {
+            require(files[i]);
+          } catch (ex) {
+            cli.error(util.inspect(ex));
+            cli.error("No tests loaded from " + files[i] + ".");
+            ready = false;
+          }
+        }
+      } else {
+        cli.error({message:"No tests to run, exiting.\n", category:"feather.test"});
+        ready = false;
+      }
+
+      var Y = require("yuitest"),
+          testRunner = Y.TestRunner,
+          formatter = null;
+      
+      switch(options.format) {
+        case "junitxml":
+          if (options.verbose){
+            cli.info("Using JUnitXML output format.\n");
+          }
+          Y.Node.CLI.Format(Y.TestFormat.JUnitXML);
+          formatter = Y.TestFormat.JUnitXML;
+          break;
+        case "xunit":
+          if (options.verbose) {
+            cli.info("Using XUnit output format.\n");
+          }
+          Y.Node.CLI.XUnit();
+          formatter = Y.TestFormat.XUnit;
+          break;
+        case "tap":
+          if (options.verbose){
+            cli.info("Using TAP output format.\n");
+          }
+          Y.Node.CLI.Format(Y.TestFormat.TAP);
+          formatter = Y.TestFormat.TAP;
+          break;
+        default:
+          if (options.verbose){
+            cli.info("Using TAP output format.\n");
+          }
+          Y.Node.CLI.Format(Y.TestFormat.TAP);
+          formatter = Y.TestFormat.TAP;
+          break;
+      }
+      // Setup completion handler.
+      testRunner.subscribe("complete", function(event) {
+        var output = formatter(event.results);
+        if (! path.existsSync(process.env.FEATHER_HOME+"/reports")) {
+          fs.mkdirSync(process.env.FEATHER_HOME+"/reports", 0755);
+        }
+        var outputPath = process.env.FEATHER_HOME + "/reports/test-results.xml";
+        fs.writeFileSync(outputPath, output);
+      });
+
+      if (ready) {
+        cli.info("Running tests...");
+        // Start testing
+        testRunner.run({
+          groups: options.groups ? options.groups.split(",") : null
+        });
+      }
     }
   },
   test: {
@@ -277,7 +376,7 @@ function createWidget(appDir, namespace, widgetName) {
     'feather.ns("' + namespace + '");',
     namespace+'.'+widgetName+' = feather.widget.create({',
     '  name: "'+namespace+'.'+widgetName+'",',
-    '  path: "/widgets/'+widgetName+'/",',
+    '  path: "widgets/'+widgetName+'/",',
     '  prototype: {',
     '    initialize: function($super, options) {',
     '      $super(options);',
@@ -290,7 +389,7 @@ function createWidget(appDir, namespace, widgetName) {
     '(function() {',
     '  '+namespace+'.'+widgetName+' = feather.widget.create({',
     '    name: "'+namespace+'.'+widgetName+'",',
-    '    path: "/widgets/'+widgetName+'/",',
+    '    path: "widgets/'+widgetName+'/",',
     '    prototype: {',
     '      initialize: function($super, options) {',
     '        $super(options);',
@@ -304,4 +403,39 @@ function createWidget(appDir, namespace, widgetName) {
   fs.writeFileSync(path.join(fullPath, widgetName+'.template.html'), "", "utf-8");
   fs.writeFileSync(path.join(fullPath, widgetName+'.css'), "", "utf-8");
   cli.ok(color.ansify("#green[Widget #white["+widgetName+"] created at #white["+fullPath+"].]\n"));
+}
+
+function getFiles(dir){
+    var files = [];
+    
+    try {
+        fs.statSync(dir);
+    } catch (ex){
+        return [];
+    }
+
+    function traverse(dir, stack){
+        if (options.verbose) cli.info("Traversing " + dir);
+        stack.push(dir);
+        fs.readdirSync(stack.join("/")).forEach(function(file){
+            var path = stack.concat([file]).join("/");
+            var stat = fs.statSync(path);
+            
+            if (file[0] == ".") {
+                return;
+            } else if (stat.isFile() && /\.js$/.test(file)){
+                if (options.verbose) {
+                  cli.info("Found test file " + path);
+                }
+                files.push(path);
+            } else if (stat.isDirectory()){
+                traverse(file, stack);
+            }
+        });
+        stack.pop();
+    }
+    
+    traverse(dir, []);
+
+    return files;
 }

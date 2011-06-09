@@ -1,0 +1,9 @@
+{
+  "logging": {
+    "enabled": true,
+    "defaultLevel": "warn",
+    "categories": {
+      "feather.http": "off"
+    }
+  }
+}
