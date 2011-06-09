@@ -49,6 +49,9 @@ Thus, I'm going to include some workflow instructions.
         - $: `npm install yuitest`
         - $: `npm install daemon`
         - $: `npm install colorize` (Added 5/10/2011; used by the CLI)
+        - $: `npm install uuid`
+        - $: `npm install clean-css`
+        - $: `npm install uglify-js`
     - In featherdoc app
       - $: `mkdir node_modules` (If this step is omitted, npm will install it in feather's copy of node_modules rather than create the folder for you.)
       - $: `npm install node-markdown` (required for the featherdoc app)
