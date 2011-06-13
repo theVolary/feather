@@ -30,7 +30,7 @@
           "feather.http": "off",
           "feather.fsm": "info",
           "blog.api": "debug",
-          "feather.respack":"off"
+          "feather.respack":"all"
         },
         "appenders": [
           { 
@@ -41,6 +41,11 @@
         "templates": [
           {"id":"separator", "template":"-------------------------------------------------------------------------"}
         ]
+      },
+      "resources": {
+        "publish": {
+          "consolidate": false
+        }
       }
     }
   }

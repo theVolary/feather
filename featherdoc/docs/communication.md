@@ -89,7 +89,7 @@ _Example 1 client.js_:
       /**
        * subscribe to the channel
        */
-      var chatChannel = feather.socket.subscribe("chat");
+      var chatChannel = feather.socket.subscribe({id: "chat"});
       
       myapp.chat = feather.widget.create({
         name: "myapp.chat",

@@ -55,15 +55,15 @@
     "packages": [
       { 
         "name":"feather-client-core.js",
-        "consolidate": false,
+        "consolidate": true,
         "minify": false,
         "mangleJs": false,
         "publisherId": "local"
       },
       {
         "name": "feather-client-core.css",
-        "consolidate": false,
-        "minify": false,
+        "consolidate": true,
+        "minify": true,
         "publisherId": "local"
       }
     ]
