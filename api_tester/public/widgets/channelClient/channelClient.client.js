@@ -9,10 +9,30 @@ feather.ns("api_tester");
       },
       onReady: function() {
         var me = this;
-        var channel = feather.socket.subscribe({id: "channel2"});
-        channel.on("test", function(args) {
-          channel.send("ack", {message: "got it"});
+
+        var channel2 = feather.socket.subscribe({id: "channel2"});
+        channel2.on("test", function(args) {
+          channel2.send("ack", {message: "got it"});
         });
+
+        var channel4 = feather.socket.subscribe({id: "channel4"});
+        channel4.on("test", function(args) {
+          channel4.send("ack", {message: "got it"});
+        });
+
+        var channel5 = feather.socket.subscribe({
+          id: "channel5",
+          data: {clientMessage: "client1"}
+        });
+        channel5.on("test", function(args) {
+          channel5.send("ack", {message: "got it"});
+        });
+
+        window.onbeforeunload = function() {
+          channel2.dispose();
+          channel4.dispose();
+          channel5.dispose();
+        };
       }
     }
   });

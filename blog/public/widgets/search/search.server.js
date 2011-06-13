@@ -1,11 +1,6 @@
-feather.ns("blog");
-
-blog.search = feather.widget.create({
-	name: "blog.search",
-	path: "widgets/search/",
-	prototype: {
-		initialize: function($super, options) {
-			$super(options);
-		}
-	}		
-});
+exports.getWidget = function(feather, cb) { 
+  cb(null, {
+    name: "blog.search",
+    path: "widgets/search/"
+  });
+};

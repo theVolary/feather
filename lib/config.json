@@ -38,31 +38,33 @@
     ]
   },
   "resources": {
-    "consolidation": {
-      "consolidateAll": false,
-      "enabled": false,
-      "serveStatic": {
-        "enabled": true,
-        "urlPrefix": "/feather-res-cache",
-        "method": "disk",
-        "diskPath": null,
-      }
+    "publish": {
+      "consolidate": false,
+      "minify": false,
+      "mangleJs": false, 
+      "publisherId": "local",
+      "publishers": [
+        {
+          "id": "local",
+          "config": {
+            "publishLocation": "feather-res-cache"
+          }
+        }
+      ]
     },
-    "minifyAll": false, 
-    "mangleAllJs": false, 
-    "minifyJs": false,
-    "minifjCss": false, 
     "packages": [
       { 
         "name":"feather-client-core.js",
         "consolidate": false,
         "minify": false,
-        "mangle": false
+        "mangleJs": false,
+        "publisherId": "local"
       },
       {
         "name": "feather-client-core.css",
         "consolidate": false,
-        "minify": false
+        "minify": false,
+        "publisherId": "local"
       }
     ]
   },

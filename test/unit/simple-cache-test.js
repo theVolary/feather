@@ -18,8 +18,7 @@
     },
 
     tearDown: function() {
-      cache.deleteItem("item1");
-      cache.deleteItemReadOnly("item2", this.token);
+      cache.deleteAll();
       delete this.item1;
       delete this.item2;
       delete this.token;
@@ -76,6 +75,49 @@
           });
         }
       });
+    },
+
+    testGetItems: function() {
+      var test = this;
+      cache.getItems(["item1", "item2"], function(err, _items) {
+        if (err) {
+          Y.Assert.fail(err);
+        } else {
+          Y.Assert.areSame(test.item1, _items.item1, "items should be the same");
+          Y.Assert.areEqual(test.item2.value, _items.item2.value, "item values should be equal");
+        }
+      });
+    },
+
+    testGetItemWait: function() {
+      var test = this;
+      var item3 = {};
+      cache.getItemWait("item3", function(err, _item) {
+        test.resume(function() {
+          Y.Assert.areSame(item3, _item, "items should be the same");
+        });
+      });
+      setTimeout(function() {
+        cache.setItem("item3", item3);
+      }, 500);
+      test.wait(1000);
+    },
+
+    testGetItemsWait: function() {
+      var test = this;
+      var item3 = {};
+      var item4 = {};
+      cache.getItemsWait(["item3", "item4"], function(err, _items) {
+        test.resume(function() {
+          Y.Assert.areSame(item3, _items.item3, "item3 items should be the same");
+          Y.Assert.areSame(item4, _items.item4, "item4 items should be the same");
+        });
+      });
+      setTimeout(function() {
+        cache.setItem("item3", item3);
+        cache.setItem("item4", item4);
+      }, 500);
+      test.wait(1000);
     }
 
   }));
