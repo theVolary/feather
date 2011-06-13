@@ -2,7 +2,7 @@
   
   feather.ns("blog");
   
-  var chatChannel = feather.socket.subscribe("blog:chat");
+  var chatChannel = feather.socket.subscribe({id: "blog:chat"});
 
   blog.chat = feather.widget.create({
     name: "blog.chat",
@@ -34,8 +34,8 @@
          */
         chatChannel.on("chat", function(args) {
           me.newMessage({
-            name: args.name,
-            message: args.message,
+            name: args.data.name,
+            message: args.data.message,
             remote: true
           });
         });
