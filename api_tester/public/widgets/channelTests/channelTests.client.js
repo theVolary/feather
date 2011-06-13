@@ -52,7 +52,7 @@ feather.ns("api_tester");
         this.channel = feather.socket.subscribe({id: "channel2"});
       },
 
-      tearDown : function () { 
+      tearDown : function () {   
         this.channel.dispose();
         delete this.channel;             
       },
@@ -63,15 +63,17 @@ feather.ns("api_tester");
 
       testConnectionDisconnection: function () {
         var test = this;
+        this.popup = window.open("/channelClient", "channelClient", "width=200, height=200");
         this.channel.once("connection", function() {
           test.channel.once("disconnection", function() {
             test.resume();          
-          }); 
-          test.popup.close();        
-        });
-        this.popup = window.open("/channelClient", "channelClient", "width=200, height=200");
+          });   
+          test.popup.close();    
+        });        
         this.popup.focus();  
-        test.wait(2000); 
+        test.wait(2000, function() {
+          test.popup.close();   
+        }); 
       }
     }),
 
@@ -119,7 +121,9 @@ feather.ns("api_tester");
         });
         this.popup = window.open("/channelClient", "channelClient", "width=200, height=200");
         this.popup.focus();  
-        test.wait(2000); 
+        test.wait(2000, function() {
+          test.popup.close();  
+        }); 
       }
     }),
 
