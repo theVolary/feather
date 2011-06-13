@@ -30,7 +30,7 @@
           "feather.http": "off",
           "feather.fsm": "info",
           "blog.api": "debug",
-          "feather.respack":"all"
+          "feather.respack":"off"
         },
         "appenders": [
           { 
