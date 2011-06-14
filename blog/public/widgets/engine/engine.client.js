@@ -36,6 +36,7 @@ feather.ns("blog");
       editPost: function(post) {
         var me = this;
         var id = feather.id();
+
         feather.widget.load({
           id: id,
           path: "widgets/editpost/",

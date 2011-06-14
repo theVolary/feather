@@ -340,6 +340,311 @@ feather.ns("api_tester");
         });        
         test.wait(4000);
       }
+    }),
+
+    new Y.Test.Case({
+ 
+      name: "Hooks",
+
+      //---------------------------------------------
+      // Setup and tear down
+      //---------------------------------------------
+
+      setUp : function () {
+        this.popup1 = window.open("/channelClient", "channelClient", "width=200, height=200");
+      },
+
+      tearDown : function () {
+        this.popup1 && this.popup1.close();
+        delete this.popup1;        
+      },
+
+      //---------------------------------------------
+      // Tests
+      //---------------------------------------------
+
+      testSubscribeHookAllow: function() {
+        var test = this;
+        var channel = feather.socket.subscribe({
+          id: "channel6",
+          data: {
+            allowSubscribe: true,
+            allowConnect: false
+          }
+        });
+        channel.on("subscribe", function(args) {
+          test.resume(function() {
+            channel.dispose();
+          });
+        });
+        test.wait(2000, function() {
+          channel.dispose();
+        });
+      },
+
+      testSubscribeHookNotAllowed: function() {
+        var test = this;
+        var channel = feather.socket.subscribe({
+          id: "channel6",
+          data: {
+            allowSubscribe: false,
+            allowConnect: false
+          }
+        });
+        channel.on("subscribe", function(args) {
+          test.resume(function() {
+            channel.dispose();
+            Y.Assert.fail("subscribe should not have been allowed");
+          });
+        });
+        channel.on("error", function(args) {
+          channel.dispose();
+          if (args.type === "Hook Error" && args.message === "Subscribe error: not allowed") {
+            test.resume();
+          }
+        });
+        test.wait(2000, function() {
+          channel.dispose();
+        });
+      },
+
+      testConnectHookAllow: function() {
+        var test = this;
+        setTimeout(function() {
+          var channel = feather.socket.subscribe({
+            id: "channel6",
+            data: {
+              allowSubscribe: true,
+              allowConnect: true
+            }
+          });
+          channel.on("gotConnection", function(args) {
+            test.resume(function() {
+              channel.dispose();
+              Y.Assert.areEqual("got it", args.data.message);
+            });
+          });
+        }, 1000);
+        test.wait(2000, function() {
+          channel.dispose();
+        });
+      },
+
+      testConnectHookNotAllowed: function() {
+        var test = this;
+        var channel = feather.socket.subscribe({
+          id: "channel6",
+          data: {
+            allowSubscribe: true,
+            allowConnect: false
+          }
+        });
+        channel.on("error", function(args) {
+          test.resume(function() {
+            channel.dispose();
+            Y.Assert.areEqual("Connect error: not allowed", args.message);
+          });
+        });
+        test.wait(2000, function() {
+          channel.dispose();
+        });
+      },
+
+      testDisconnectHook: function() {
+        var test = this;
+        var channel = feather.socket.subscribe({
+          id: "channel6",
+          data: {allowSubscribe: true}
+        });
+        channel.on("disconnection", function(args) {
+          test.resume(function() {
+            channel.dispose();
+            Y.Assert.areEqual("disconnected", args.data);
+          });
+        });
+        setTimeout(function() {
+          test.popup1.close();
+        }, 1000);
+        test.wait(2000, function() {
+          channel.dispose();
+        });
+      },
+
+      testMessageHookAllow: function() {
+        var test = this;
+        var channel = feather.socket.subscribe({
+          id: "channel6",
+          data: {allowSubscribe: true}
+        });
+        channel.on("ack:allowMessage", function(args) {
+          test.resume(function() {
+            channel.dispose();
+            Y.Assert.areEqual("got it", args.data.message);
+          });
+        });
+        setTimeout(function() {
+          channel.send("allowMessage", "allow this");
+        }, 500);
+        test.wait(2000, function() {
+          channel.dispose();
+        });
+      },
+
+      testMessageHookDisallow: function() {
+        var test = this;
+        var channel = feather.socket.subscribe({
+          id: "channel6",
+          data: {allowSubscribe: true}
+        });
+        channel.on("ack:disallowMessage", function(args) {
+          test.resume(function() {
+            channel.dispose();
+            Y.Assert.fail("message should not have been allowed");
+          });
+        });
+        channel.on("error", function(args) {
+          if (args.type === "Hook Error" && args.message === "Message error: not allowed") {
+            test.resume(function() {
+              channel.dispose();
+            });
+          }
+        });
+        setTimeout(function() {
+          channel.send("disallowMessage", "disallow this");
+        }, 500);
+        test.wait(2000, function() {
+          channel.dispose();
+        });
+      },
+
+      testDirectMessageAllow: function () {
+        var test = this;
+        var channel = feather.socket.subscribe({
+          id: "channel6",
+          data: {allowSubscribe: true}
+        });
+        channel.on("connection", function(connectionArgs) {
+          channel.once("ack:directMessage", function(args) {
+            test.resume(function() {
+              channel.dispose();
+              Y.Assert.areEqual("got it", args.data.message);
+            });   
+          });
+          channel.send("directMessage", "allow", [connectionArgs.clientId]);
+        });        
+        test.wait(2000, function() {
+          channel.dispose();
+        });
+      },
+
+      testDirectMessageDisallow: function () {
+        var test = this;
+        var channel = feather.socket.subscribe({
+          id: "channel6",
+          data: {allowSubscribe: true}
+        });
+        channel.on("connection", function(connectionArgs) {
+          channel.once("ack:directMessage", function(args) {
+            test.resume(function() {
+              channel.dispose();
+              Y.Assert.fail("direct message should not have been allowed");
+            });   
+          });
+          channel.on("error", function(args) {
+            if (args.type === "Hook Error" && args.message === "Message error: direct message not allowed") {
+              test.resume(function() {
+                channel.dispose();
+              });
+            }
+          });
+          channel.send("directMessage", "disallow", [connectionArgs.clientId]);
+        });        
+        test.wait(2000, function() {
+          channel.dispose();
+        });
+      },
+
+      testDirectMessageAlterList: function () {
+        var test = this;
+        var channel = feather.socket.subscribe({
+          id: "channel6",
+          data: {allowSubscribe: true}
+        });
+        channel.on("connection", function(connectionArgs) {
+          channel.once("ack:directMessage", function(args) {
+            test.resume(function() {
+              channel.dispose();
+              Y.Assert.fail("direct message should have been redirected to self only");
+            });   
+          });
+          channel.once("directMessage", function(args) {
+            test.resume(function() {
+              channel.dispose();
+              Y.Assert.areEqual("alterList: to self", args.data);
+            });   
+          });
+          channel.send("directMessage", "alterList", [connectionArgs.clientId]);
+        });        
+        test.wait(2000, function() {
+          channel.dispose();
+        });
+      },
+
+      testGroupMessageAllow: function() {
+        var test = this;
+        var channel = feather.socket.subscribe({
+          id: "channel6",
+          data: {allowSubscribe: true}
+        });
+        channel.once("subscribe", function(subscribeArgs) {
+          channel.on("group:goodGroup", function(args) {
+            if (args.memberCount === 2) { //wait until at least one other client has joined the group
+              channel.once("group:goodGroup:ack", function() {
+                test.resume(function() {
+                  channel.dispose();
+                });
+              });
+              channel.sendGroup("goodGroup", "groupMessage", "allow this");
+            }
+          });
+          channel.joinGroup("goodGroup");
+        });        
+        test.wait(2000, function() {
+          channel.dispose();
+        });
+      },
+
+      testGroupMessageDisallow: function() {
+        var test = this;
+        var channel = feather.socket.subscribe({
+          id: "channel6",
+          data: {allowSubscribe: true}
+        });
+        channel.once("subscribe", function(subscribeArgs) {
+          channel.on("group:badGroup", function(args) {
+            if (args.memberCount === 2) { //wait until at least one other client has joined the group
+              channel.once("group:badGroup:ack", function() {
+                test.resume(function() {
+                  channel.dispose();
+                  Y.Assert.fail("message should not have been allowed.");
+                });
+              });
+              channel.on("error", function(args) {
+                if (args.type === "Hook Error" && args.message === "Message error: group closed for the summer") {
+                  test.resume(function() {
+                    channel.dispose();
+                  });
+                }
+              });
+              channel.sendGroup("badGroup", "groupMessage", "disallow this");
+            }
+          });
+          channel.joinGroup("badGroup");
+        });        
+        test.wait(2000, function() {
+          channel.dispose();
+        });
+      }
     })
   ];
 

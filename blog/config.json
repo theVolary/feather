@@ -3,10 +3,6 @@
   "environments": {
     "dev": {
       "data": {
-        "authdb": {
-        },
-        "metadb": {
-        },
         "appdb": {
           "hostUrl": "http://localhost",
           "dbName":"featherblog",

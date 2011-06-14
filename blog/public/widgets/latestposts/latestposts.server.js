@@ -1,6 +1,7 @@
 exports.getWidget = function(feather, cb) {
   
   //TODO: find an elegant way around global static method dependency in dynamic tags
+  
   //use ns when you need a global context object
   feather.ns("blog");
 
