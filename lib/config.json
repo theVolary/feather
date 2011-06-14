@@ -41,7 +41,6 @@
     "publish": {
       "consolidate": false,
       "minify": false,
-      "mangleJs": false, 
       "publisherId": "local",
       "publishers": [
         {
@@ -57,7 +56,6 @@
         "name":"feather-client-core.js",
         "consolidate": true,
         "minify": false,
-        "mangleJs": false,
         "publisherId": "local"
       },
       {
