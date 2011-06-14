@@ -394,7 +394,7 @@ feather.ns("api_tester");
         channel.on("subscribe", function(args) {
           test.resume(function() {
             channel.dispose();
-            Y.Assert.fail("sibscribe should not have been allowed");
+            Y.Assert.fail("subscribe should not have been allowed");
           });
         });
         channel.on("error", function(args) {
