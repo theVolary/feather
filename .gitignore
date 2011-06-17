@@ -10,3 +10,4 @@ node_modules
 *.sublime-project
 reports
 */public/feather-res-cache
+.DS_Store
