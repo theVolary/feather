@@ -33,13 +33,19 @@
 
     testGotoState: function() {
       var fsm = this.getFsm({
-        testPassed: {
+        testObjectPassed: {
+          stateStartup: function() {}
+        },
+        testStringPassed: {
           stateStartup: function() {}
         }
       });
 
-      fsm.gotoState(fsm.states.testPassed);
-      Y.Assert.areEqual("testPassed", fsm.getCurrentStateName(), "FSM is not in testPassed state.");
+      fsm.gotoState(fsm.states.testObjectPassed);
+      Y.Assert.areEqual("testObjectPassed", fsm.getCurrentStateName(), "FSM is not in testObjectPassed state.");
+
+      fsm.gotoState("testStringPassed");
+      Y.Assert.areEqual("testStringPassed", fsm.getCurrentStateName(), "FSM is not in testStringPassed state.");
     },
 
     testOnState: function() {
