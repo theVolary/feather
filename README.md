@@ -3,23 +3,26 @@ feather
 
 ### Overview
 feather is a full-featured widget-based web framework implemented in pure js. 
-The main goal is to enable rapid development of powerful RIA-type apps (long running single-page applications).
+The main goal is to enable rapid development of powerful RIA-type apps (long running single-page applications with real-time data being seamless).
 
-Since this is meant to be a full-featured framework, there will likely be some dependencies (like jQuery and CouchDB, for example). 
-This is not intended to be a bits-and-pieces library where each concern is its own standalone module. 
-Where possible (and sensible), we will work on modularizing certain things, but just keep in mind that that is not a primary goal of the project.
+Since this is meant to be a full-featured framework, there will likely be some hard dependencies (like jQuery and CouchDB, for example). We will refactor things over time to be as generic as is prudent (and we of course welcome help). Some dependecies will be abstracted out, some may linger.
 
-In the end, the intent is to use feather to create a browser-based development platform where real-time collaboration is first-class.
-Short of that
+Note: This project is not meant to be a competing project to Express as it aims to fill a very different development niche, although we certainly have "make an Express plugin" as a roadmap item.
+
+Where possible (and sensible) we will work on extracting granular standalone npm modules, but please keep in mind that that is not a primary goal of the project at this time. We are first and foremost concerned with creating a powerful framework for building out arbitrarily complex RIAs that have deeply integrated and seamless support for the real-time web.
+
+In the end, the intent is to use feather to create a browser-based development platform where real-time collaboration is first-class. We believe app developers should be empowered to express the unique behaviors of their application as quickly as possible, so the aim is to remove as much ceremony, boilerplate, and process as possible from the development cycle until we are left with only an elegant expression layer that produces apps that "just work". We don't care if you call these goals crazy; we happen to be just a little bit crazy.
 
 ### Features
 
 - Fill
   - This
   - In
+  - Before
+  - v0.2.0
 
 ### Setup and Contribution Instructions
-First of all, not to be too obvious but this project requires node.js. Specifically, we intend to support node.js on *nix platforms. I assume the Windows/cygwin flavors of node builds should also work but we aren't going to go out of our way to support it.
+First of all, not to be too obvious but this project requires node.js. Specifically, we intend to support node.js on *nix platforms. I assume the Windows/cygwin flavors of node builds should also work but we aren't going to go out of our way to support it right now.
 
 _Note: these instructions are intended for use during the early stages of the project, until we stabilize things a bit and have a nice build script or npm package to give you._
 
