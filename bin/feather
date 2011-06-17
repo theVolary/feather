@@ -9,7 +9,7 @@ var fs    = require("fs"),
     cli   = require("cli").enable('version').setApp('feather', '0.1');
 
 if (!process.env.FEATHER_HOME) {
-  cli.fatal("The environment variable #white[FEATHER_HOME] is required.");
+  cli.fatal(color.ansify("The environment variable #white[FEATHER_HOME] is required."));
 } else {
   var stat = fs.statSync(process.env.FEATHER_HOME);
   if (!stat.isDirectory()) {
