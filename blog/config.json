@@ -44,7 +44,7 @@
       },
       "resources": {
         "publish": {
-          "consolidate": false
+          "consolidate": true
         }
       }
     }
