@@ -373,17 +373,15 @@ function createWidget(appDir, namespace, widgetName) {
   var fullPath = path.join(appDir, 'public', 'widgets', widgetName);
   ffs.mkdirpSync(fullPath);
   var serverTemplate = [
-    'feather.ns("' + namespace + '");',
-    namespace+'.'+widgetName+' = feather.widget.create({',
-    '  name: "'+namespace+'.'+widgetName+'",',
-    '  path: "widgets/'+widgetName+'/",',
-    '  prototype: {',
-    '    initialize: function($super, options) {',
-    '      $super(options);',
-    '    }',
-    '  }',
-    '});'
+    'exports.getWidget = function(feather, cb) {',
+    '  // Other logic may go here.\n',
+    '  cb(null, {',
+    '    name: "' + namespace + '.' + widgetName + '",',
+    '    path: "widgets/' + widgetName + '/",',
+    '  });',
+    '};'
   ];
+
   var clientTemplate = [
     'feather.ns("' + namespace + '");',
     '(function() {',
