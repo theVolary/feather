@@ -123,7 +123,7 @@ _Example 1 client.js_:
 
 In the above examples, the `chat` channel on the server is in the default liberal mode. This means that clients can send any messages they want. The vanilla configuration will also announce connections (subscriptions) to other clients, as can be seen in the `.on("connection"...)` bit of code above. 
 
-Now let's say you want to lock down valid messages and only allow `chat` messages, while at the same time turn off the connection announcements (we think you'd usually leave this on, but simply want to demonstrate turning it off in case you want to).
+Now let's say you want to lock down valid messages and only allow `chat` messages, while at the same time turn off the connection announcements. For a chat channel, you'd probably want to leave `announceConnections` set to true, of course, but since we allow turning it off we'll show you how here.
 
 _Example 2 server.js_:
   
@@ -154,7 +154,7 @@ _Example 2 client.js_:
       /**
        * subscribe to the channel
        */
-      var chatChannel = feather.socket.subscribe("chat");
+      var chatChannel = feather.socket.subscribe({id: "chat"});
       
       myapp.chat = feather.widget.create({
         name: "myapp.chat",
@@ -199,7 +199,7 @@ At this point I'd also like to point out that because the semantics of listening
  - `error` (sent back to the client that originated the message; the `data` property of the return object contains the error message.)
  - `group:*` (group communications are done via the `group:*` namespace. Clients using `group:group_name:message_name` syntax must be members of group `group_name` first. The .sendGroup() client side method is a convenience alias for sending messages in this format.)
 
-Another very important, but potentially subtle thing to notice about our chat widget in its current form is that you could add instances of this widget on many pages of your application and all clients across all pages would receive all of the chat messages. This might be desirable for some applications, but there are certainly a lot of use cases for limiting who gets what messages on a given channel. 
+Another very important but potentially subtle thing to notice about our chat widget in its current form is that you could add instances of this widget on many pages of your application and all clients across all pages would receive all of the chat messages. This might be desirable for some applications, but there are certainly a lot of use cases for limiting who gets what messages on a given channel. 
 
 ### Private Messages, Groups and Invitations ###
 Now how about some more complex scenarios? Let's refactor our chat widget to accomplish the following stated goals:
@@ -216,9 +216,11 @@ When multiple clients have joined a group with the same name and that group has 
 To support the concept of secure private groups we'll need to add one more step, however, and that is the notion of an `invite`. This step is necessary for clients to communicate with each other within any group that is configured as `secure`. The security of these `secure` groups goes two ways: 
   - The first step is that a client must declare a secure group with a unique name (i.e. the group must not already exist within this channel). This means that group names are on a first come first serve basis within a channel, but that can be reasonably mitigated by generating random group names via code. 
   - Next, that client must issue an invite to another client via whatever identifying information has been made public to it (more on that in a bit). That's the first direction of security: the client declaring the secure group must explicitly identify other clients to invite into the group. 
-  - The next direction is on the invitee's side. An invitation, when received, must be either _accepted_ or _declined_. Failure to accept an invite before a configurable timeout period has elapsed will result in a declination. This acceptance can be made programatically if you wish, or can be delegated to a choice made by the user via your UI code, but the answer must originate from the target client. Once accepted, both clients are now able to communicate privately on the channel by using `.sendGroup(groupName, messageName, data)`.
+  - The next direction is on the invitee's side. An invitation, when received, must be either _accepted_ or _declined_. Failure to accept an invite before a configurable timeout period has elapsed will result in a declination. This acceptance can be made programatically if you wish, or can be delegated to a choice made by the user via your UI code. Whatever the answer mechanism is, though, the answer must originate from the target client. Once accepted, both clients are now able to communicate privately on the channel by using `.sendGroup(groupName, messageName, data)`.
 
-The final bit of the puzzle is how a given client will know how to issue an invite to another individual client. In addition to a per-channel uuid key to identify clients, channels support passing along custom identifying information when announcing new connections. Be careful what you choose to send here though. Rather than sending a given client's underlying system identifiers like session token or socket.io ID it is usually better to pass something like the username (screen name) of the user associated with the client. Each application will have its own requirements for what's acceptable under various conditions. For our example, we'll use the username so that we can emulate a chat room type scenario.
+The final bit of the puzzle is how a given client will know how to issue an invite to another individual client. This must be done by the channel specific uuid `.clientId` property that will be propogated with every client-originating event (like `connection`). 
+
+In addition to a per-channel uuid key to identify clients, channels support passing along custom identifying information when announcing new connections. Be careful what you choose to send here though. Rather than sending a given client's underlying system identifiers like session token or socket.io ID it is usually better to pass something like the username (screen name) of the user associated with the client. Each application will have its own requirements for what's acceptable under various conditions. For our example, we'll use the username so that we can emulate a chat room type scenario.
 
 With all that in mind, in this next example we'll achieve both goals of 1) limiting the main `chat` messages by URL and 2) allowing users to send private messages to each other. As explained above both goals will be met via the `groups` mechanism. 
 
@@ -250,7 +252,7 @@ _Example 3 server.js_:
          * this hook handler you must call the supplied callback function at some point. Using the
          * standard node callback format of "errors go in the 1st argument", calling the callback
          * with a non-null/non-undefined value for the 1st argument will result in the subscription
-         * request being rejected (this is how you can implement server-side validation). 
+         * request being rejected (this is how you can implement server-side validation for subscription requests). 
          * Passing null or undefined as the 1st argument and optionally any
          * data you want to send back in the 2nd argument will result in the subscription being accepted.
          * Failing to execute the callback function in your handler will simply mean the client will
@@ -295,13 +297,17 @@ _Example 3 server.js_:
          * but we have exposed the possibility for you to do so (via passing a non-null value for the 1st argument
          * to the callback) just in case you find a need.
          *
-         * @param {Object} args
+         * It's important to note that if you choose not to call the callback for this hook, you are _not_ preventing
+         * the connection from happening; you are simply preventing the event from propagating to the other clients.
+         * If you wish to prevent a subscription altogether, you must implement the 'subscribe' hook (see above).
+         *
+         * @param {object} args
          *    {
          *      client: Object,     //the client that just connected to the channel
          *      data:   Object      //the message data sent by the client, if any
          *    }
          *
-         * @param {Function} cb - The callback function to be called when you are ready for the connection event to propagate
+         * @param {function} cb - The callback function to be called when you are ready for the connection event to propagate
          */
         connect: function(args, cb) {
           //you could code the client-side to send the username along with the subscription request,
@@ -324,21 +330,21 @@ _Example 3 server.js_:
          * The disconnect hook will execute after a client has left the channel, either explicitly
          * or because their general socket.io client has been disconnected.
          * 
-         * Like the connect event, this one will only happen if the channel is configured with
+         * Like the connect hook, this one will only be invoked if the channel is configured with
          * 'announceConnections' set to true (which is the default).
          *
          * In most cases in which your widget/app cares about the connect event, it probably also
          * cares about the disconnect event. 
          * 
-         * Remember: as is the case with all these event hooks, if you implement this handler
+         * As is the case with most of these event hooks, if you implement this handler
          * you must invoke the callback function in order to propagate the event to the other clients.
          *
-         * @param {Object} args
+         * @param {object} args
          *    {
          *      client: Object    //the client that just disconnected from the channel
          *    }
          *
-         * @param {Function} cb - The callback function to be called when you are ready for the disconnection event to propagate
+         * @param {function} cb - The callback function to be called when you are ready for the disconnection event to propagate
          */
         disconnect: function(args, cb) {
           //for this one, we'll forego any custom logic (which yes, means we could have 
@@ -356,8 +362,14 @@ _Example 3 server.js_:
          * like a server-based timestamp or something like that. You could even use this hook to 
          * implement your own special group-like construct for routing or add a command structure if
          * you wanted to use channels to create an RPG or some other game.
+         *
+         * For the case of direct messages, you may also alter the toClients array and pass the new list
+         * to the callback function in the 3rd argument. If you wish to simply leave the toClients array 
+         * untouched you don't have to pass anything for the 3rd argument. Finally, passing anything for 
+         * the 3rd argument for non-direct messages (i.e. where the toClients array was not passed to the
+         * hook to begin with) has no effect.
          * 
-         * Remember: as is the case with all these event hooks, if you implement this handler
+         * As is the case with most of these event hooks, if you implement this handler
          * you must call the callback function in order to propagate the event to the other clients.
          *
          * NOTE: if the channel is configured to only allow certain message types, this hook will ONLY
@@ -368,38 +380,44 @@ _Example 3 server.js_:
          *      client:   object,    //the client that originated the message
          *      message:  string,    //the message type being transmitted (i.e. 'chat')
          *      groupName: string,   //this contains the group name if this message is associated with a group; undefined otherwise
-         *      directedTo: object (client),  //if this is a direct message, this will be the client that the message is being sent to; undefined otherwise
+         *      toClients: [client],  //if this is a direct message, this will be an array of clients that the message is being sent to; undefined otherwise
          *      data:     object     //the message payload (which could be a flat string or an object deserialized from JSON)
          *    }
          *
-         * @param {Function} cb - The callback function to be called to send the message on its way or stop it in its tracks
-         *    function(err /*{string | object}*/, )
+         * @param {function} cb - The callback function to be called to send the message on its way or stop it in its tracks
+         *    function(err, data) {}
          */
         message: function(args, cb) {
           //for this example, let's pretend we have a dictionary of swear words we want to use to clean up
           //all the messages before passing them on, and if the swear word count is 3 or more we refuse
           //to let the message through at all
 
-          var cleanMessage = myapp.pseudocode.cleanAndCountSwearWords(args.data);
-          if (cleanMessage.numSwearWords >= 3) {
-            cb("Clean up your act, buster!");
+          //illustrate simple data type validation
+          if (typeof args.data !== "string") {
+            cb("This channel only accepts string based message payloads.");
           } else {
-            cb(null, cleanMessage.message);
+            var cleanMessage = myapp.pseudocode.cleanAndCountSwearWords(args.data);
+            if (cleanMessage.numSwearWords >= 3) {
+              cb("Clean up your act, buster!");
+            } else {
+              cb(null, cleanMessage.data);
+            }
           }
         },
 
         /**
          * The next hook you have at your disposal is 'invalidMessage'. If you implement the handler for this
-         * event, it will be called when a) the channel is configured to restrict the message types and b)
-         * a client attempts to send an unsupported message.
+         * event, it will be called when a) the channel is configured to restrict the message types and a 
+         * client attempts to send an unsupported message, or b) whenever a client attempts sending a reserved
+         * message type like 'subscribe' or 'connection'.
          * 
          * One reason you might want to implement this handler is to log invalid message attempts.
          *
-         * @param {Object} args
+         * @param {object} args
          *    {
-         *      client:   Object,    //the client that originated the message
-         *      message:  String,    //the message type the client is trying to send 
-         *      data:     Object     //the message payload (which could be a flat string or an object deserialized from JSON)
+         *      client:   object,    //the client that originated the message
+         *      message:  string,    //the message type the client is trying to send 
+         *      data:     object     //the message payload (which could be a flat string or an object deserialized from JSON)
          *    }
          *
          * NOTE: There is no callback function with this one. The client that originated the invalid message will
@@ -420,14 +438,14 @@ _Example 3 server.js_:
          * with a non-null 1st argument will result in the group _not_ being created. This allows
          * you to place validation and other restrictive logic on the group creation process.
          *
-         * @param {Object} args
+         * @param {object} args
          *    {
-         *      client:     Object,    //the client that originated the group creation
-         *      groupName:  String,    //the name of the group being created
-         *      secure:     Boolean    //flag to indicate whether the group is secure or not (default false)
+         *      client:     object,    //the client that originated the group creation
+         *      groupName:  string,    //the name of the group being created
+         *      secure:     boolean    //flag to indicate whether the group is secure or not (default false)
          *    }
          *
-         * @param {Function} cb - The callback function to invoke to either allow or disallow group creation
+         * @param {function} cb - The callback function to invoke to either allow or disallow group creation
          */
         createGroup: function(args, cb) {
           //server side validation and/or logging can go here...
@@ -449,13 +467,13 @@ _Example 3 server.js_:
          * in order to allow the client to join the group. Failure to invoke the callback, or invoking it
          * with a non-null 1st argument will result in the client _not_ joining the group. 
          *
-         * @param {Object} args
+         * @param {object} args
          *    {
-         *      client:     Object,    //the client that is trying to join the group
-         *      groupName:  String     //the name of the group being joined
+         *      client:     object,    //the client that is trying to join the group
+         *      groupName:  string     //the name of the group being joined
          *    }
          *
-         * @param {Function} cb - The callback function to invoke to either allow or disallow the joining
+         * @param {function} cb - The callback function to invoke to either allow or disallow the joining
          */
         joinGroup: function(args, cb) {
           //server side validation and/or logging can go here...
@@ -477,14 +495,14 @@ _Example 3 server.js_:
          * squash the invitation if the target client has indicated that it doesn't want to hear from
          * the source client at all.
          *
-         * @param {Object} args
+         * @param {object} args
          *    {
-         *      sourceClient:   Object,   //the client that originated the invitation
-         *      targetClient:   Object    //the client being invited to join the group
-         *      groupName:      String,   //the name of the group 
+         *      sourceClient:   object,   //the client that originated the invitation
+         *      targetClient:   object    //the client being invited to join the group
+         *      groupName:      string,   //the name of the group 
          *    }
          *
-         * @param {Function} cb - The callback function to invoke to either pass the invitation on or prevent it
+         * @param {function} cb - The callback function to invoke to either pass the invitation on or prevent it
          */
         invite: function(args, cb) {
           if (myapp.pseudocode.invitationAllowed(args)) {
@@ -501,11 +519,11 @@ _Example 3 server.js_:
          * of this event. The intent to invite and to accept has already been declared by both parties, 
          * therefore to prevent propagation at this point would only serve to confuse.
          *
-         * @param {Object} args
+         * @param {object} args
          *    {
-         *      sourceClient:   Object,   //the client that originated the invitation
-         *      targetClient:   Object,   //the client that has just accepted the invitation
-         *      groupName:      String    //the name of the group 
+         *      sourceClient:   object,   //the client that originated the invitation
+         *      targetClient:   object,   //the client that has just accepted the invitation
+         *      groupName:      string    //the name of the group 
          *    }
          */
         invitationAccepted: function(args, cb) {
@@ -519,11 +537,11 @@ _Example 3 server.js_:
          * of this event. The intent to invite and to decline has already been declared by both parties, 
          * therefore to prevent propagation at this point would only serve to confuse.
          *
-         * @param {Object} args
+         * @param {object} args
          *    {
-         *      sourceClient:   Object,   //the client that originated the invitation
-         *      targetClient:   Object,   //the client that has just declined the invitation
-         *      groupName:      String    //the name of the group 
+         *      sourceClient:   object,   //the client that originated the invitation
+         *      targetClient:   object,   //the client that has just declined the invitation
+         *      groupName:      string    //the name of the group 
          *    }
          */
         invitationDeclined: function(args, cb) {
@@ -553,7 +571,8 @@ _Example 3 client.js_:
        * Notice that you can create/join 'public' groups at subscribe-time.
        * In this example we're joining the group on the chat channel for "this page, by URL".
        */
-      var chatChannel = feather.socket.subscribe("chat", {
+      var chatChannel = feather.socket.subscribe({
+        id: "chat",
         groups: [window.location.href],
         data: {foo: "bar"} //illustration of passing data at subscribe-time (other clients will receive this data via the connection event)
       });

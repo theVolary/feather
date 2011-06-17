@@ -28,6 +28,41 @@ feather.ns("api_tester");
           channel5.send("ack", {message: "got it"});
         });
 
+        var channel6 = feather.socket.subscribe({
+          id: "channel6",
+          data: {
+            allowSubscribe: true,
+            allowConnect: true,
+            clientMessage: "client1"
+          }
+        });
+        channel6.on("connection", function(args) {
+          channel6.send("gotConnection", {message: "got it"});
+        });
+        channel6.on("allowMessage", function(args) {
+          if (args.data === "allow this: augmented") {
+            channel6.send("ack:allowMessage", {message: "got it"});
+          }
+        });
+        channel6.on("disallowMessage", function(args) {
+          channel6.send("ack:disallowMessage", {message: "got it"});
+        });
+        channel6.on("directMessage", function(args) {
+          if (args.isDirect) {
+            channel6.send("ack:directMessage", {message: "got it"});
+          }
+        });
+        channel6.on("group:goodGroup:groupMessage", function(args) {
+          channel6.sendGroup("goodGroup", "ack", {message: "got it"});
+        });
+        channel6.on("group:badGroup:groupMessage", function(args) {
+          channel6.sendGroup("badGroup", "ack", {message: "got it"});
+        });
+        channel6.on("subscribe", function() {
+          channel6.joinGroup("goodGroup");          
+          channel6.joinGroup("badGroup");
+        });
+
         window.onbeforeunload = function() {
           channel2.dispose();
           channel4.dispose();
