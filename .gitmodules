@@ -4,6 +4,3 @@
 [submodule "featherdoc/lib/node-jsdoc-toolkit"]
 	path = featherdoc/lib/node-jsdoc-toolkit
 	url = git@github.com:skrenek/node-jsdoc-toolkit.git
-[submodule "lib/socket.io.client"]
-	path = lib/socket.io.client
-	url = git://github.com/LearnBoost/Socket.IO.git

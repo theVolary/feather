@@ -1,7 +1,6 @@
 .project
 .tmp_*
 *.log
-*/jojolib
 *.orig
 lib/node-core-enhancements/*
 featherdoc/public/docs
