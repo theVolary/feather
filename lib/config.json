@@ -38,22 +38,31 @@
     ]
   },
   "resources": {
-    "consolidateAll": false,
-    "minifyAll": false, 
-    "mangleAllJs": false, 
-    "minifyJs": false,
-    "minifjCss": false, 
+    "publish": {
+      "consolidate": false,
+      "minify": false,
+      "publisherId": "local",
+      "publishers": [
+        {
+          "id": "local",
+          "config": {
+            "publishLocation": "feather-res-cache"
+          }
+        }
+      ]
+    },
     "packages": [
       { 
         "name":"feather-client-core.js",
-        "consolidate": false,
+        "consolidate": true,
         "minify": false,
-        "mangle": false
+        "publisherId": "local"
       },
       {
         "name": "feather-client-core.css",
-        "consolidate": false,
-        "minify": false
+        "consolidate": true,
+        "minify": true,
+        "publisherId": "local"
       }
     ]
   },
