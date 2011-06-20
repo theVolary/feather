@@ -14,6 +14,9 @@ feather.ns("blog");
         feather.auth.api.on('authenticated', function() {
           me.checkUser();
         }, me); //pass disposable object to track disposal to clean up handlers (disposable objects are expected to fire a 'disposed' event)
+        feather.auth.api.on('loggedOut', function() {
+          me.checkUser();
+        });
         this.bindUI();
       },
       bindUI: function() {
@@ -62,6 +65,8 @@ feather.ns("blog");
             };
             me.fire("editPost", {post: post});
           });
+        } else {
+          me.get(".btnEditPost").remove();
         }
       }
 		}
