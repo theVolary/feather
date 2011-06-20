@@ -1,10 +1,11 @@
-var MarkdownCache = exports.MarkdownCache = function(cacheLifetime) {
+var MarkdownCache = exports.MarkdownCache = function(feather, cacheLifetime) {
+  this.feather = feather;
   this.cacheLifetime = cacheLifetime || 3600000;
+  this.registry = new feather.lang.Registry();
 };
 
 MarkdownCache.prototype = {
   cacheLifetime: 3600000, // one hour in ms
-  registry: new feather.lang.registry(),
   add: function(url, doc) {
     var cachedDoc = this.registry.findById(url);
     if (cachedDoc) {
