@@ -1,4 +1,5 @@
 [
   {"name": "channels", "path": "widgets/channelTests/"},
-  {"name": "session", "path": "widgets/sessionTests/"}
+  {"name": "session", "path": "widgets/sessionTests/"},
+  {"name": "async widget definition", "path": "widgets/asyncWidgetTest/"}
 ]
