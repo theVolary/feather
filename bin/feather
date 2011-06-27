@@ -202,7 +202,7 @@ var commands = {
     desc:"Creates a new feather application at the specified directory.  If NAME is omitted, the current directory is assumed, but it will prompt you for confirmation.",
     usage:"feather [OPTIONS] create-app [NAME]",
     fn: function() {
-      var dir = getAppDir(), name;
+      var dir = getAppDir(true), name;
       if (cli.argc < 1) {
         name = path.basename(dir);
         if (fs.readdirSync(dir).length == 0) {
@@ -283,19 +283,19 @@ function resolveCmd(cmd) {
   return cmd.replace(/-([a-z])/, function(m) { return m[1].toUpperCase(); });
 }
 
-function getAppDir() {
+function getAppDir(bypassPublicCheck) {
   var appDir = path.normalize(options.path);
   if (appDir[0] !== '/') {
     appDir = path.resolve(process.cwd(), appDir);
   }
 
-  if (! path.existsSync(appDir)) {
+  if (!path.existsSync(appDir)) {
     cli.fatal("Path " + appDir + " does not exist.");
   }
-  if (! fs.statSync(appDir).isDirectory()) {
+  if (!fs.statSync(appDir).isDirectory()) {
     cli.fatal(appDir + " is not a directory.");
   }
-  if (! path.existsSync(appDir + '/public')) {
+  if (!bypassPublicCheck && !path.existsSync(appDir + '/public')) {
     cli.fatal(appDir + " does not appear to be a feather application.");
   }
   return appDir;
