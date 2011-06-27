@@ -20,7 +20,6 @@ feather.ns("api_tester");
           tearDown : feather.emptyFn,
 
           testAsynWidget: function () {
-            debugger;
             Y.Assert.areEqual(me.asyncWidget.foo, "bar");
           }
         }));
