@@ -68,7 +68,7 @@
   },
   "session": {
     "config": {
-      "key": "featherblog.sid",
+      "key": "feather.sid",
       "cookie": { "path": "/", "httpOnly": false, "maxAge": 14400000 },
       "secret": "feather app key"
     },
