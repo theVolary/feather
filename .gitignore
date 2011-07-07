@@ -8,4 +8,4 @@ featherdoc/lib/node-jsdoc-toolkit/*
 node_modules
 *.sublime-project
 reports
-*/public/feather-res-cache
+*/public/feather-res-cache/*
