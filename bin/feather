@@ -349,7 +349,7 @@ function createApp(dir, name) {
   fs.writeFileSync(path.join(fullPath, 'lib', 'README.txt'), "Add your own js libraries here.", "utf-8");
   fs.writeFileSync(path.join(fullPath, 'app.js'), "exports.onReady = function() {\n  \n}", "utf-8");
   fs.writeFileSync(path.join(fullPath, 'config.json'), "{}\n");
-  fs.writeFileSync(path.join(fullPath, 'public', 'index.feather.html'), "<html>\n<head>\n  <title>Index.feather.html</title\n  <resources />\n</head>\n<body>\n  <h1>Light as a Feather</h1>\n</body>\n</html>", "utf-8");
+  fs.writeFileSync(path.join(fullPath, 'public', 'index.feather.html'), "<html>\n<head>\n  <title>Index.feather.html</title>\n  <resources />\n</head>\n<body>\n  <h1>Light as a Feather</h1>\n</body>\n</html>", "utf-8");
   cli.ok(color.ansify(" #green[App #white[" + name + "] created at #white[" + fullPath + "]]\n"));
 }
 
