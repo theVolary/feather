@@ -1,7 +1,6 @@
 .project
 .tmp_*
 *.log
-*/jojolib
 *.orig
 lib/node-core-enhancements/*
 featherdoc/public/docs
@@ -9,5 +8,7 @@ featherdoc/lib/node-jsdoc-toolkit/*
 node_modules
 *.sublime-project
 reports
+<<<<<<< HEAD
 */public/feather-res-cache
 .DS_Store
+*/public/feather-res-cache/*

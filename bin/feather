@@ -298,7 +298,7 @@ function getAppDir(createIfNoExist, ignorePublicMissing) {
       cli.fatal("Path " + appDir + " does not exist.");
     }
   }
-  if (! fs.statSync(appDir).isDirectory()) {
+  if (!fs.statSync(appDir).isDirectory()) {
     cli.fatal(appDir + " is not a directory.");
   }
   if (!ignorePublicMissing && ! path.existsSync(appDir + '/public')) {
@@ -355,7 +355,7 @@ function createApp(dir, name) {
   fs.writeFileSync(path.join(fullPath, 'lib', 'README.txt'), "Add your own js libraries here.", "utf-8");
   fs.writeFileSync(path.join(fullPath, 'app.js'), "exports.onReady = function() {\n  \n}", "utf-8");
   fs.writeFileSync(path.join(fullPath, 'config.json'), "{}\n");
-  fs.writeFileSync(path.join(fullPath, 'public', 'index.feather.html'), "<html>\n<head>\n  <title>Index.feather.html</title\n  <resources />\n</head>\n<body>\n  <h1>Light as a Feather</h1>\n</body>\n</html>", "utf-8");
+  fs.writeFileSync(path.join(fullPath, 'public', 'index.feather.html'), "<html>\n<head>\n  <title>Index.feather.html</title>\n  <resources />\n</head>\n<body>\n  <h1>Light as a Feather</h1>\n</body>\n</html>", "utf-8");
   cli.ok(color.ansify(" #green[App #white[" + name + "] created at #white[" + fullPath + "]]\n"));
 }
 
@@ -380,11 +380,10 @@ function createWidget(appDir, namespace, widgetName) {
   ffs.mkdirpSync(fullPath);
   var serverTemplate = [
     'exports.getWidget = function(feather, cb) {',
-    '  // Other logic may go here.\n',
-    '  cb(null, {',
-    '    name: "' + namespace + '.' + widgetName + '",',
-    '    path: "widgets/' + widgetName + '/",',
-    '  });',
+    ' cb(null, {',
+    '   name: "'+namespace+'.'+widgetName+'",',
+    '   path: "widgets/'+widgetName+'/"',
+    ' });',
     '};'
   ];
 
