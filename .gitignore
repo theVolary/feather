@@ -8,6 +8,10 @@ featherdoc/lib/node-jsdoc-toolkit/*
 node_modules
 *.sublime-project
 reports
-*/public/feather-res-cache
 .DS_Store
-*/public/feather-res-cache/*
+blog/public/feather-res-cache/
+blog/public/feather-res-cache/*
+featherdoc/public/feather-res-cache
+featherdoc/public/feather-res-cache/*
+api_tester/public/feather-res-cache
+api_tester/public/feather-res-cache/*
