@@ -6,13 +6,11 @@ exports.getWidget = function(feather, cb) {
   feather.ns("featherdoc");
   featherdoc.navItems = [
     // Paths should be local to featherdoc, not public.
-    {type:'markdown', name:'Setup README', method:'fs', path:'../README.md'},
+    {type:'markdown', name:'Setup README', method:'fs', path:'../README.md'}
   ];
 
-  fs.readdir("docs", function(err, files) {
-    
-    _.each(files, function(f) {
-      
+  fs.readdir("docs", function(err, files) {    
+    _.each(files, function(f) {    
       if (path.extname(f) === ".md") {
         var name = path.basename(f, '.md');
         name = name.charAt(0).toUpperCase() + name.substring(1);
@@ -22,8 +20,6 @@ exports.getWidget = function(feather, cb) {
 
     featherdoc.navItems.push({type:'api', name:'Server API', method:'url', path:'/docs/api/server/index.html'});
     featherdoc.navItems.push({type:'api', name:'Client API', method:'url', path:'/docs/api/client/index.html'});
-
-    
   });
 
   featherdoc.getNavItems = function(callback) {
@@ -31,7 +27,7 @@ exports.getWidget = function(feather, cb) {
   };
 
   cb(null, {
-      name: "featherdoc.docnav",
-      path: "widgets/docnav/"
-    });
+    name: "featherdoc.docnav",
+    path: "widgets/docnav/"
+  });
 };

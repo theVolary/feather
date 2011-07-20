@@ -40,7 +40,7 @@
           stateStartup: function() {}
         }
       });
-
+ 
       fsm.gotoState(fsm.states.testObjectPassed);
       Y.Assert.areEqual("testObjectPassed", fsm.getCurrentStateName(), "FSM is not in testObjectPassed state.");
 

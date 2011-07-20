@@ -289,7 +289,7 @@ function getAppDir(createIfNoExist, ignorePublicMissing) {
     appDir = path.resolve(process.cwd(), appDir);
   }
 
-  if (! path.existsSync(appDir)) {
+  if (!path.existsSync(appDir)) {
     if (createIfNoExist) {
       if (!ffs.mkdirpSync(appDir, 0755).result) {
         cli.fatal("Path " + appDir + " does not exist and I couldn't create it.");
@@ -301,7 +301,7 @@ function getAppDir(createIfNoExist, ignorePublicMissing) {
   if (!fs.statSync(appDir).isDirectory()) {
     cli.fatal(appDir + " is not a directory.");
   }
-  if (!ignorePublicMissing && ! path.existsSync(appDir + '/public')) {
+  if (!ignorePublicMissing && !path.existsSync(appDir + '/public')) {
     cli.fatal(appDir + " does not appear to be a feather application.");
   }
   return appDir;

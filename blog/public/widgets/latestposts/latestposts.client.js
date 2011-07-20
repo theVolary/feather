@@ -60,8 +60,8 @@ feather.ns("blog");
             var postId = $(this).attr('postid');
             var post = {
               id: postId,
-              summary: $('#'+postId+'-summary').text(),
-              post: $('#'+postId+'-post').text()
+              summary: $('#'+postId+'_summary').text(),
+              post: $('#'+postId+'_post').text()
             };
             me.fire("editPost", {post: post});
           });

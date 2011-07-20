@@ -1,13 +1,13 @@
 <template name="posts" client_enabled="true">
   [[each(i, item) result.posts]]
     <li class="blogentry">
-      <h3 postId="$[id]">
-        <span id="$[id]-summary">$[summary]</span> <!--(timestamp: $[timestamp]) this timestamp value should change with each refresh -->
+      <h3 postid="$[id]">
+        <span id="$[id]_summary">$[summary]</span> <!--(timestamp: $[timestamp]) this timestamp value should change with each refresh -->
         <span style="font-style:italic;font-size:75%;">
           Posted on $[pubDate]
         </span>
       </h3>
-      <p id="$[id]-post" class="collapsed">$[post]</p>
+      <p id="$[id]_post" class="collapsed">$[post]</p>
     </li>
   [[/each]]
 </template>
