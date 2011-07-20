@@ -9,7 +9,7 @@ var fs    = require("fs"),
     cli   = require("cli").enable('version').setApp('feather', '0.1');
 
 if (!process.env.FEATHER_HOME) {
-  cli.fatal("The environment variable #white[FEATHER_HOME] is required.");
+  cli.fatal(color.ansify("The environment variable #white[FEATHER_HOME] is required."));
 } else {
   var stat = fs.statSync(process.env.FEATHER_HOME);
   if (!stat.isDirectory()) {
@@ -202,7 +202,7 @@ var commands = {
     desc:"Creates a new feather application at the specified directory.  If NAME is omitted, the current directory is assumed, but it will prompt you for confirmation.",
     usage:"feather [OPTIONS] create-app [NAME]",
     fn: function() {
-      var dir = getAppDir(true), name;
+      var dir = getAppDir(true, true), name;
       if (cli.argc < 1) {
         name = path.basename(dir);
         if (fs.readdirSync(dir).length == 0) {
@@ -283,19 +283,25 @@ function resolveCmd(cmd) {
   return cmd.replace(/-([a-z])/, function(m) { return m[1].toUpperCase(); });
 }
 
-function getAppDir(bypassPublicCheck) {
+function getAppDir(createIfNoExist, ignorePublicMissing) {
   var appDir = path.normalize(options.path);
   if (appDir[0] !== '/') {
     appDir = path.resolve(process.cwd(), appDir);
   }
 
   if (!path.existsSync(appDir)) {
-    cli.fatal("Path " + appDir + " does not exist.");
+    if (createIfNoExist) {
+      if (!ffs.mkdirpSync(appDir, 0755).result) {
+        cli.fatal("Path " + appDir + " does not exist and I couldn't create it.");
+      }
+    } else {
+      cli.fatal("Path " + appDir + " does not exist.");
+    }
   }
   if (!fs.statSync(appDir).isDirectory()) {
     cli.fatal(appDir + " is not a directory.");
   }
-  if (!bypassPublicCheck && !path.existsSync(appDir + '/public')) {
+  if (!ignorePublicMissing && !path.existsSync(appDir + '/public')) {
     cli.fatal(appDir + " does not appear to be a feather application.");
   }
   return appDir;
@@ -394,6 +400,7 @@ function createWidget(appDir, namespace, widgetName) {
     '  });',
     '};'
   ];
+
   var clientTemplate = [
     'feather.ns("' + namespace + '");',
     '(function() {',

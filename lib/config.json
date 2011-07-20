@@ -54,13 +54,13 @@
     "packages": [
       { 
         "name":"feather-client-core.js",
-        "consolidate": true,
+        "consolidate": false,
         "minify": false,
         "publisherId": "local"
       },
       {
         "name": "feather-client-core.css",
-        "consolidate": true,
+        "consolidate": false,
         "minify": true,
         "publisherId": "local"
       }
