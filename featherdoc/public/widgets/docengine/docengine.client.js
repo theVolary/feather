@@ -5,7 +5,7 @@ feather.ns("featherdoc");
   
 	featherdoc.docengine = feather.widget.create({
 		name: "featherdoc.docengine",
-		path: "w/docengine/",
+		path: "widgets/docengine/",
 		prototype: {
 			initialize: function($super, options) {
 				$super(options);
@@ -41,7 +41,7 @@ feather.ns("featherdoc");
         if (widgetName) {        
           feather.widget.load({
             id: feather.id(),
-            path:"w/"+widgetName+"/",
+            path:"widgets/"+widgetName+"/",
             serverOptions: {
               path: options.path,
               method: options.method

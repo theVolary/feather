@@ -2,7 +2,7 @@ feather.ns("featherdoc");
 (function() {	
 	featherdoc.markdown = feather.widget.create({
 		name: "featherdoc.markdown",
-		path: "w/markdown/",
+		path: "widgets/markdown/",
 		prototype: {
 			initialize: function($super, options) {
 				$super(options);

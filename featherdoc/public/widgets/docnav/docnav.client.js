@@ -3,7 +3,7 @@ feather.ns("featherdoc");
 (function() {	
 	featherdoc.docnav = feather.widget.create({
 		name: "featherdoc.docnav",
-		path: "w/docnav/",
+		path: "widgets/docnav/",
 		prototype: {
       initialize: function($super, options) {
         $super(options);

@@ -51,7 +51,7 @@ exports.getWidget = function(feather, cb) {
 
   cb(null, {
     name: "featherdoc.markdown",
-    path: "w/markdown/"
+    path: "widgets/markdown/"
   });
 
 };
