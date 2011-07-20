@@ -1,23 +1,33 @@
+var fs = require("fs"),
+    path = require("path"),
+    _ = require("underscore")._;
+
 exports.getWidget = function(feather, cb) {
   feather.ns("featherdoc");
-  feather.navItems = [
+  featherdoc.navItems = [
     // Paths should be local to featherdoc, not public.
-    {type:'markdown', name:'Setup README', method:'fs', path:'../README.md'},
-    {type:'markdown', name:'Data', method:'fs', path:'docs/data.md'},
-    {type:'markdown', name:'Applications', method:'fs', path:'docs/applications.md'},
-    {type:'markdown', name:'Auth', method:'fs', path:'docs/auth.md'},
-    {type:'markdown', name:'Logging', method:'fs', path:'docs/logging.md'},
-    {type:'markdown', name:'Testing Apps', method:'fs', path:'docs/testing.md'},
-    {type:'api', name:'Server API', method:'url', path:'/docs/api/server/index.html'},
-    {type:'api', name:'Client API', method:'url', path:'/docs/api/client/index.html'}
+    {type:'markdown', name:'Setup README', method:'fs', path:'../README.md'}
   ];
 
-  featherdoc.getNavItems = function(cb) {
-    cb && cb(null, {navItems: featherdoc.navItems });
+  fs.readdir("docs", function(err, files) {    
+    _.each(files, function(f) {      
+      if (path.extname(f) === ".md") {
+        var name = path.basename(f, '.md');
+        name = name.charAt(0).toUpperCase() + name.substring(1);
+        featherdoc.navItems.push({type:'markdown', method:'fs', path:'docs/'+path.basename(f), name:name});
+      }
+    });
+
+    featherdoc.navItems.push({type:'api', name:'Server API', method:'url', path:'/docs/api/server/index.html'});
+    featherdoc.navItems.push({type:'api', name:'Client API', method:'url', path:'/docs/api/client/index.html'});    
+  });
+
+  featherdoc.getNavItems = function(callback) {
+    callback && callback(null, {navItems: featherdoc.navItems });
   };
 
   cb(null, {
     name: "featherdoc.docnav",
-    path: "w/docnav/"
+    path: "widgets/docnav/"
   });
 };
