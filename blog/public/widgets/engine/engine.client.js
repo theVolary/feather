@@ -1,4 +1,5 @@
 feather.ns("blog");
+
 (function() {
   
   blog.engine = feather.widget.create({
