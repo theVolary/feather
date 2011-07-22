@@ -19,7 +19,7 @@ feather.ns("api_tester");
             me.datalink1 && me.datalink1.dispose();
           },
 
-          testSetSessionFoo: function () {
+          testDatalinkOptions: function () {
             var test = this;
             feather.widget.load({
               path: "widgets/datalink1/",
