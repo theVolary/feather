@@ -15,8 +15,11 @@ exports.getWidget = function(feather, cb) {
     feather.blog.api.getPosts(function(err, dbResult) {
       if (!err) {
         dbResult.forEach(function(key, doc, id) {
-          doc.timestamp = (new Date()).getTime(); //for testing
-          posts.push(doc);
+          if (key[0]=="post")
+          {
+            doc.timestamp = (new Date()).getTime(); //for testing
+            posts.push(doc);
+          }
         });
         _cb(null, {
           posts: posts, 

@@ -55,11 +55,16 @@ feather.ns("blog");
           $('.blogentry h3').prepend(function(index, html) {
             return '<input type="button" value="Edit" postid="' + $($('.blogentry h3')[index]).attr('postid') + '" class="btnEditPost" />';
           });
+          $('.blogentry p').prepend(function(index, html) {
+            return '<input type="button" value="Reply"  parentid="' + $($('.blogentry h3')[index]).attr('postid') + '"class="btnEditPost"/>';
+          });
           me.domEvents.bind(me.get(".btnEditPost"), "click", function(event) {
             event.stopPropagation();
             var postId = $(this).attr('postid');
+            var postParentId = $(this).attr('parentid');
             var post = {
               id: postId,
+              parent_id: postParentId,
               summary: $('#'+postId+'_summary').text(),
               post: $('#'+postId+'_post').text()
             };

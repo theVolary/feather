@@ -9,8 +9,10 @@ blogApi.prototype = {
       if (!err) {
         feather.logger.info({message:'Found ' + dbResult.length + ' posts.', category:'blog.api'});
         dbResult.forEach(function(key, doc, id) {
+          var keyDate = key[1];
           doc.key = key;
-          doc.pubDate = new Date(key[0]-0, key[1]-0, key[2]-0, key[3]-0, key[4]-0, key[5]-0);
+          doc.type = key[0];
+          doc.pubDate = new Date(keyDate[0]-0, keyDate[1]-0, keyDate[2]-0, keyDate[3]-0, keyDate[4]-0, keyDate[5]-0);
           doc.id = id;
           feather.logger.debug({message:'Found document w/ id ' + id + ', key ' + key, category:'blog.api'});
         });
@@ -39,7 +41,8 @@ blogApi.prototype = {
       id: post.id,
       summary:post.summary,
       post:post.post,
-      pub_date:(new Date()).toArray()
+      pub_date:(new Date()).toArray(),
+      parent_id:post.parent_id
     };
     var errors = this.postIsInvalid(post);
     if (errors) {
