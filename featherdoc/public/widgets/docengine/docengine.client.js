@@ -1,15 +1,12 @@
 feather.ns("featherdoc");
 
-(function() {	
+(function() { 
   var currWidget = null;
   
-	featherdoc.docengine = feather.widget.create({
-		name: "featherdoc.docengine",
-		path: "widgets/docengine/",
-		prototype: {
-			initialize: function($super, options) {
-				$super(options);
-			}, 
+  featherdoc.docengine = feather.Widget.create({
+    name: "featherdoc.docengine",
+    path: "widgets/docengine/",
+    prototype: {
       onReady: function() {
         var me = this;
         me.docnav.on('nav', function(args) {
@@ -39,7 +36,7 @@ feather.ns("featherdoc");
         }
         
         if (widgetName) {        
-          feather.widget.load({
+          feather.Widget.load({
             id: feather.id(),
             path:"widgets/"+widgetName+"/",
             serverOptions: {
@@ -58,6 +55,6 @@ feather.ns("featherdoc");
           });
         } // end if.
       }
-		}		
-	});	
+    }   
+  }); 
 })();

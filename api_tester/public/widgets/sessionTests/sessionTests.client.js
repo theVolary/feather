@@ -1,13 +1,10 @@
 feather.ns("api_tester");
 (function() {
 
-  api_tester.sessionTests = feather.widget.create({
+  api_tester.sessionTests = feather.Widget.create({
     name: "api_tester.sessionTests",
     path: "widgets/sessionTests/",
     prototype: {
-      initialize: function($super, options) {
-        $super(options);
-      },
       addTests: function() {
         var me = this;
 

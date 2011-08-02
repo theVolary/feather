@@ -648,18 +648,15 @@ feather.ns("api_tester");
     })
   ];
 
-  api_tester.channelTests = feather.widget.create({
+  api_tester.channelTests = feather.Widget.create({
     name: "api_tester.channelTests",
     path: "widgets/channelTests/",
     prototype: {
-      initialize: function($super, options) {
-        $super(options);        
-      },
       addTests: function() {
         var me = this;
 
         var suite = new Y.Test.Suite("Channels Tests");
-        tests.each(function(test) {
+        _.each(tests, function(test) {
           suite.add(test);
         })
         Y.Test.Runner.add(suite);

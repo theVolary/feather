@@ -1,12 +1,9 @@
 feather.ns("api_tester");
 (function() {
-  api_tester.channelClient2 = feather.widget.create({
+  api_tester.channelClient2 = feather.Widget.create({
     name: "api_tester.channelClient2",
     path: "widgets/channelClient2/",
     prototype: {
-      initialize: function($super, options) {
-        $super(options);
-      },
       onReady: function() {
         var me = this;
 

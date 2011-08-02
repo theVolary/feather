@@ -1,13 +1,10 @@
 feather.ns("featherdoc");
 
-(function() {	
-	featherdoc.docnav = feather.widget.create({
-		name: "featherdoc.docnav",
-		path: "widgets/docnav/",
-		prototype: {
-      initialize: function($super, options) {
-        $super(options);
-      },
+(function() { 
+  featherdoc.docnav = feather.Widget.create({
+    name: "featherdoc.docnav",
+    path: "widgets/docnav/",
+    prototype: {
       onReady: function() {
         var me = this;
         me.domEvents.bind(me.get('.navitem'), 'click', function(e) {
@@ -21,6 +18,6 @@ feather.ns("featherdoc");
           me.fire('nav', navOptions);
         });
       }
-		}		
-	});	
+    }   
+  }); 
 })();
