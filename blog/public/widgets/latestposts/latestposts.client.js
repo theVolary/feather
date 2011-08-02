@@ -1,14 +1,10 @@
 feather.ns("blog");
 (function() {
-	
-	blog.latestposts = feather.widget.create({
-		name : "blog.latestposts",
-		path : "widgets/latestposts/",
-		prototype : {
-			initialize : function($super, options) {
-				$super(options);
-				var me = this;
-			},
+  
+  blog.latestposts = feather.Widget.create({
+    name : "blog.latestposts",
+    path : "widgets/latestposts/",
+    prototype : {
       onReady: function() {
         var me = this;
         feather.auth.api.on('authenticated', function() {
@@ -69,7 +65,7 @@ feather.ns("blog");
           me.get(".btnEditPost").remove();
         }
       }
-		}
-	});
+    }
+  });
 
 })();

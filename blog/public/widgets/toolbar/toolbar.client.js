@@ -1,18 +1,13 @@
 feather.ns("blog");
-(function() {	
+(function() { 
   var template = '<span class="button ${name}" title="${tooltip}">&nbsp;</span>';
   
-  blog.toolbar = feather.widget.create({
+  blog.toolbar = feather.Widget.create({
     name: "blog.toolbar",
     path: "widgets/toolbar/",
     prototype: {
-      initialize: function($super, options) {
-        $super(options);
-      },
-      onReady: function(args) {
-        var me = this;
-			  
-        me.addButton({ name:'refresh', tooltip: 'Refresh' });
+      onReady: function() {
+        this.addButton({ name:'refresh', tooltip: 'Refresh' });
       },
       addButton: function(options, callback) {
         var me = this;
@@ -36,13 +31,13 @@ feather.ns("blog");
         });
         
         return button;
-			},
+      },
       removeButton: function(options) {
         var me = this;
         if (options.name) {
           me.get('.'+options.name).remove();
         }
       }
-    }		
-  });	
+    }   
+  }); 
 })();

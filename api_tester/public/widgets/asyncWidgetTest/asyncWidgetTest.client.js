@@ -1,13 +1,10 @@
 feather.ns("api_tester");
 (function() {
 
-  api_tester.asyncWidgetTest = feather.widget.create({
+  api_tester.asyncWidgetTest = feather.Widget.create({
     name: "api_tester.asyncWidgetTest",
     path: "widgets/asyncWidgetTest/",
     prototype: {
-      initialize: function($super, options) {
-        $super(options);
-      },
       addTests: function() {
         var me = this;
 

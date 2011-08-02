@@ -1,12 +1,9 @@
 feather.ns("api_tester");
 (function() {
-  api_tester.dynamicTmplVarsTest = feather.widget.create({
+  api_tester.dynamicTmplVarsTest = feather.Widget.create({
     name: "api_tester.dynamicTmplVarsTest",
     path: "widgets/dynamicTmplVarsTest/",
     prototype: {
-      initialize: function($super, options) {
-        $super(options);
-      },
       addTests: function() {
         var me = this;
 
@@ -17,20 +14,22 @@ feather.ns("api_tester");
 
           setUp: feather.emptyFn,
           tearDown : function() {
-            me.dynamicTmplVars && me.dynamicTmplVars.dispose();
+            setTimeout(function() {
+              me.dynamicTmplVars && me.dynamicTmplVars.dispose();
+            },10);            
           },
 
           testDynamicTagWithVars: function () {
             var test = this;
             var id = feather.id();
-            feather.widget.load({
+            feather.Widget.load({
               path: "widgets/dynamicTmplVars/",
               parent: me,
               id: id,
               clientOptions: {
                 on: {
-                  ready: function(args) {
-                    me.dynamicTmplVars = args.sender;
+                  ready: function(sender) {
+                    me.dynamicTmplVars = sender;
                     test.resume(function() {
                       Y.Assert.areEqual(me.dynamicTmplVars.get("#testDiv").html(), "foo");
                     });

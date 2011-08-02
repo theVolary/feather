@@ -1,11 +1,10 @@
 feather.ns("api_tester");
 (function() {
-  api_tester.testPicker = feather.widget.create({
+  api_tester.testPicker = feather.Widget.create({
     name: "api_tester.testPicker",
     path: "widgets/testPicker/",
     prototype: {
-      initialize: function($super, options) {
-        $super(options);
+      onInit: function() {
         this.testWidgets = [];
       },
       onReady: function() {
@@ -15,14 +14,14 @@ feather.ns("api_tester");
         this.setupYUI();
 
         //tiny fsm to track YUI ready state
-        this.YUIFSM = new feather.fsm.finiteStateMachine({
+        this.YUIFSM = new feather.FiniteStateMachine({
           states: {
             initial: {
-              ready: function(fsm) {
-                return fsm.states.ready;
+              ready: function() {
+                return this.states.ready;
               }
             },
-            ready: feather.fsm.emptyState
+            ready: feather.FiniteStateMachine.emptyState
           }
         });
       },
@@ -58,26 +57,26 @@ feather.ns("api_tester");
         var tests = [];
         me.get(".testCB").each(function(i, el) {
           if (el.checked) {
-            tests.push(me.tests.find(function(t) {
+            tests.push(_.find(me.tests, function(t) {
               return t.name === el.id;
             }));
           }
         });
-        var sem = new feather.lang.semaphore(function() {
+        var sem = new feather.Semaphore(function() {
           Y.Test.Runner.run();
         });
         sem.semaphore = tests.length;
         me.YUIFSM.onceState("ready", function() {
           Y.Test.Runner.clear();
-          tests.each(function(test) {
-            var widget = me.testWidgets.find(function(w) {
+          _.each(tests, function(test) {
+            var widget = _.find(me.testWidgets, function(w) {
               return w.widgetPath === test.path;
             });
             if (widget) {
               widget.addTests();
               sem.execute();
             } else {
-              feather.widget.load({
+              feather.Widget.load({
                 id: feather.id(),
                 path: test.path,
                 clientOptions: {
@@ -85,9 +84,9 @@ feather.ns("api_tester");
                     containerizer: "empty"
                   },
                   on: {
-                    ready: function(args) {
-                      me.testWidgets.push(args.sender);
-                      args.sender.addTests();
+                    ready: function(sender) {
+                      me.testWidgets.push(sender);
+                      sender.addTests();
                       sem.execute();
                     }
                   }
