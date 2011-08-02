@@ -1,13 +1,10 @@
 feather.ns("blog");
 (function() {	
 
-  blog.editpost = feather.widget.create({
+  blog.editpost = feather.Widget.create({
     name: "blog.editpost",
     path: "widgets/editpost/",
     prototype: {
-      initialize: function($super, options) {
-        $super(options);
-      },
       savePost: function(cb) {
         var me = this;
         var post = me.model.post; //thanks to auto datalinking, this will updated for us

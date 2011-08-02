@@ -1,45 +1,40 @@
 # feather client/server communication models #
 
 ## Overview ##
-Once a feather page has been served to a client, there are several ways in which you can communicate with the server, and with other connected clients. At the core of feather's communications lies the excellent [socket.io](http://socket.io) library. This means we have full support for the WebSocket protocol, assuming the client supports it. It also means we have full support for server push, as well as client broadcasting of messages. The channel abstraction allows for a pub/sub event model for real-time communications, while the `feather.widget.widgetServerMethod` construct enables seamless widget-level RPC style communications.
+Once a feather page has been served to a client, there are several ways in which you can communicate with the server, and with other connected clients. At the core of feather's communications lies the excellent [socket.io](http://socket.io) library. This means we have full support for the WebSocket protocol, assuming the client supports it. It also means we have full support for server push, as well as client broadcasting of messages. The channel abstraction allows for a pub/sub event model for real-time communications, while the `feather.Widget.widgetServerMethod` construct enables seamless widget-level RPC style communications.
 
 ## Widget-level RPC ##
-If you'd like to encapsulate server-side methods within a given widget, there is an easy mechanism for doing so: `feather.widget.widgetServerMethod()`. When you wrap a method as a `widgetServerMethod`, a corresponding proxy method will be emitted to the client, which can be used to invoke the server method seamlessly. The name of the proxy method on the client will be the same name as the server method, prefixed with "server_" for clarity.
+If you'd like to encapsulate server-side methods within a given widget, there is an easy mechanism for doing so: `feather.Widget.widgetServerMethod()`. When you wrap a method as a `widgetServerMethod`, a corresponding proxy method will be emitted to the client, which can be used to invoke the server method seamlessly. The name of the proxy method on the client will be the same name as the server method, prefixed with "server_" for clarity.
 
 _Example_:
 
   If you have a widget `foo`, and `foo.server.js` looks like this:
 
-    feather.ns("myapp");    
-    myapp.foo = feather.widget.create({
-      name: "myapp.foo",
-      path: "widgets/foo/",
-      prototype: {
-        initialize: function($super, options) {
-          $super(options);
-        },
-        doSomething: feather.widget.widgetServerMethod(function(arg1, cb) {
-          //doSomething with arg1...
-          var result = {message: "you sent me" + arg1};
-          
-          //when ready, call back 
-          //notice we're following the 'error as first argument' nodejs callback style,
-          //so pass null if there were no errors
-          cb(null, result);
-        })
-      }   
-    });  
+    exports.getWidget = function(feather, cb) {
+      cb(null, {
+        name: "myapp.foo",
+        path: "widgets/foo/",
+        prototype: {
+          doSomething: feather.Widget.widgetServerMethod(function(arg1, cb) {
+            //doSomething with arg1...
+            var result = {message: "you sent me" + arg1};
+            
+            //when ready, call back 
+            //notice we're following the 'error as first argument' nodejs callback style,
+            //so pass null if there were no errors
+            cb(null, result);
+          })
+        }   
+      });  
+    };
   
   Then, in your `foo.client.js`, you can do something like this:
 
     feather.ns("myapp");    
-    myapp.foo = feather.widget.create({
+    myapp.foo = feather.Widget.create({
       name: "myapp.foo",
       path: "widgets/foo/",
       prototype: {
-        initialize: function($super, options) {
-          $super(options);
-        },
         onReady: function() {
           var me = this;
           //when one of my buttons is clicked, do something on the server...
@@ -91,13 +86,10 @@ _Example 1 client.js_:
        */
       var chatChannel = feather.socket.subscribe({id: "chat"});
       
-      myapp.chat = feather.widget.create({
+      myapp.chat = feather.Widget.create({
         name: "myapp.chat",
         path: "widgets/chat/",
         prototype: {
-          initialize: function($super, options) {
-            $super(options);
-          },
           onReady: function() {
             var me = this;
 
@@ -156,13 +148,10 @@ _Example 2 client.js_:
        */
       var chatChannel = feather.socket.subscribe({id: "chat"});
       
-      myapp.chat = feather.widget.create({
+      myapp.chat = feather.Widget.create({
         name: "myapp.chat",
         path: "widgets/chat/",
         prototype: {
-          initialize: function($super, options) {
-            $super(options);
-          },
           onReady: function() {
             var me = this;            
 
@@ -550,7 +539,7 @@ _Example 3 server.js_:
       }
     });
     
-    myapp.chat = feather.widget.create({
+    myapp.chat = feather.Widget.create({
       name: "myapp.chat",
       path: "widgets/chat/",
       prototype: {
@@ -577,13 +566,10 @@ _Example 3 client.js_:
         data: {foo: "bar"} //illustration of passing data at subscribe-time (other clients will receive this data via the connection event)
       });
       
-      myapp.chat = feather.widget.create({
+      myapp.chat = feather.Widget.create({
         name: "myapp.chat",
         path: "widgets/chat/",
         prototype: {
-          initialize: function($super, options) {
-            $super(options);
-          },
           onReady: function() {            
             this.bindUI();   
             

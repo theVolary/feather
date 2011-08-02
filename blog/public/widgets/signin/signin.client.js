@@ -1,31 +1,29 @@
 feather.ns("blog");
 (function() {
 
-	blog.signin = feather.widget.create({
-		name: "blog.signin",
-		path: "widgets/signin/",		
-		prototype: {
-			initialize: function($super, options) {
-				$super(options);
-			},
-			onReady: function(args) {
-				var me = this;
+  blog.signin = feather.Widget.create({
+    name: "blog.signin",
+    path: "widgets/signin/",    
+    prototype: {
+      onReady: function(args) {
+        var me = this;
         
         /**
          * create an FSM to handle ui states
          */
-        var fsm = new feather.fsm.finiteStateMachine({
+        var fsm = new feather.FiniteStateMachine({
           states: {
             initial: {
-              stateStartup: function(fsm, args) {
+              stateStartup: function() {
                 if (me.get("#signoutBtn").length) {
-                  return fsm.states.loggedIn;
+                  return this.states.loggedIn;
                 }
-                return fsm.states.loggedOut;
+                return this.states.loggedOut;
               }
             },
             loggedIn: {
-              stateStartup: function(fsm, args) {
+              stateStartup: function() {
+                var fsm = this;
                 if (!me.get("#signoutBtn").length) {
                   me.get("#signInPanel").html("");
                   $.tmpl(me.templates.signedIn, {}).appendTo(me.get("#signInPanel"));
@@ -41,16 +39,17 @@ feather.ns("blog");
                   });                  
                 });
               },
-              loggedOut: function(fsm, args) {
-                return fsm.states.loggedOut;
+              loggedOut: function() {
+                return this.states.loggedOut;
               },
-              leavingState: function(fsm, args) {
+              leavingState: function() {
                 me.signOutHandler.unbind();
                 me.signOutHandler = null;
               }
             }, //end loggedIn state
             loggedOut: {
-              stateStartup: function(fsm, args) {
+              stateStartup: function() {
+                var fsm = this;
                 if (!me.get(".templating_error").length) {
                   if (!me.get("#signinBtn").length) {
                     me.get("#signInPanel").html("");
@@ -70,18 +69,18 @@ feather.ns("blog");
                   }); // end signinButton click
                 }
               }, 
-              loggedIn: function(fsm, args) {
-                return fsm.states.loggedIn;
+              loggedIn: function() {
+                return this.states.loggedIn;
               },
-              leavingState: function(fsm, args) {
+              leavingState: function() {
                 me.signInHandler.unbind();
                 me.signInHandler = null;
               }
             } //end loggedOutState
           }
         });
-			} // end onReady
-		}
-	});
+      } // end onReady
+    }
+  });
 
 })();

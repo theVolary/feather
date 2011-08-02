@@ -4,13 +4,12 @@
   
   var chatChannel = feather.socket.subscribe({id: "blog:chat"});
 
-  blog.chat = feather.widget.create({
+  blog.chat = feather.Widget.create({
     name: "blog.chat",
     path: "widgets/chat/",
     prototype: {
       notifier: null,
-      initialize: function($super, options) {
-        $super(options);
+      onInit: function() {
         if (window.Audio) { //window reference required to avoid breaking error during check if undefined
           this.notifier = new Audio();
           this.notifier.src = '/widgets/chat/notify.wav';
