@@ -2,12 +2,25 @@
   [[each(i, item) result.posts]]
     <li class="blogentry">
       <h3 postid="$[id]">
-        <span id="$[id]_summary">$[summary]</span> <!--(timestamp: $[timestamp]) this timestamp value should change with each refresh -->
+        <span id="${id}_summary_$[id]">$[summary]</span> <!--(timestamp: $[timestamp]) this timestamp value should change with each refresh -->
         <span style="font-style:italic;font-size:75%;">
-          Posted on $[pubDate]
+          Posted on $[pubDate] (Replies: $[replies.length])
         </span>
       </h3>
-      <p id="$[id]_post" class="collapsed">$[post]</p>
+      <p id="${id}_post_$[id]" class="collapsed">$[post]</p>
+
+      [[each(r, reply) replies]]
+        <li class="blogreply">
+          <h5 postid="$[id]" parentid="$[parent_id]">
+            <span id="${id}_summary_$[id]">$[summary]</span> <!--(timestamp: $[timestamp]) this timestamp value should change with each refresh -->
+            <span style="font-style:italic;font-size:75%;">
+              Posted on $[pubDate]
+            </span>
+          </h5>
+          <p id="${id}_post_$[id]" class="collapsed">$[post]</p>
+        </li>
+      [[/each]]
+
     </li>
   [[/each]]
 </template>

@@ -38,7 +38,6 @@ feather.ns("blog");
         var me = this;
         var id = feather.id();
         var title = post == null ? "New Post" : post.parent_id != null ? "Reply to Post" : "Edit Post";
-
         feather.Widget.load({
           id: id,
           path: "widgets/editpost/",

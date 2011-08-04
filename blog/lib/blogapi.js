@@ -9,10 +9,8 @@ blogApi.prototype = {
       if (!err) {
         feather.logger.info({message:'Found ' + dbResult.length + ' posts.', category:'blog.api'});
         dbResult.forEach(function(key, doc, id) {
-          var keyDate = key[1];
-          doc.key = key;
-          doc.type = key[0];
-          doc.pubDate = new Date(keyDate[0]-0, keyDate[1]-0, keyDate[2]-0, keyDate[3]-0, keyDate[4]-0, keyDate[5]-0);
+//          var pubDate = doc.pubDate;
+//          doc.pubDate = new Date(pubDate[0]-0, pubDate[1]-0, pubDate[2]-0, pubDate[3]-0, pubDate[4]-0, pubDate[5]-0);
           doc.id = id;
           feather.logger.debug({message:'Found document w/ id ' + id + ', key ' + key, category:'blog.api'});
         });
@@ -41,9 +39,14 @@ blogApi.prototype = {
       id: post.id,
       summary:post.summary,
       post:post.post,
-      pub_date:(new Date()).toArray(),
-      parent_id:post.parent_id
+      pub_date:new Date().toArray(),
+      parent_id:post.parent_id,
+      level: post.level==undefined?"0":post.level
     };
+    if (dbDoc.id==undefined)
+    {
+      dbDoc.id=dbDoc.pub_date.toString().replace(/,/g,"");
+    }
     var errors = this.postIsInvalid(post);
     if (errors) {
       callback && callback({message:"Post has validation errors.", validationErrors:errors});

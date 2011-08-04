@@ -14,11 +14,18 @@ exports.getWidget = function(feather, cb) {
     var posts = [];
     feather.blog.api.getPosts(function(err, dbResult) {
       if (!err) {
+        var replies=[];
         dbResult.forEach(function(key, doc, id) {
-          if (key[0]=="post")
+          if (doc.level==undefined || doc.level=="0")
           {
             doc.timestamp = (new Date()).getTime(); //for testing
+            doc.replies = replies;
             posts.push(doc);
+            replies=[];
+          }
+          else
+          {
+            replies.push(doc);
           }
         });
         _cb(null, {
