@@ -1,6 +1,6 @@
 exports.getWidget = function(feather, cb) {
 
-  //this line should not cause an error
+  //this line should not cause an error (defined in app.js)
   var foo = test_namespace.foo;
 
   cb(null, {

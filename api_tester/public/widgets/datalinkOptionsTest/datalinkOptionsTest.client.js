@@ -1,12 +1,9 @@
 feather.ns("api_tester");
 (function() {
-  api_tester.datalinkOptionsTest = feather.widget.create({
+  api_tester.datalinkOptionsTest = feather.Widget.create({
     name: "api_tester.datalinkOptionsTest",
     path: "widgets/datalinkOptionsTest/",
     prototype: {
-      initialize: function($super, options) {
-        $super(options);
-      },
       addTests: function() {
         var me = this;
 
@@ -21,13 +18,13 @@ feather.ns("api_tester");
 
           testDatalinkOptions: function () {
             var test = this;
-            feather.widget.load({
+            feather.Widget.load({
               path: "widgets/datalink1/",
               parent: me,
               clientOptions: {
                 on: {
-                  ready: function(args) {
-                    me.datalink1 = args.sender;
+                  ready: function(sender) {
+                    me.datalink1 = sender;
                   }
                 },
                 datalinkOptions: {

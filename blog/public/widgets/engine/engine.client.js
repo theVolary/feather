@@ -2,7 +2,7 @@ feather.ns("blog");
 
 (function() {
   
-  blog.engine = feather.widget.create({
+  blog.engine = feather.Widget.create({
     name : "blog.engine",
     path : "widgets/engine/",
     prototype: {
@@ -39,7 +39,7 @@ feather.ns("blog");
         var id = feather.id();
         var title = post == null ? "New Post" : post.parent_id != null ? "Reply to Post" : "Edit Post";
 
-        feather.widget.load({
+        feather.Widget.load({
           id: id,
           path: "widgets/editpost/",
           clientOptions: {
@@ -51,7 +51,7 @@ feather.ns("blog");
               modal: true,
               buttons: {
                 SAVE: function() {
-                  var w = feather.widget.widgets.findById(id);
+                  var w = feather.Widget.widgets.findById(id);
                   w.savePost(function(err) {
                     if (!err) {
                       w.dispose();
@@ -60,7 +60,7 @@ feather.ns("blog");
                   });
                 },
                 Cancel: function() {
-                  var w = feather.widget.widgets.findById(id);
+                  var w = feather.Widget.widgets.findById(id);
                   w.dispose();
                 }
               }

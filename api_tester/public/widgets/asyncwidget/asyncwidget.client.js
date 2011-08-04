@@ -1,12 +1,11 @@
 feather.ns("api_tester");
 (function() {
 
-  api_tester.asyncwidget = feather.widget.create({
+  api_tester.asyncwidget = feather.Widget.create({
     name: "api_tester.asyncwidget",
     path: "widgets/asyncwidget/",
     prototype: {
-      initialize: function($super, options) {
-        $super(options);
+      onInit: function() {
         this.foo = "bar";
       }
     }
