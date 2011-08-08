@@ -5,5 +5,34 @@
     "categories": {
       "feather.http": "off"
     }
+  },
+  "resources": {
+    "publish": {
+      "consolidate": false,
+      "minify": false,
+      "publisherId": "local",
+      "publishers": [
+        {
+          "id": "local",
+          "config": {
+            "publishLocation": "feather-res-cache"
+          }
+        }
+      ]
+    },
+    "packages": [
+      { 
+        "name":"feather-client-core.js",
+        "consolidate": false,
+        "minify": false,
+        "publisherId": "local"
+      },
+      {
+        "name": "feather-client-core.css",
+        "consolidate": false,
+        "minify": true,
+        "publisherId": "local"
+      }
+    ]
   }
 }
