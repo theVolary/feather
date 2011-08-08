@@ -69,23 +69,28 @@
     },
 
     testOnceState: function() {
+      var i = 0;
       var fsm = this.getFsm({
         initial: {
+          stateStartup: function() {
+            i++;
+          },
           gotoReady: function() {
             return fsm.states.ready;
           }
         },
         ready: {}
       });
-
+      Y.Assert.areEqual(1, i, "i should have been set to 1 on fsm contruction");
       var x = 0;
       var listener = function() { x += 1; };
       fsm.onceState("ready", listener);
       fsm.fire("gotoReady");
-      Y.Assert.areEqual(1, x, "X should have been set to 1 on ready");
+      Y.Assert.areEqual(1, x, "x should have been set to 1 on ready");
       fsm.gotoState(fsm.states.initial);
+      Y.Assert.areEqual(2, i, "i should have been set to 2 when fsm sent back to initial state");
       fsm.fire("gotoReady");
-      Y.Assert.areEqual(1, x, "X should still be set to 1 on 2nd ready.");
+      Y.Assert.areEqual(1, x, "x should still be set to 1 on 2nd ready.");
     },
 
     testDispose: function() {
