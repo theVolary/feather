@@ -3,6 +3,8 @@
   <title>Index.feather.html</title>
   <resources />
   <script src="http://yui.yahooapis.com/3.3.0/build/yui/yui-min.js" charset="utf-8"></script>
+
+  <script type="text/javascript" src="/widgets/clientSideRender/clientSideRender.client.js"></script>
 </head>
 <body class="yui3-skin-sam">
   <h1>Light as a Feather</h1>
@@ -10,5 +12,19 @@
   <widget id="testPicker" path="widgets/testPicker/"></widget>
   <widget id="onReadyTest" path="widgets/testAppOnReady/"></widget>
   <widget id="dynamicTagParams" path="widgets/testDynamicTagParams/"></widget>
+  <hr/>
+  testing embedding client-side widget in server side template<br/>
+  this widget should have 2 buttons (because it embeds an instance of clientSideRender4)
+  <widget id="clientSideRender3" path="widgets/clientSideRender3/">
+    <options>
+      <option name="title" value="embedded within server widget" />
+    </options>
+  </widget><hr/>
+  testing embedding client-side widget directly in page
+  <widget id="clientSideRender4" path="widgets/clientSideRender4/">
+    <options>
+      <option name="title" value="directly embedded in the page" />
+    </options>
+  </widget>
 </body>
 </html>

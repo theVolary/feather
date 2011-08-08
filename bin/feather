@@ -410,7 +410,7 @@ function createWidget(appDir, namespace, widgetName) {
     '    prototype: {',
     '      onInit: function() {',
     '        ',
-    '      }',
+    '      },',
     '      onReady: function() {',
     '        ',
     '      }',
