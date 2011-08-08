@@ -6,7 +6,7 @@ feather.ns("api_tester");
     prototype: {
       onInit: function() {
         
-      }
+      },
       onReady: function() {
         
       },
@@ -18,16 +18,17 @@ feather.ns("api_tester");
         suite.add(new Y.Test.Case({
           name: "Conduct Various tests with a client-side rendered widget",
           setUp: feather.emptyFn,
-          tearDown : function(){
+          tearDown : function() {
             me.widget && me.widget.dispose();
           },
 
-          testDatalinkOptions: function () {
+          testClientSideRendering1: function () {
             var test = this;
             feather.Widget.load({
               path: "widgets/clientSideRender/",
               parent: me,
               clientOptions: {
+                title: "FooBar",
                 on: {
                   ready: function(sender) {
                     me.widget = sender;
@@ -40,7 +41,7 @@ feather.ns("api_tester");
                   buttons: {
                     DONE: function() {
                       test.resume(function() {
-                        //assert?                        
+                        //assert?
                       });
                     }
                   }
