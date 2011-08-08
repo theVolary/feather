@@ -8,7 +8,7 @@
   },
   "resources": {
     "publish": {
-      "consolidate": false,
+      "consolidate": true,
       "minify": false,
       "publisherId": "local",
       "publishers": [
@@ -23,13 +23,13 @@
     "packages": [
       { 
         "name":"feather-client-core.js",
-        "consolidate": false,
+        "consolidate": true,
         "minify": false,
         "publisherId": "local"
       },
       {
         "name": "feather-client-core.css",
-        "consolidate": false,
+        "consolidate": true,
         "minify": true,
         "publisherId": "local"
       }
