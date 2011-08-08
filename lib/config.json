@@ -78,11 +78,11 @@
     "enabled": true,
     "provider": {
       "jsFiles": [
-        "feather-client/lib/jqueryUI-1.8.14/js/jquery-ui-1.8.14.custom.min.js",
-        "feather-client/ui.js"
+        "/feather-client/lib/jqueryUI-1.8.14/js/jquery-ui-1.8.14.custom.min.js",
+        "/feather-client/ui.js"
       ],
       "cssFiles": [
-        "feather-client/lib/jqueryUI-1.8.14/css/black-tie/jquery-ui-1.8.14.custom.css"
+        "/feather-client/lib/jqueryUI-1.8.14/css/black-tie/jquery-ui-1.8.14.custom.css"
       ]
     }
   }
