@@ -3,5 +3,6 @@
   {"name": "session", "path": "widgets/sessionTests/"},
   {"name": "async widget definition", "path": "widgets/asyncWidgetTest/"},
   {"name": "datalink options", "path": "widgets/datalinkOptionsTest/"},
-  {"name": "dynamic tag with tmpl vars", "path": "widgets/dynamicTmplVarsTest/"}
+  {"name": "dynamic tag with tmpl vars", "path": "widgets/dynamicTmplVarsTest/"},
+  {"name": "client-side rendering of widgets", "path": "widgets/clientSideRenderTest/"}
 ]
