@@ -6,7 +6,8 @@ var fs    = require("fs"),
     ffs   = require("../lib/util"),
     color = require("colorize"),
     util  = require("util"),
-    cli   = require("cli").enable('version').setApp('feather', '0.1');
+    cli   = require("cli").enable('version').setApp('feather', '0.1'),
+    _     = require("underscore");
 
 if (!process.env.FEATHER_HOME) {
   cli.fatal(color.ansify("The environment variable #white[FEATHER_HOME] is required."));
@@ -40,18 +41,19 @@ cli.readline = function (encoding, callback) {
 };
 
 var options = cli.parse({
-    daemonize: ['z', 'Daemonize this server so it runs in the background (run command only)', 'boolean', null],
-    debug: ['d', 'Starts the app in debug mode (i.e. "node debug")', 'boolean', false],
-    dompoolmax: ['x', 'The max size of the dom pool to use', 'number', null],
-    dompoolmin: ['n', 'The min size of the dom pool to use', 'number', null],
-    env: ['e', 'The environment to run in (e.g. dev, prod)', 'string', "dev"],
-    loglevel: ['l', 'The default logging level to use.  Options are: all, trace, debug, info, warn, error, off', 'string', null],
-    outputpath: ['o', 'Path to write std output to when running as a daemon (run command only)', 'path', null],
+    daemonize: ['z', '(run command only) - Daemonize this server so it runs in the background', 'boolean', null],
+    debug: ['d', '(run command only) - Starts the app in debug mode (i.e. "node debug")', 'boolean', false],
+    dompoolmax: ['x', '(run command only) - The max size of the dom pool to use', 'number', null],
+    dompoolmin: ['n', '(run command only) - The min size of the dom pool to use', 'number', null],
+    env: ['e', '(run command only) - The environment to run in (e.g. dev, prod)', 'string', "dev"],
+    loglevel: ['l', '(run command only) - The default logging level to use.  Options are: all, trace, debug, info, warn, error, off', 'string', null],
+    outputpath: ['o', '(run command only) - Path to write std output to when running as a daemon', 'path', null],
     path: ['p', 'The path to the application to apply this command to', 'path', process.cwd()],
-    pidpath: ['i', 'The path of the pid file to use when running as a daemon (run command only)', 'path', null],
+    pidpath: ['i', '(run command only) - The path of the pid file to use when running as a daemon', 'path', null],
     verbose: ['V', 'Verbose output', 'boolean', null],
-    format: ['f', 'Used for test commands to denote the output format.  Valid formats are "tap", "xunit", and "junitxml".', 'string', null],
-    testsuite: ['t', 'Specify the name of a single test suite to run inside of feather/test/unit (omit the file extension)', 'string', null]
+    format: ['f', '(api-test command only) - Used for test commands to denote the output format.  Valid formats are "tap", "xunit", and "junitxml".', 'string', null],
+    testsuite: ['t', '(api-test command only) - Specify the name of a single test suite to run inside of feather/test/unit (omit the file extension)', 'string', null],
+    "client-only": ['c', '(create-widget command only) - Indicates that the created widget is a client-side rendered widget (has no .server.js file)', 'boolean', false]
   },
   ['run', 'test', 'api-test', 'create-app', 'create-widget', 'help']);
 
@@ -389,14 +391,16 @@ function startCreateWidget(appDir, namespace, widgetName) {
   }
 }
 
-function createWidget(appDir, namespace, widgetName) {
-  var fullPath = path.join(appDir, 'public', 'widgets', widgetName);
+function createWidget(appDir, namespace, widgetPath) {
+  var clientOnly = options["client-only"];
+  var fullPath = path.join(appDir, 'public', 'widgets', widgetPath);
   ffs.mkdirpSync(fullPath);
+  var widgetName = widgetPath.replace(/.*\/([^\/]*)$/, "$1");
   var serverTemplate = [
     'exports.getWidget = function(feather, cb) {',
     '  cb(null, {',
     '    name: "'+namespace+'.'+widgetName+'",',
-    '    path: "widgets/'+widgetName+'/"',
+    '    path: "widgets/'+widgetPath+'/"',
     '  });',
     '};'
   ];
@@ -406,7 +410,9 @@ function createWidget(appDir, namespace, widgetName) {
     '(function() {',
     '  '+namespace+'.'+widgetName+' = feather.Widget.create({',
     '    name: "'+namespace+'.'+widgetName+'",',
-    '    path: "widgets/'+widgetName+'/",',
+    '    path: "widgets/'+widgetPath+'/",',
+    (clientOnly ? '    clientOnly: true,' : null),
+    (clientOnly ? '    template: [\n    \n    ].join(""),' : null),
     '    prototype: {',
     '      onInit: function() {',
     '        ',
@@ -418,8 +424,12 @@ function createWidget(appDir, namespace, widgetName) {
     '  });',
     '})();'
   ];
+  clientTemplate = _.compact(clientTemplate);
+
   fs.writeFileSync(path.join(fullPath, widgetName+'.client.js'), clientTemplate.join('\n'), "utf-8");
-  fs.writeFileSync(path.join(fullPath, widgetName+'.server.js'), serverTemplate.join('\n'), "utf-8");
+  if (!clientOnly) {
+    fs.writeFileSync(path.join(fullPath, widgetName+'.server.js'), serverTemplate.join('\n'), "utf-8");
+  }
   fs.writeFileSync(path.join(fullPath, widgetName+'.template.html'), "", "utf-8");
   fs.writeFileSync(path.join(fullPath, widgetName+'.css'), "", "utf-8");
   cli.ok(color.ansify("#green[Widget #white["+widgetName+"] created at #white["+fullPath+"].]\n"));
