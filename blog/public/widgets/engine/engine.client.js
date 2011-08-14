@@ -6,9 +6,6 @@ feather.ns("blog");
     name : "blog.engine",
     path : "widgets/engine/",
     prototype: {
-      initialize: function($super, options){
-        $super(options);
-      },
       checkUser: function() {
         var me = this;
         if (feather.auth.user && (feather.auth.user.hasAnyAuthority(['admin', 'editor']))) {

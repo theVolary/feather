@@ -80,9 +80,9 @@ feather.ns("api_tester");
                 id: feather.id(),
                 path: test.path,
                 clientOptions: {
-                  containerOptions: {
-                    containerizer: "empty"
-                  },
+                  // containerOptions: {
+                  //   containerizer: "empty"
+                  // },
                   on: {
                     ready: function(sender) {
                       me.testWidgets.push(sender);

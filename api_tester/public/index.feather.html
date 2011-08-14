@@ -2,9 +2,10 @@
 <head>
   <title>Index.feather.html</title>
   <resources />
-  <script src="http://yui.yahooapis.com/3.3.0/build/yui/yui-min.js" charset="utf-8"></script>
+  <clientscript src="http://yui.yahooapis.com/3.3.0/build/yui/yui-min.js" charset="utf-8"></clientscript>
 
-  <script type="text/javascript" src="/widgets/clientSideRender/clientSideRender.client.js"></script>
+  <!-- TODO: figure out elegant way to auto-include widget classes used for inheritance -->
+  <clientscript src="/widgets/inheritableClientWidget/inheritableClientWidget.client.js" charset="utf-8"></clientscript>
 </head>
 <body class="yui3-skin-sam">
   <h1>Light as a Feather</h1>
