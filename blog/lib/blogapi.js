@@ -35,17 +35,18 @@ blogApi.prototype = {
   savePost: function(post, callback) {
     var feather = this.feather;
     feather.logger.info({message: 'Creating post titled ${summary} with id ${id}', replacements:post, category:'blog.api'});
+    var curDate = new Date();
     var dbDoc = {
       id: post.id,
       summary:post.summary,
       post:post.post,
-      pub_date:new Date().toArray(),
+      pub_date:curDate.toArray(),
       parent_id:post.parent_id,
       level: post.level==undefined?"0":post.level
     };
     if (dbDoc.id==undefined)
     {
-      dbDoc.id=dbDoc.pub_date.toString().replace(/,/g,"");
+      dbDoc.id=curDate.getTime().toString();
     }
     var errors = this.postIsInvalid(post);
     if (errors) {
