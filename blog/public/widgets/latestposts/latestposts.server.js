@@ -14,18 +14,22 @@ exports.getWidget = function(feather, cb) {
     var posts = [];
     feather.blog.api.getPosts(function(err, dbResult) {
       if (!err) {
-        var replies=[];
+        var replies={};
         dbResult.forEach(function(key, doc, id) {
+          doc.formattedPubDate = new Date(doc.pubDate).toString("yyyy-MM-dd HH:mm:ss");  // Nice formatting
           if (doc.level==undefined || doc.level=="0")
           {
-            doc.timestamp = (new Date()).getTime(); //for testing
-            doc.replies = replies;
+            if (replies[id]==undefined)
+              replies[id]=[];
+            doc.replies = replies[id];
             posts.push(doc);
             replies=[];
           }
           else
           {
-            replies.push(doc);
+            if (replies[doc.parent_id]==undefined)
+              replies[doc.parent_id]=[];
+            replies[doc.parent_id].push(doc);
           }
         });
         _cb(null, {

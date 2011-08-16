@@ -4,7 +4,7 @@
       <h3 postid="$[id]">
         <span id="${id}_summary_$[id]">$[summary]</span> <!--(timestamp: $[timestamp]) this timestamp value should change with each refresh -->
         <span style="font-style:italic;font-size:75%;">
-          Posted on $[pubDate] (Replies: $[replies.length])
+          Posted on $[formattedPubDate] (Replies: $[replies.length])
         </span>
       </h3>
       <p id="${id}_post_$[id]" class="collapsed">$[post]</p>
@@ -14,7 +14,7 @@
           <h5 postid="$[id]" parentid="$[parent_id]">
             <span id="${id}_summary_$[id]">$[summary]</span> <!--(timestamp: $[timestamp]) this timestamp value should change with each refresh -->
             <span style="font-style:italic;font-size:75%;">
-              Posted on $[pubDate]
+              Reply on $[formattedPubDate]
             </span>
           </h5>
           <p id="${id}_post_$[id]" class="collapsed">$[post]</p>
