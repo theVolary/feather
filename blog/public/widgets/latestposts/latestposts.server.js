@@ -23,7 +23,6 @@ exports.getWidget = function(feather, cb) {
               replies[id]=[];
             doc.replies = replies[id];
             posts.push(doc);
-            replies=[];
           }
           else
           {

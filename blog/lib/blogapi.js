@@ -9,8 +9,6 @@ blogApi.prototype = {
       if (!err) {
         feather.logger.info({message:'Found ' + dbResult.length + ' posts.', category:'blog.api'});
         dbResult.forEach(function(key, doc, id) {
-//          var pubDate = doc.pubDate;
-//          doc.pubDate = new Date(pubDate[0]-0, pubDate[1]-0, pubDate[2]-0, pubDate[3]-0, pubDate[4]-0, pubDate[5]-0);
           doc.id = id;
           feather.logger.debug({message:'Found document w/ id ' + id + ', key ' + key, category:'blog.api'});
         });
