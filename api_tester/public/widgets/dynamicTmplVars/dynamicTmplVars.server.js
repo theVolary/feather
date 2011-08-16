@@ -1,5 +1,5 @@
 exports.getWidget = function(feather, cb) {
-  api_tester.dynamicWithVarsTest = function(param1, _cb) {
+  api_tester.dynamicWithVarsTest = function(param1, request, _cb) {
     _cb(null, param1);
   };
 

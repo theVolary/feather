@@ -1,7 +1,7 @@
 exports.getWidget = function(feather, cb) {
   feather.ns("api_tester");
 
-  api_tester.dynamicTagParams = function(foo, bar, baz, bool, num, _cb) {
+  api_tester.dynamicTagParams = function(foo, bar, baz, bool, num, request, _cb) {
     _cb(null, {
       foo: foo,
       bar: bar,
