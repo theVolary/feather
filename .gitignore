@@ -15,3 +15,4 @@ featherdoc/public/feather-res-cache
 featherdoc/public/feather-res-cache/*
 api_tester/public/feather-res-cache
 api_tester/public/feather-res-cache/*
+*.out

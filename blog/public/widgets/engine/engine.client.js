@@ -34,14 +34,14 @@ feather.ns("blog");
       editPost: function(post) {
         var me = this;
         var id = feather.id();
-
+        var title = post == null ? "New Post" : post.parent_id != null ? "Reply to Post" : "Edit Post";
         feather.Widget.load({
           id: id,
           path: "widgets/editpost/",
           clientOptions: {
             model: {post: post},
             containerOptions: {
-              title: "Edit Post",
+              title: title,
               width: 800,
               height: 350,
               modal: true,
