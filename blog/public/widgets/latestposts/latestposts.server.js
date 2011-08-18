@@ -9,7 +9,7 @@ exports.getWidget = function(feather, cb) {
    * global static method which can also be used from within the template via a 'dynamic' tag
    * @param {Function} cb
    */
-  blog.getPosts = function(_cb) {
+  blog.getPosts = function(request, _cb) {
     var me = this;
     var posts = [];
     feather.blog.api.getPosts(function(err, dbResult) {
