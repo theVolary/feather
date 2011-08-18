@@ -9,8 +9,6 @@ blogApi.prototype = {
       if (!err) {
         feather.logger.info({message:'Found ' + dbResult.length + ' posts.', category:'blog.api'});
         dbResult.forEach(function(key, doc, id) {
-          doc.key = key;
-          doc.pubDate = new Date(key[0]-0, key[1]-0, key[2]-0, key[3]-0, key[4]-0, key[5]-0);
           doc.id = id;
           feather.logger.debug({message:'Found document w/ id ' + id + ', key ' + key, category:'blog.api'});
         });
@@ -35,12 +33,19 @@ blogApi.prototype = {
   savePost: function(post, callback) {
     var feather = this.feather;
     feather.logger.info({message: 'Creating post titled ${summary} with id ${id}', replacements:post, category:'blog.api'});
+    var curDate = new Date();
     var dbDoc = {
       id: post.id,
       summary:post.summary,
       post:post.post,
-      pub_date:(new Date()).toArray()
+      pub_date:curDate.toArray(),
+      parent_id:post.parent_id,
+      level: post.level==undefined?"0":post.level
     };
+    if (dbDoc.id==undefined)
+    {
+      dbDoc.id=curDate.getTime().toString();
+    }
     var errors = this.postIsInvalid(post);
     if (errors) {
       callback && callback({message:"Post has validation errors.", validationErrors:errors});

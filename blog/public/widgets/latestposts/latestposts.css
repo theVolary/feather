@@ -16,6 +16,24 @@
   padding-top: 5px;
 }
 
+
+.blog_latestposts .blogreply {
+  padding: 3px 5px;
+  margin-bottom: 5px;
+  margin-right: 5px;
+}
+
+.blog_latestposts .blogreply h5 {
+  margin: 0px;
+}
+
+.blog_latestposts .blogreply p {
+  border-radius: 5px;
+  border: solid 1px #329300;
+  padding: 3px;
+  margin: 3px 10px;
+}
+
 .blog_latestposts .collapsed {
   display: none;
 }

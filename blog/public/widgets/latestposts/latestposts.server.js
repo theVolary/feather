@@ -9,14 +9,27 @@ exports.getWidget = function(feather, cb) {
    * global static method which can also be used from within the template via a 'dynamic' tag
    * @param {Function} cb
    */
-  blog.getPosts = function(_cb) {
+  blog.getPosts = function(request, _cb) {
     var me = this;
     var posts = [];
     feather.blog.api.getPosts(function(err, dbResult) {
       if (!err) {
+        var replies={};
         dbResult.forEach(function(key, doc, id) {
-          doc.timestamp = (new Date()).getTime(); //for testing
-          posts.push(doc);
+          doc.formattedPubDate = new Date(doc.pubDate).toString("yyyy-MM-dd HH:mm:ss");  // Nice formatting
+          if (doc.level==undefined || doc.level=="0")
+          {
+            if (replies[id]==undefined)
+              replies[id]=[];
+            doc.replies = replies[id];
+            posts.push(doc);
+          }
+          else
+          {
+            if (replies[doc.parent_id]==undefined)
+              replies[doc.parent_id]=[];
+            replies[doc.parent_id].push(doc);
+          }
         });
         _cb(null, {
           posts: posts, 
