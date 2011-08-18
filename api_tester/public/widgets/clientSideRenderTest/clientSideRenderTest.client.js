@@ -24,14 +24,16 @@ feather.ns("api_tester");
 
           testClientSideRendering1: function () {
             var test = this;
+            var readyFired = false;
             feather.Widget.load({
               path: "widgets/clientSideRender/",
               parent: me,
               clientOptions: {
                 title: "FooBar",
-                on: {
-                  ready: function(sender) {
-                    me.widget = sender;
+                onceState: {
+                  ready: function() {
+                    me.widget = this;
+                    readyFired = true;
                   }
                 },
                 containerOptions: {
@@ -41,7 +43,7 @@ feather.ns("api_tester");
                   buttons: {
                     DONE: function() {
                       test.resume(function() {
-                        //assert?
+                        Y.Assert.areEqual(true, readyFired, "readyFired should have been set to true");
                       });
                     }
                   }
