@@ -50,7 +50,7 @@ exports.getWidget = function(feather, cb) {
       },
       getPosts: feather.Widget.serverMethod(function(_cb) {
         var me = this;
-        blog.getPosts(function(err, result) {
+        blog.getPosts(null, function(err, result) {
           if (err) {
             _cb(err);
           } else {
