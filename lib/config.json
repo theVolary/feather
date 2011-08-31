@@ -4,6 +4,13 @@
     "enabled": false,
     "userIdPrefix": "org.couchdb.user:"
   },
+  "ssl": {
+    "enabled": false,
+    "key": "full/path/to/key_file",
+    "cert": "full/path/to/cert_file",
+    "useRedirectServer": true,
+    "redirectServerPort": 80
+  },
   "daemon": {
     "runAsDaemon": false,
     "outputPath": "feather-app.out",
