@@ -1,6 +1,6 @@
 {
   "ssl": {
-    "enabled": true,
+    "enabled": false,
     "key": "/home/ryan/.ssl/test1.pem",
     "cert": "/home/ryan/.ssl/test1-cert.pem",
     "useRedirectServer": true,
