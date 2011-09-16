@@ -1,5 +1,9 @@
 {
   "appNamespace":"featherapp",
+  "socket.io": {
+    "port": 8081,
+    "host": "localhost"
+  },
   "auth": {
     "enabled": false,
     "userIdPrefix": "org.couchdb.user:"
