@@ -6,7 +6,7 @@ exports.getWidget = function(feather, cb) {
       path = require("path");
     //request = require("request");
 
-  featherdoc.getMarkdown = function(filePath, method, cb) {
+  featherdoc.getMarkdown = function(filePath, method, request, cb) {
     feather.logger.info("In getMarkdown");
     var myPath = (method === "fs") ? path.normalize(feather.appOptions.appRoot + '/' + filePath) : filePath;
     var doc = featherdoc.markdownCache.get(myPath);

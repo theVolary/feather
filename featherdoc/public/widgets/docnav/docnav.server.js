@@ -22,7 +22,7 @@ exports.getWidget = function(feather, cb) {
     featherdoc.navItems.push({type:'api', name:'Client API', method:'url', path:'/docs/api/client/index.html'});
   });
 
-  featherdoc.getNavItems = function(callback) {
+  featherdoc.getNavItems = function(request, callback) {
     callback && callback(null, {navItems: featherdoc.navItems });
   };
 
