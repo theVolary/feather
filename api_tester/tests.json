@@ -6,5 +6,6 @@
   {"name": "dynamic tag with tmpl vars", "path": "widgets/dynamicTmplVarsTest/"},
   {"name": "client-side rendering of widgets", "path": "widgets/clientSideRenderTest/"},
   {"name": "rpc method with server-side async return", "path": "widgets/rpcAsyncTest/"},
-  {"name": "inheritable client side widget", "path": "widgets/inheritableClientWidgetTest/"}
+  {"name": "inheritable client side widget", "path": "widgets/inheritableClientWidgetTest/"},
+  {"name": "onRequest", "path": "widgets/onRequestTest/"}
 ]

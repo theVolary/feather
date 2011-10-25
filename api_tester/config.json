@@ -1,4 +1,11 @@
 {
+  "ssl": {
+    "enabled": false,
+    "key": "/home/ryan/.ssl/test1.pem",
+    "cert": "/home/ryan/.ssl/test1-cert.pem",
+    "useRedirectServer": true,
+    "redirectServerPort": 8180
+  },
   "logging": {
     "enabled": true,
     "defaultLevel": "warn",
@@ -8,7 +15,7 @@
   },
   "resources": {
     "publish": {
-      "consolidate": true,
+      "consolidate": false,
       "minify": false,
       "publisherId": "local",
       "publishers": [
@@ -23,7 +30,7 @@
     "packages": [
       { 
         "name":"feather-client-core.js",
-        "consolidate": true,
+        "consolidate": false,
         "minify": false,
         "publisherId": "local"
       },

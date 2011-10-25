@@ -26,6 +26,7 @@ First of all, not to be too obvious but this project requires node.js. Specifica
 
 _Note: these instructions are intended for use during the early stages of the project, until we stabilize things a bit and have a nice build script or npm package to give you._
 
+- UPDATE (8/30/11): For non-contributors who just want to kick the tires or are otherwise interested in "just using feather"... please use this tool to manage feather installs: https://github.com/ryedin/fvm. It's extremely easy to use and will make it a snap to install new tags as we relese them (allowing you to switch between active tags as you please).
 - Assumptions
   - you have a github account and understand git and github basics (forking, cloning, etc.)
   - you are running node v0.4.x
