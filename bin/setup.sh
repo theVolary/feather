@@ -7,6 +7,8 @@ fi
 
 MODULES=( connect@1.4.1 jsdom@0.2.0 socket.io@0.8.4 cradle@0.5.5 yuitest@0.6.9 daemon@0.3.0 colorize@0.1.0 cli@0.3.6 underscore@1.1.6 inherits@1.0.0 node-uuid@1.1.0 clean-css@0.2.4 uglify-js@1.0.2 )
 
+GLOBAL_MODULES=( node-inspector@0.1.10 )
+
 echo -n "Where is your feather installation? [`pwd`]"
 read FEATHER_HOME
 
