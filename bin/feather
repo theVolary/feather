@@ -3,6 +3,7 @@
 var fs    = require("fs"),
     path  = require("path"),
     spawn = require("child_process").spawn,
+    exec = require("child_process").exec,
     ffs   = require("../lib/util"),
     color = require("colorize"),
     util  = require("util"),
@@ -43,6 +44,7 @@ cli.readline = function (encoding, callback) {
 var options = cli.parse({
     daemonize: ['z', '(run command only) - Daemonize this server so it runs in the background', 'boolean', null],
     debug: ['d', '(run command only) - Starts the app in debug mode (i.e. "node debug")', 'boolean', false],
+    "debug-inspector": ['D', '(run command only) - Starts the app in debug mode and hosts node-inspector on port 8888', 'boolean', false],
     dompoolmax: ['x', '(run command only) - The max size of the dom pool to use', 'number', null],
     dompoolmin: ['n', '(run command only) - The min size of the dom pool to use', 'number', null],
     env: ['e', '(run command only) - The environment to run in (e.g. dev, prod)', 'string', "dev"],
@@ -69,19 +71,22 @@ var commands = {
     usage: "feather [OPTIONS] run",
     fn: function() {
       var args = [];
-      if (options.debug) args.push('debug');
+      if (options.debug || options["debug-inspector"]) {
+        args.push('debug');
+      }
 
       args.push(process.env.FEATHER_HOME + '/lib/app.js');
       
-      var appDir = getAppDir();
-
-
-      
+      var appDir = getAppDir();      
       args.push(appDir);
 
       addAdditionalOptions(args);
       
       runChild("node", args, appDir);
+
+      if (options["debug-inspector"]) {
+        exec("node-inspector --web-port=8888 &");
+      }
     }
   },
   apiTest: {
