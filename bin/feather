@@ -71,8 +71,10 @@ var commands = {
     usage: "feather [OPTIONS] run",
     fn: function() {
       var args = [];
-      if (options.debug || options["debug-inspector"]) {
+      if (options.debug) {
         args.push('debug');
+      } else if (options["debug-inspector"]) {
+        args.push('--debug');
       }
 
       args.push(process.env.FEATHER_HOME + '/lib/app.js');
