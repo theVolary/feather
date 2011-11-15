@@ -5,6 +5,10 @@
   "daemon": {
     "runAsDaemon": false
   },
+  "socket.io": {
+    "port": 8089,
+    "host": "localhost"
+  },
   "environments": {
     "dev": {
       "auth": {
