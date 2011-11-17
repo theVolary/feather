@@ -52,6 +52,7 @@
     "publish": {
       "consolidate": false,
       "minify": false,
+      "gzip": false,
       "publisherId": "local",
       "publishers": [
         {
