@@ -1,5 +1,5 @@
 {
-  "appNamespace":"featherapp",
+  "host": "localhost",
   "socket.io": {
     "port": 8081,
     "host": "localhost"
