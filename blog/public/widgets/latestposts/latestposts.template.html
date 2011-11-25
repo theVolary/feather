@@ -1,12 +1,12 @@
 <template name="posts" client_enabled="true">
   [[each(i, item) result.posts]]
     <li class="blogentry">
-      <h3 postid="$[id]">
+      <h4 postid="$[id]">
         <span id="${id}_summary_$[id]">$[summary]</span> <!--(timestamp: $[timestamp]) this timestamp value should change with each refresh -->
         <span style="font-style:italic;font-size:75%;">
           Posted on $[formattedPubDate] (Replies: $[replies.length])
         </span>
-      </h3>
+      </h4>
       <p id="${id}_post_$[id]" class="collapsed">$[post]</p>
 
       [[each(r, reply) replies]]
