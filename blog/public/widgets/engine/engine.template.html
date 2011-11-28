@@ -1,16 +1,18 @@
-<widget path="widgets/header/" id="header" class="feather.header">
+<widget path="widgets/header/" id="header" class="feather.header container">
   <options>
-    <option name="title" value="The feather Blog" />
+    <option name="title" value="Feather" />
   </options>
 </widget>
-<div class="content">
-  <div class="left-col">
-		<widget path="widgets/toolbar/" id="toolbar" />
-    <widget path="widgets/latestposts/" id="latestposts" />
-  </div>
-  <div class="right-col">
-    <widget path="widgets/signin/" id="signin" />
-    <widget path="widgets/search/" id="search" />    
-   	<widget path="widgets/chat/" id="chat" />
-  </div>
+<div class="container">
+    <div class="row">
+        <div class="eight columns">
+		    <widget path="widgets/toolbar/" id="toolbar" />
+            <widget path="widgets/latestposts/" id="latestposts" />
+        </div>
+        <div class="four columns">
+            <widget path="widgets/signin/" id="signin" />
+            <widget path="widgets/search/" id="search" />    
+            <widget path="widgets/chat/" id="chat" />
+        </div>
+    </div>
 </div>
