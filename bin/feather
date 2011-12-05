@@ -57,7 +57,7 @@ var options = cli.parse({
     testsuite: ['t', '(api-test command only) - Specify the name of a single test suite to run inside of feather/test/unit (omit the file extension)', 'string', null],
     "client-only": ['c', '(create-widget command only) - Indicates that the created widget is a client-side rendered widget (has no .server.js file)', 'boolean', false]
   },
-  ['run', 'test', 'api-test', 'create-app', 'create-widget', 'help']);
+  ['run', 'test', 'api-test', 'create-app', 'create-widget', 'help', 'stats']);
 
 if (options.debug) {
   cli.debug("Parsed options are: " + util.inspect(options));
@@ -190,7 +190,7 @@ var commands = {
   },
   test: {
     desc: "Runs the tests for an app.  If the path option is omitted, the default is used.",
-    usage: "feather [OPTIONS] test [--format] test/(unit/integration)",
+    usage: "feather [OPTIONS] test [--format] test/(unit|integration)",
     fn: function() {
       var args = [];
       if (options.debug) args.push('debug');
@@ -203,6 +203,7 @@ var commands = {
       }
       args.push(appDir);
       Array.prototype.push.apply(args, cli.args);
+
       if (options.debug) cli.debug("Spawning test process node " + args);
       runChild("node", args, appDir);
     }
@@ -277,6 +278,13 @@ var commands = {
         ];
         console.log(output.join('\n'));
       }
+    }
+  },
+  stats: {
+    desc: "Calculates stats on the feather app.",
+    usage: "feather [OPTIONS] stats",
+    fn: function() {
+      stats();
     }
   }
 };
@@ -475,4 +483,8 @@ function getFiles(dir){
     traverse(dir, []);
 
     return files;
+}
+
+function stats() {
+  cli.ok("TODO: Stats");
 }
