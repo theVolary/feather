@@ -171,7 +171,7 @@ if (!appName || appName.length == 0) {
   console.error("No application specified");
 } else {
   
-  var options = {
+  var yuiTestOptions = {
     // Any property /not/ in the environments block is global to all environments 
     // and is the default.  Each environment may still override.
     debug: true,
@@ -244,13 +244,17 @@ if (!appName || appName.length == 0) {
         }
       }
     },
-    onStartup: function() {
+    onReady: function() {
+
+      if (this.appOnReady) {
+        this.appOnReady(feather);
+      }
       //-----------------------------------------------------------------------------
       // Include test files
       //-----------------------------------------------------------------------------
       feather.logger.info({message:"Reading test files\n"});
       var i, len, output, ready = true;
-
+      global.feather = feather;
       if (files.length > 0){
           for (i=0, len=files.length; i < len; i++){
 
@@ -291,6 +295,17 @@ if (!appName || appName.length == 0) {
       }
     }
   };
-  require(process.env.FEATHER_HOME + "/lib/core").bootstrap();
-  feather.start(options);
+  var container = require(process.env.FEATHER_HOME + "/lib/app");
+  if (container) {
+    var feather = container.feather;
+    if (container.appOptions.testing) {
+      container.appOptions.appOnReady = container.appOptions.onReady;
+      container.appOptions = feather.recursiveExtend(container.appOptions, yuiTestOptions);
+
+      console.log("Options are: " + util.inspect(container.appOptions));
+      feather.start(container.appOptions);
+    }
+  }
+
+  //feather.start(options);
 } // end else arg length != 0
