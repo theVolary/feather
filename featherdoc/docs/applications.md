@@ -7,13 +7,13 @@ To create a new application, simply run `feather create-app [app_name]` from the
 ## Running your application ##
 Running the app is a simple matter of running `feather run` from the top-level folder of your app (`/feather_apps/hello_world/` in our example above). There are several command line options you can use with the run command: (NOTE: any options you provide via the command line will override the same options that might be defined in your config.json file)
 
--     -e: Lets you specify which config environment to use (defined in the "environments" section of your app's config.json file)
--     -z: Lets you run the app as a daemon
--     -o: Lets you specify the path of a file to pipe stdout to when running as a daemon (i.e. where to write out the log file)
--     -i: Lets you specify the path of the pid file when running as a daemon
--     -l: The default logging level to use.  Options are: all, trace, debug, info, warn, error, off
--     -d: Starts the app in node's CLI debugger (command line debugging)
--     -D: Starts the app in debug mode and hosts [node-inspector](https://github.com/dannycoates/node-inspector) on port 8888. To access this debugger you must use a recent webkit browser (Safari or Chrome) and browse to http://localhost:8888/debug?port=5858 (also see the documentation for [node-inspector](https://github.com/dannycoates/node-inspector))
+-     `-e` : Lets you specify which config environment to use (defined in the "environments" section of your app's config.json file)
+-     `-z` : Lets you run the app as a daemon
+-     `-o` : Lets you specify the path of a file to pipe stdout to when running as a daemon (i.e. where to write out the log file)
+-     `-i` : Lets you specify the path of the pid file when running as a daemon
+-     `-l` : The default logging level to use.  Options are: all, trace, debug, info, warn, error, off
+-     `-d` : Starts the app in node's CLI debugger (command line debugging)
+-     `-D` : Starts the app in debug mode and hosts [node-inspector](https://github.com/dannycoates/node-inspector) on port 8888. To access this debugger you must use a recent webkit browser (Safari or Chrome) and browse to http://localhost:8888/debug?port=5858 (also see the documentation for [node-inspector](https://github.com/dannycoates/node-inspector))
 
 ## config.json ##
 Your application can be configured via the `config.json` file in the top level app folder. When you first create your application, this file will contain only an empty JSON object (`{}`). If you edit this file, this object must be a valid JSON object (i.e. keys are all surrounded by quotes, etc.). The default configuration is as follows: (NOTE: any section you define in your app's `config.json` file will override these defaults)
