@@ -161,6 +161,7 @@ You would then be able to access that within one of your widget's .server.js fil
 It's also important to note the order of config option overriding. The first level are the system defaults, mentioned above in the large code block. Any section you define in your app's `config.json` file that matches the name of a default section will override all values for that section (i.e. your section is the one that wins). The next level of overriding happens when you have defined an environment within your app's `config.json` files under the `"environments`" section. The same rule applies here... any section under the currently running environment's section will override the top level defaults. The final level of overriding happens from the command line. Any options used when you issue your `feather run` command will override the approriate options from the config.json file.
 
 EXAMPLE: You have a config.json file that looks like this:
+    
     {
       "ssl": {
         "enabled": false
@@ -214,6 +215,7 @@ EXAMPLE: You have a config.json file that looks like this:
     }
 
 Now let's look at the behavior of running the app using a couple different commands:
+  
   - `feather run`: This will result in the app running with `feather.appOptions.ssl.enabled` being `false`, `feather.appOptions.someCustomConfigSection.something.nestedSomething` being `"abc"` and `feather.appOptions.someCustomConfigSection.something.nestedTwo` being `"123"`. Also, the system defaults of `host` = `localhost`, `socket.io.host` = `localhost`, `socket.io.port` = `8081`, and so forth... and finally, the app will _not_ be running as a daemon.
   - `feather run -e prod`: This will result in the app running with `feather.appOptions.ssl.enabled` being `true` (with a shim redirect server running on port 80 to redirect all traffic from port 80 to the default ssl port of 443), `feather.appOptions.someCustomConfigSection.something.nestedSomething` being `"abc"` and `feather.appOptions.someCustomConfigSection.something.nestedTwo` being `"xyz"` (notice the overriding for this section will leave the default values in tact for any values not defined in the custom environment). Also, `host` = `www.somewebsite.com`, `socket.io.host` = `www.somewebsite.com`, `socket.io.port` = `8989`, and so forth... and finally, the app will _still_ _not_ be running as a daemon.
   - `feather run -e prod -z`: All of the above will be applied, and the app will be run as a daemon under the system user `feather` (assuming you have such a user on your machine), with the output and pid paths as specified in the config file.
