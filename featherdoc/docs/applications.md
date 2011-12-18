@@ -7,7 +7,7 @@ To create a new application, simply run `feather create-app [app_name]` from the
 ## Running your application ##
 Running the app is a simple matter of running `feather run` from the top-level folder of your app (`/feather_apps/hello_world/` in our example above). There are several command line options you can use with the run command: (NOTE: any options you provide via the command line will override the same options that might be defined in your config.json file)
 
-     -e: Lets you specify which config environment to use (defined in the "environments" section of your app's config.json file) (NOTE: if no)
+     -e: Lets you specify which config environment to use (defined in the "environments" section of your app's config.json file)
      -z: Lets you run the app as a daemon
      -o: Lets you specify the path of a file to pipe stdout to when running as a daemon (i.e. where to write out the log file)
      -i: Lets you specify the path of the pid file when running as a daemon
