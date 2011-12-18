@@ -23,8 +23,7 @@ Test results are output to the console, as well as the __reports__ folder within
 
 ## Example Test File ##
     (function() {
-    var assert = require("assert"),
-        sys = require("util"),
+    var sys = require("util"),
         sinon = require("sinon"),
         cradle = require("cradle"),
         blogapi = require("../../lib/blogapi").BlogApi,
