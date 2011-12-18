@@ -60,7 +60,7 @@ Test results are output to the console, as well as the __reports__ folder within
           Y.Assert.areEqual(3, posts.length, "Expected 3 posts, but got " + posts.length);
           Y.Assert.isNotUndefined(posts[0].key, "Expected a key property in the posts");
           Y.Assert.isNotUndefined(posts[0].pubDate, "Expected a pubDate property in the posts");
-          Y.Assert.isTrue(posts[0].pubDate instanceof Date, "Expected pubDate to be a date property, but it is a " + typeof(posts[0].pubDate) + ": " + sys.inspect(posts[0].pubDate));
+          Y.Assert.isTrue(posts[0].pubDate instanceof Date, "Expected pubDate to be a date property, but it is a " + typeof(posts[0].pubDate) + ": " + JSON.stringify(posts[0].pubDate));
         });
       }
     });
