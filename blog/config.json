@@ -1,5 +1,9 @@
 {
-  "debug":true,
+  "host": "localhost",
+  "socket.io": {
+    "host": "locahost",
+    "port": 8081
+  },
   "environments": {
     "dev": {
       "data": {
