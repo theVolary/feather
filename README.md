@@ -30,6 +30,7 @@ First of all, not to be too obvious but this project requires node.js. Specifica
 
 ### The (not so great but is a starting point for now) sample app
 We have a little pseudo-working "blog" app that we made in the initial days of feather development and haven't yet had time to revisit, which you'll find here in the `/blog` folder. 
+
 - Data
   - The sample blog app is based on integration with CouchDB...  
       - install couch via the instructions for your OS ([http://wiki.apache.org/couchdb/Installation](http://wiki.apache.org/couchdb/Installation))
@@ -39,6 +40,7 @@ We have a little pseudo-working "blog" app that we made in the initial days of f
       - browse to http://localhost:8080/
       - login with the "featheradmin" / "password" credentials, add posts, play around, etc...
       - open the same page in another browser tab and use the chat widget
+
 - Starting the Sample App  
 At this point you should be able to run the blog app and hit it from a browser:  
   - $: `cd /path/to/feather/blog`
