@@ -85,7 +85,11 @@ To turn the proxy-generation on in feather, add a setting in your config.json fi
       }
     }
 
-This will make code available to your client-side that makes it super simple to make calls to your RESTful APIs in the form `feather.rest.<api_name>.<method>(path, [data, ], callback);`. The following is an example of what such code might look like, using our `person` examples from above...
+This will make code available to your client-side that makes it super simple to make calls to your RESTful APIs in the form
+
+    feather.rest.<api_name>.<method>(path, [data, ], callback);
+
+The following is an example of what such code might look like, using our `person` examples from above...
 
     feather.rest.person.get("/", function(args) {
       if (args.success) {
