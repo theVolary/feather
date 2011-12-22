@@ -1,4 +1,7 @@
 {
+  "rest": {
+    "autoGenerateProxy": true
+  },
   "ssl": {
     "enabled": false,
     "key": "/home/ryan/.ssl/test1.pem",
