@@ -85,16 +85,26 @@ To turn the proxy-generation on in feather, add a setting in your config.json fi
       }
     }
 
-This will make code available to your client-side that makes it super simple to make calls to your RESTful APIs. The following is an example of what such code might look like, using our `person` examples from above...
+This will make code available to your client-side that makes it super simple to make calls to your RESTful APIs in the form `feather.rest.<api_name>.<method>(path, [data, ], callback);`. The following is an example of what such code might look like, using our `person` examples from above...
 
-    feather.rest.person.get("/", function(err, people) {
-      if (err) {
-        doSomeErrorHandlingCode(err);
+    feather.rest.person.get("/", function(args) {
+      if (args.success) {
+        doSomethingWithPeople(args.result);        
       } else {
-        doSomethingWithPeople(people);
+        doSomeErrorHandlingCode(args);
       }
     });
 
 Using these proxy helper functions assumes that your APIs are designed around JSON. If you use feather's supplied callbacks as outlined above to return data from the API methods then you don't have to worry. If you take control of the raw response objects but you still return JSON and you add the appropriate `Content-Type` header (`application/json`), you should also be fine using these proxy helpers. It's when you override the response behavior and alter it in drastic ways (returning non-JSON data, etc...) that you're likely to run into issues using the proxies.
 
 Looking at the example above, you'll see that each API endpoint file from your `/rest` folder is added as an object on the `feather.rest` namespace object (`feather.rest.person` in our example). Then, each verb that you implement handlers for will get a method added to that object (`feather.rest.person.get` in our example). The first argument passed to these per-verb functions is a string that maps to the URI of the resource/sub-route you are trying to interact with. So in this case we're making a request to the base URI for person, which should give us an array of people objects.
+
+If the method being called requires data, pass the data object as the 2nd arg...
+
+    feather.rest.person.put("/", myPerson, function(args) {
+      if (args.success) {
+        doSomethingWithNewPerson(args.result);        
+      } else {
+        doSomeErrorHandlingCode(args);
+      }
+    });
