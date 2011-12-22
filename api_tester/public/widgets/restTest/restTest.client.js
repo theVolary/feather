@@ -58,7 +58,7 @@ feather.ns("api_tester");
 
           testGetByIdError_500: function () {
             var test = this,
-              expected = "\"error, 123 expected\"";
+              expected = "\"error, 123 or 789 expected\"";
 
             $.ajax({
               url: "/_rest/test/456",
@@ -179,6 +179,75 @@ feather.ns("api_tester");
                   Y.Assert.areEqual(expected, JSON.stringify(result));
                 });                
               }
+            });
+
+            test.wait();
+          }
+        }));
+
+        suite.add(new Y.Test.Case({
+          name: "GET via restProxy",
+          setUp: feather.emptyFn,
+          tearDown : feather.emptyFn,
+
+          testGetRoot: function () {
+            var test = this,
+              expected = JSON.stringify([
+                {name: "foo"}, 
+                {name: "foo2"}
+              ]);
+
+            feather.rest.test.get("/", function(args) {
+              test.resume(function() {
+                Y.Assert.areEqual(true, args.success);
+                Y.Assert.areEqual(expected, JSON.stringify(args.result));
+              });                
+            });
+
+            test.wait();
+          },
+
+          testGetById: function () {
+            var test = this,
+              expected = JSON.stringify({
+                name: "foo"
+              });
+
+            feather.rest.test.get("/123", function(args) {
+              test.resume(function() {
+                Y.Assert.areEqual(true, args.success);
+                Y.Assert.areEqual(expected, JSON.stringify(args.result));
+              });                
+            });
+
+            test.wait();
+          },
+
+          testGetByIdError_500: function () {
+            var test = this,
+              expected = "\"error, 123 or 789 expected\"";
+
+            feather.rest.test.get("/456", function(args) {
+              test.resume(function() {
+                Y.Assert.areEqual(false, args.success);
+                Y.Assert.areEqual(500, args.statusCode);
+                Y.Assert.areEqual(expected, args.xhr.responseText);
+              });                
+            });
+
+            test.wait();
+          },
+
+          testGetByIdError_404: function () {
+            var test = this,
+              expected = "Document not found";
+
+            feather.rest.test.get("/789", function(args) {
+              test.resume(function() {
+                Y.Assert.areEqual(false, args.success);
+                Y.Assert.areEqual(404, args.statusCode);
+                Y.Assert.areEqual(expected, args.xhr.responseText);
+              });                
             });
 
             test.wait();

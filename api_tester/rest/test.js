@@ -16,7 +16,7 @@ module.exports = {
       } else if (req.params.id === "789") { //test 404
         cb();
       } else { //test 500
-        cb("error, 123 expected");
+        cb("error, 123 or 789 expected");
       }
     },
     "/:id/:prop": function(req, res, cb) {

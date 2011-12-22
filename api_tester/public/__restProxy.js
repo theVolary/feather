@@ -1,0 +1,1 @@
+(function() { feather.bindRestProxy({"apis":[{"name":"test","methods":[{"name":"get","verb":"GET"},{"name":"post","verb":"POST"},{"name":"put","verb":"PUT"},{"name":"delete","verb":"DELETE"}]}]}); })();
