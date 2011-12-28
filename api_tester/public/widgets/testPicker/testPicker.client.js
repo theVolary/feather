@@ -37,7 +37,15 @@ feather.ns("api_tester");
 
         me.domEvents.bind(me.get("#runBtn"), "click", function() {
           me.runTests();
-        })
+        });
+
+        me.domEvents.bind(me.get("#alertBtn"), "click", function() {
+          feather.alert("Test Alert", "alert!");
+        });
+
+        me.domEvents.bind(me.get("#confirmBtn"), "click", function() {
+          feather.confirm("Test Confirm", "confirm...");
+        });
       },
       setupYUI: function() {
         var me = this;
