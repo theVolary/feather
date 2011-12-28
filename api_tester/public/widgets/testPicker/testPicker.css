@@ -1,0 +1,5 @@
+/* hide X buttons in "noCloseButton" intent dialgos (alert, confirm)
+*/
+.noCloseButton .ui-dialog-titlebar-close {
+  display: none;
+}
