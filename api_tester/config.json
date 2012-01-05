@@ -2,7 +2,7 @@
   "rest": {
     "autoGenerateProxy": true
   },
-  "useAjaxForSystem": true,
+  "useAjaxForSystem": false,
   "ssl": {
     "enabled": false,
     "key": "/home/ryan/.ssl/test1.pem",
