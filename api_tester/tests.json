@@ -8,5 +8,6 @@
   {"name": "rpc method with server-side async return", "path": "widgets/rpcAsyncTest/"},
   {"name": "inheritable client side widget", "path": "widgets/inheritableClientWidgetTest/"},
   {"name": "onRequest", "path": "widgets/onRequestTest/"},
+  {"name": "dataAbstraction", "path": "widgets/dataAbstractionTest/"},
   {"name": "RESTful API", "path": "widgets/restTest/"}
 ]
