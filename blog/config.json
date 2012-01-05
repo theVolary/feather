@@ -1,7 +1,8 @@
 {
+  "useAjaxForSystem": true,
   "host": "localhost",
   "socket.io": {
-    "host": "locahost",
+    "host": "localhost",
     "port": 8081
   },
   "environments": {
