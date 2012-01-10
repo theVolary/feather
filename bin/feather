@@ -57,7 +57,7 @@ var options = cli.parse({
     testsuite: ['t', '(api-test command only) - Specify the name of a single test suite to run inside of feather/test/unit (omit the file extension)', 'string', null],
     "client-only": ['c', '(create-widget command only) - Indicates that the created widget is a client-side rendered widget (has no .server.js file)', 'boolean', false]
   },
-  ['run', 'test', 'api-test', 'create-app', 'create-widget', 'help', 'stats']);
+  ['run', 'test', 'api-test', 'create-app', 'create-widget', 'create-rest', 'help', 'stats']);
 
 if (options.debug) {
   cli.debug("Parsed options are: " + util.inspect(options));
@@ -261,6 +261,31 @@ var commands = {
       }
     }
   },
+  createRest: {
+    desc:"Creates a new RESTful api source file.",
+    usage:"feather [OPTIONS] create-rest restApiName",
+    fn:function() {
+      var appDir = getAppDir(),
+          name = cli.args[0];
+      if (!name) {
+        cli.fatal("I can't create a REST api file without a name.  Please specify one next time.  See 'feather help create-rest'.");
+      } else {
+        var fullPath = path.join(appDir, "rest", name+".js");
+        fs.writeFileSync(fullPath, [
+          'var feather = require("../lib/feather").getFeather();',
+          '',
+          'module.exports = {',
+          '  "get": {',
+          '    "/": function(req, res, cb) {',
+          '      ',
+          '    }',
+          '  }',
+          '};'
+        ].join('\n'), "utf-8");
+        cli.ok(color.ansify("#green[REST api #white["+name+"] created at #white["+fullPath+"].]\n"));
+      }
+    }
+  },
   help: {
     desc:"Displays general help, or help on a specific command.  If you're reading this, you already know that.",
     usage:"feather help <command>",
@@ -368,6 +393,7 @@ function createApp(dir, name) {
   checkResult(ffs.mkdirpSync(fullPath));
   checkResult(ffs.mkdirpSync(path.join(fullPath, 'public', 'widgets')));
   checkResult(ffs.mkdirpSync(path.join(fullPath, 'lib')));
+  checkResult(ffs.mkdirpSync(path.join(fullPath, 'rest')));
   checkResult(ffs.mkdirpSync(path.join(fullPath, 'node_modules')));
   fs.writeFileSync(path.join(fullPath, 'lib', 'README.txt'), "Add your own js libraries here.", "utf-8");
   fs.writeFileSync(path.join(fullPath, 'lib', 'feather.js'), [
@@ -379,7 +405,7 @@ function createApp(dir, name) {
     ' * NOTE: This is a generated file; do not edit or remove this file from your app.',
     ' */',
 
-    'var _feather',
+    'var _feather;',
     'exports.init = function(feather) {',
     '  _feather = feather;',
     '};',
