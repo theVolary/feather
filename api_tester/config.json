@@ -2,7 +2,7 @@
   "rest": {
     "autoGenerateProxy": true
   },
-  "useAjaxForSystem": false,
+  "useAjaxForSystem": true,
   "ssl": {
     "enabled": false,
     "key": "/home/ryan/.ssl/test1.pem",
@@ -57,5 +57,28 @@
         "publisherId": "local"
       }
     ]
+  },
+  "environments": {
+    "ryandev": {
+      "port": 80,
+      "ssl": {
+        "enabled": true,
+        "port": 443,
+        "key": "/home/ryan/.ssl/test1.pem",
+        "cert": "/home/ryan/.ssl/test1-cert.pem",
+        "useRedirectServer": false,
+        "redirectServerPort": 8180,
+        "routes": [
+          "^/ssl/$"
+        ]
+      },
+      "data": {
+        "appdb": {
+          "hostUrl": "http://localhost",
+          "dbName":"api_tester_db",
+          "auth": { "username":"featheradmin", "password":"password" }
+        }
+      }
+    }
   }
 }
