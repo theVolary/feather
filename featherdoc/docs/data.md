@@ -71,6 +71,7 @@ All data providers should implement the following methods.
 
 ##### find option properties #####
 * `source` - **Required**.  For CouchDB, this should be a string of the format `designDocName/viewName`.
+* `returnValuesOnly` - boolean.  If true, the `value` property of the results is plucked out and returned.  By default, CouchDB returns `{ id:, key:, value: }`.
 * `pagination` - an optional javascript object that contains pagination rules for the search.  Options are:  
 
 ``
