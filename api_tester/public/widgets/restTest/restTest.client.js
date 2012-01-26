@@ -254,6 +254,40 @@ feather.ns("api_tester");
           }
         }));
 
+        suite.add(new Y.Test.Case({
+          name: "Test dynamic registering with SSL mirror",
+          setUp: feather.emptyFn,
+          tearDown : feather.emptyFn,
+
+          testDynamicRouteRegistration: function () {
+            var test = this,
+              expected = JSON.stringify([
+                {name: "foo"}, 
+                {name: "foo2"}
+              ]);    
+
+            me.server_registerRouteTest([], function(args) {
+              if (args.success || args.err == "Route already exists for that verb") {
+                $.ajax({
+                  url: "/_rest/testDynamic/",
+                  type: "GET",
+                  success: function(result) {
+                    test.resume(function() {
+                      Y.Assert.areEqual(expected, JSON.stringify(result));
+                    });                
+                  }
+                });
+              } else {
+                test.resume(function() {
+                  Y.Assert.fail(args.err);
+                });
+              }
+            });
+
+            test.wait();
+          }
+        }));
+
         Y.Test.Runner.add(suite);
       }
     }

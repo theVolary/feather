@@ -59,6 +59,7 @@
     ]
   },
   "environments": {
+    "dev": {},
     "ryandev": {
       "port": 80,
       "ssl": {
@@ -69,7 +70,7 @@
         "useRedirectServer": false,
         "redirectServerPort": 8180,
         "routes": [
-          "^/ssl/$"
+          "^/ssl/.*"
         ]
       },
       "data": {
