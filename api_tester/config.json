@@ -1,4 +1,7 @@
 {
+  "socket.io": {
+    "enabled": false
+  },
   "rest": {
     "autoGenerateProxy": true
   },
