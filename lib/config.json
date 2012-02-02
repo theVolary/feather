@@ -1,6 +1,7 @@
 {
   "host": "localhost",
   "socket.io": {
+    "enabled": false,
     "port": 8081,
     "host": "localhost"
   },
