@@ -18,7 +18,7 @@ This will ask you if `hello_world` is OK to use as the namespace of the widget (
   * sayHello.server.js
   * sayHello.template.html
 
-We will revisit the nature of each of these files in a bit, but for now let's just start with a few examples of how we can add UI and interactivity to a widget. In the following series of snippets and explanations, we're going to simply show you code and ask you to run the app to see what it does. Some of the code will go unexplained in this series, but by the end it will all make sense, and we'll come back for more details later in the documentation.
+We will revisit the nature of each of these files in a bit, but for now let's just start with a few examples of how we can add UI and interactivity to a widget. In the following series of snippets and explanations we're going to simply show you code and ask you to run the app to see what it does. Some of the code will go unexplained in this series, but by the end it will all make sense, and we'll come back for more details later in the documentation.
 
 So what is our new widget going to look like and what will it do? Quite simply it will contain a button that when clicked alerts "hello" (what, you thought it would do something useful when our app's name is hello_world?). Let's start with the UI...
 
@@ -27,5 +27,11 @@ _sayHello.template.html_
     <input type="button" id="sayHiBtn" value="say hello" />
 
 The `<widgetName>.template.html` file of a given widget is that widget's UI expression. This file may contain HTML as well as other embedded widgets (via the `<widget>` tag), [jQuery templating](http://api.jquery.com/jquery.tmpl/), and a couple other _special_ tags that we'll get to later. For now we'll just stick with vanilla HTML.
+
+So, if you're following along, add the above markup to your `sayHello.template.html` file. The next step is to actually consume (embed) this widget in a page. 
+
+and then issue `feather run` from the command line you'll be able to hit the page from your browser (default URL of `http://localhost:8080/`) and see our completely useless button.
+
+
 
 ___ more to come ___
