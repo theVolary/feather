@@ -8,7 +8,7 @@ There is another fundamental building block in feather that you probably won't f
 ### Creating a widget and consuming it in a page
 Let's start by creating a widget in our project. This is done with the `feather create-widget [namespace] <widgetName>` command on the command line at the root of your app. First of all, we're assuming you've read the `Creating a New Application` section of the [applications.md](applications.md) document and have a hello_world feather app. If not, please do that now if you wish to follow along as we go. So then, using that app as the example, you'd do the following:
 
-    $: cd ~/feather_apps/hello_world
+    $ cd ~/feather_apps/hello_world
     ~/feather_apps/hello_world$ feather create-widget sayHello
 
 This will ask you if `hello_world` is OK to use as the namespace of the widget (since we omitted a namespace when we ran the command). So far we've typically just stuck with the app name as being the namespace for all widgets; it's a pattern that seems to work for most apps, though you may want to introduce additional namespaces if your app design is particulary large. After you say "yes", it will then create a folder at ` ~/feather_apps/hello_world/public/widgets/sayHello` that contains four files as follows...
