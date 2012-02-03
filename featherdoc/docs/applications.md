@@ -145,7 +145,7 @@ It's important to note that you may add any arbitrary sections you want to this 
       }
     }
 
-You would then be able to access that within one of your widget's .server.js file like so:
+You would then be able to access that within one of your widget's .server.js files like so:
 
     exports.getWidget = function(feather, cb) {
       if (feather.appOptions.myAppCustomConfigSection.something === "123") {
