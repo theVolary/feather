@@ -20,7 +20,7 @@ This will ask you if `hello_world` is OK to use as the namespace of the widget (
 
 We will revisit the nature of each of these files in a bit, but for now let's just start with a few examples of how we can add UI and interactivity to a widget. In the following series of snippets and explanations, we're going to simply show you code and ask you to run the app to see what it does. Some of the code will go unexplained in this series, but by the end it will all make sense, and we'll come back for more details later in the documentation.
 
-So what is our new widget going to look like and what will it do? Quite simply it will contain a button that when clicked alerts "hello" (what, you thought it would do something useful when our app's name is hellow_world?). Let's start with the UI...
+So what is our new widget going to look like and what will it do? Quite simply it will contain a button that when clicked alerts "hello" (what, you thought it would do something useful when our app's name is hello_world?). Let's start with the UI...
 
 _sayHello.template.html_
 
