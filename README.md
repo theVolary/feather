@@ -1,5 +1,5 @@
 feather
-======
+======  
 
 ### Overview
 feather is a full-featured widget-based web framework implemented in pure js. 
@@ -21,57 +21,33 @@ In the end, the intent is to use feather to create a browser-based development p
   - Before
   - v0.2.0
 
-### Setup and Contribution Instructions
+### Installation
 First of all, not to be too obvious but this project requires node.js. Specifically, we intend to support node.js on *nix platforms. I assume the Windows/cygwin flavors of node builds should also work but we aren't going to go out of our way to support it right now.
 
-_Note: these instructions are intended for use during the early stages of the project, until we stabilize things a bit and have a nice build script or npm package to give you._
+NOTE: as of 12/31/11 we are still on node v0.4.12. We recommend using [https://github.com/creationix/nvm](nvm) to manage your node versions (which is what our tool `fvm`, mentioned below, is based on)
 
-- UPDATE (8/30/11): For non-contributors who just want to kick the tires or are otherwise interested in "just using feather"... please use this tool to manage feather installs: https://github.com/ryedin/fvm. It's extremely easy to use and will make it a snap to install new tags as we relese them (allowing you to switch between active tags as you please).
-- Assumptions
-  - you have a github account and understand git and github basics (forking, cloning, etc.)
-  - you are running node v0.4.x
-  - you have both npm and nvm installed ([https://github.com/isaacs/npm](https://github.com/isaacs/npm)) ([https://github.com/creationix/nvm](https://github.com/creationix/nvm))
-  - Since this is still very early, I'm also assuming if you're going through these instructions it's because you are a contributor to the project. 
-Thus, I'm going to include some workflow instructions.
-  - This is obviously not a requirement, but for sake of convenience I'm basing paths of the following root folder (just because that's our internal convention): ~/mainline
-- Setup 
-  - first, fork the project (via your github account) from [https://github.com/theVolary/feather](https://github.com/theVolary/feather)
-  - clone locally (and recursively to auto pull the submodules), and remember to add the remote to 'upstream' as explained here: [http://help.github.com/fork-a-repo/](http://help.github.com/fork-a-repo/)
-    - $: `cd ~/mainline`
-    - $: `git clone --recursive [your-fork-url]`
-    - $: `cd feather`
-    - $: `git remote add upstream git@github.com:theVolary/feather.git`
-    - if you forget the --recursive argument when cloning the repo you can also run the following commands
-    - $: `git submodule init`
-    - $: `git submodule update`
-  - Feather relies on several dependencies.  Most are installed by the setup script mentioned below, but in case any fail, they are listed here. **DO NOT RUN THESE MANUALLY UNLESS setup.sh FAILS!**
-      - Dependencies (this list will change, so please continue to check it, especially as a first place to look if you do an update and run into errors that look like missing dependencies) (NOTE: yes, we plan on create a complete npm-encapsulated package to ease this pain, but for now we're still playing with things too much)
-        - $: `npm install connect` (version 1.4 is required)
-        - $: `npm install jsdom`
-        - $: `npm install socket.io`
-        - $: `npm install cradle`
-        - $: `npm install yuitest`
-        - $: `npm install daemon`
-        - $: `npm install colorize` (Added 5/10/2011; used by the CLI)
-        - $: `npm install uuid`
-        - $: `npm install clean-css`
-        - $: `npm install uglify-js`
-    - In featherdoc app
-      - $: `mkdir node_modules` (If this step is omitted, npm will install it in feather's copy of node_modules rather than create the folder for you.)
-      - $: `npm install node-markdown` (required for the featherdoc app)
-  - Setup
-    - $: `bin/setup.sh` This will create the FEATHER_HOME environment variable in your user's `~/.bashrc` file if it exists.  Otherwise it will add them to your `~/.profile` file.  It will also add feather's bin dir to your path.  Finally it will attempt to install all of the dependencies of the framework.
-    - open `~/.bashrc` and ensure the PATH var in Feather Vars section looks like "export PATH=$FEATHER_HOME/bin:$PATH"
-    - At this point, you should be able to run "feather help" and get the usage of the CLI.
+- Use `fvm` (found here: [https://github.com/ryedin/fvm](https://github.com/ryedin/fvm))
+  - Using fvm is the recommended (and for now the only "supported") way to install feather. It is patterned after nvm (node version manager), and makes it very easy to manage the dependencies and track your local environments with each new published feather tag. For now just keep checking the tags here on github to know when to upgrade your local feather "distro".
+  - The caveat to that advice is if you intend to hack on feather directly or want to play with the sample app that for now lives in this repo (we intend to create a much better set of samples when we have some time). In that case we still recommend using fvm to get the initial install working, and then clone this repo to get convenient access to the source. If hacking/modifying on feather source, you can then use the `fvm use ./` command from the top-level feather source folder to use that version instead of an installed-from-a-tag version.
+
+### The (not so great but is a starting point for now) sample app
+We have a little pseudo-working "blog" app that we made in the initial days of feather development and haven't yet had time to revisit, which you'll find here in the `/blog` folder. 
+
 - Data
-  - 3/15/2011: as of today, the blog app now requires CouchDB.
+  - The sample blog app is based on integration with CouchDB...  
       - install couch via the instructions for your OS ([http://wiki.apache.org/couchdb/Installation](http://wiki.apache.org/couchdb/Installation))
-      - from Futon ([http://localhost:5984/_utils/](http://localhost:5984/_utils/)), create a db called "featherblog"
-      - if couch is not installed on localhost, edit app.js and modify the hostUrl value in the data.appdb variable
+      - from Futon (http://localhost:5984/_utils/), create an admin user named "featherblog" with password "password" and then create a db called "featherblog"
+      - add the design doc to the database from this gist: [https://gist.github.com/1490342](https://gist.github.com/1490342)
       - start the blog application (See Starting the Sample App below)
-      - browse to [http://localhost:8080/](http://localhost:8080/) and press the Go button where it says "Import the database"
-      - refresh the page in your browser.  You should now see 3 sample blog entries.  If you click on them they should expand to show the full blog post.
+      - browse to http://localhost:8080/
+      - login with the "featheradmin" / "password" credentials, add posts, play around, etc...
+      - open the same page in another browser tab and use the chat widget
+
 - Starting the Sample App  
 At this point you should be able to run the blog app and hit it from a browser:  
-  - $: `feather run ~/mainline/feather/blog`  
-  - in a browser: [http://localhost:8080/](http://localhost:8080/)  (replace localhost with the appropriate IP address or hostname if running on a VM... obviously :P) 
+  - $: `cd /path/to/feather/blog`
+  - $: `feather run` 
+  - in a browser: [http://localhost:8080/](http://localhost:8080/) 
+
+### More Documentation...
+There is another app in this repo that we intend to clean up and host for the community, which is the featherdoc app. For now, just know that there are some markdown docs here: [https://github.com/theVolary/feather/tree/master/featherdoc/docs](https://github.com/theVolary/feather/tree/master/featherdoc/docs). They aren't complete yet, but at least they're something. 

@@ -1,8 +1,13 @@
 {
   "host": "localhost",
   "socket.io": {
+    "enabled": false,
     "port": 8081,
     "host": "localhost"
+  },
+  "socketOptions": {
+    "log level": 1,
+    "log level docs": "0 = error, 1 = warn, 2 = info, 3 = debug"
   },
   "auth": {
     "enabled": false,
@@ -18,7 +23,8 @@
   "daemon": {
     "runAsDaemon": false,
     "outputPath": "feather-app.out",
-    "pidPath": "/tmp/feather-app.pid"
+    "pidPath": "/tmp/feather-app.pid",
+    "runAsUser": "root"
   },
   "data": {
     "datalinking": {
@@ -32,7 +38,23 @@
   "environments": {
     "dev": {},
     "test": {}, 
-    "prod": {}
+    "prod": {},
+    "unittest": {
+      "debug": true,
+      "daemon": {
+        "runAsDaemon": false
+      },
+      "data": {
+        "appdb": {
+          "provider": "test"
+        }
+      },
+      "logging": {
+        "enabled": true,
+        "defaultLevel": "trace",
+        "absorbConsoleLogging": true
+      }
+    }
   },
   "logging": {
     "enabled": true,

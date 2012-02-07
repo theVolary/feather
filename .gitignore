@@ -2,11 +2,12 @@
 .tmp_*
 *.log
 *.orig
+node_modules
 lib/node-core-enhancements/*
 featherdoc/public/docs
 featherdoc/lib/node-jsdoc-toolkit/*
-node_modules
 *.sublime-project
+*.sublime-workspace
 reports
 .DS_Store
 blog/public/feather-res-cache/
@@ -17,3 +18,4 @@ api_tester/public/feather-res-cache
 api_tester/public/feather-res-cache/*
 *.out
 *.swp
+__restProxy.js
