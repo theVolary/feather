@@ -1,6 +1,6 @@
 feather.ns("blog");
 (function() { 
-  var template = '<span class="button ${name}" title="${tooltip}">&nbsp;</span>';
+  var template = '<span class="button_icon ${name}" title="${tooltip}">&nbsp;</span>';
   
   blog.toolbar = feather.Widget.create({
     name: "blog.toolbar",

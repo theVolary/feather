@@ -17,8 +17,15 @@ if [ "$FEATHER_HOME" = "" ]; then
 fi
 
 # Preferably append to .bashrc.  Most systems that use .bashrc typically don't use .profile by default (*buntu).
+# The exception is Mac OS that uses .bash_profile for Terminal.app
 
-if [ -f "$HOME/.bashrc" ]; then
+if [ ${OSTYPE//[0-9.]/} == "darwin" ]; then
+  echo "" >> ~/.bash_profile
+  echo "# Feather Vars" >> ~/.bash_profile
+  echo "export FEATHER_HOME=$FEATHER_HOME" >> ~/.bash_profile
+  echo "export PATH=\$FEATHER_HOME/bin:\$PATH" >> ~/.bash_profile
+  . $HOME/.bash_profile
+elif [ -f "$HOME/.bashrc" ]; then
   echo "" >> ~/.bashrc
   echo "# Feather Vars" >> ~/.bashrc
   echo "export FEATHER_HOME=$FEATHER_HOME" >> ~/.bashrc
