@@ -19,7 +19,7 @@ feather.ns("blog");
         var me = this;
         
         // Bind a click event to the headers to expand / collapse them.
-        me.domEvents.bind(me.get(".blogentry h3"), "click", function(event) {
+        me.domEvents.bind(me.get(".blogentry h4"), "click", function(event) {
           var target = $(this); //note: 'this' inside jQuery .bind functions === the element that triggered the event
           if (target[0]) {
             var content = target.next('p');
@@ -63,11 +63,11 @@ feather.ns("blog");
       checkUser: function() {
         var me = this;
         if (feather.auth.user && (feather.auth.user.hasAnyAuthority(['admin', 'editor']))) {
-          $('.blogentry h3').prepend(function(index, html) {
-            return '<input type="button" value="Reply"  parentid="' + $($('.blogentry h3')[index]).attr('postid') + '" level="1" class="btnEditPost"/>';
+          $('.blogentry h4').prepend(function(index, html) {
+            return '<input type="button" value="Reply"  parentid="' + $($('.blogentry h4')[index]).attr('postid') + '" level="1" class="btnEditPost nice small radius white button"/>';
           });
-          $('.blogentry h3').prepend(function(index, html) {
-            return '<input type="button" value="Edit" postid="' + $($('.blogentry h3')[index]).attr('postid') + '" level="0" class="btnEditPost" />';
+          $('.blogentry h4').prepend(function(index, html) {
+            return '<input type="button" value="Edit" postid="' + $($('.blogentry h4')[index]).attr('postid') + '" level="0" class="btnEditPost nice small white button" />';
           });
           $('.blogreply h5').prepend(function(index, html) {
             return '<input type="button" value="Edit" postid="' + $($('.blogreply h5')[index]).attr('postid') + '" parentid="' + $($('.blogreply h5')[index]).attr('parentid') + '" level="1" class="btnEditPost" />';

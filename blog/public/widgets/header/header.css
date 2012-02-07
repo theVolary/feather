@@ -1,26 +1,25 @@
-@font-face {
-  font-family: rubberneck;
-  src: url('/fonts/RUBBERNECK.ttf');
+#blogengine_header_Container {
+    background: #222;
+    border-bottom: solid 4px #329300;
+    padding: 15px 20px 13px 20px;
 }
-@font-face {
-  font-family: bukabird;
-  src: url('/fonts/Buka Bird.ttf');
+#blogengine_header_Container h1 {
+    color: white;
+    font-size: 16px;
+    font-size: 1.6rem;
+    font-weight: 800;
 }
-
-.blog_header h1 {
-  margin: 0px;
-  padding: 5px;
-  font-family: bukabird, "Arial Black", sans-serif;
-  background-color: #aade32;
-  border-bottom: ridge 5px #329300;
-  font-size:80px;
-  text-shadow: 2px 2px 3px #000000;
+#blogengine_header_Container h1 a {
+    color: white;
+    font-weight: bold;
 }
-.blog_header h1 img {
-  vertical-align: middle;
-  margin-right: 15px;
+#blogengine_header_Container strong a {
+    line-height: 14px;
+    color: white;
+    font-weight: 500;
+    padding-right: 12px;
 }
-.blog_header a {
-  color: #6a340a;
-  text-decoration: none ! important;
+#blogengine_header_Container h1, #blogengine_header_Container h2 {
+    margin-bottom: 0;
+    line-height: 1;
 }
