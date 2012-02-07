@@ -17,5 +17,5 @@ featherdoc/public/feather-res-cache/*
 api_tester/public/feather-res-cache
 api_tester/public/feather-res-cache/*
 *.out
-*.swp
 __restProxy.js
+*.swp
