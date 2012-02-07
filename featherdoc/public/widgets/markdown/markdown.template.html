@@ -1,7 +1,0 @@
-{{if doc}}
-  {{html doc}}
-{{else}}
-<dynamic method="featherdoc.getMarkdown" params="'${options.path}','${options.method}'">
-	[[html result.doc]]
-</dynamic>
-{{/if}}

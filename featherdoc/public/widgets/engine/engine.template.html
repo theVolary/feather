@@ -1,0 +1,28 @@
+<div class="container">
+
+<widget path="widgets/navbar/" id="navbar">
+  <options>
+    <option name="brand" value="Feather">
+  </options>
+</widget>
+
+<widget path="widgets/fork_me_github/" id="fork_me_github">
+  <options>
+    <option name="url" value="${options.github_url}">
+    <option name="image_src" value="https://a248.e.akamai.net/assets.github.com/img/abad93f42020b733148435e2cd92ce15c542d320/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67">
+    <option name="style" value="position: absolute; top: 0; right: 0; border: 0;">
+  </options>
+</widget>
+
+<section class='content'>
+  <div class='page-header introduction'>
+      <h1>Feather <small>A full featured widget-based RIA framework for nodeJS.</small></h1>
+  </div>
+  {{each(index, doc) docs_as_html}}
+    <div class='${doc.key}'>
+      {{html doc.value}}
+    </div>
+  {{/each}}
+</section>
+
+</div> <!-- end container -->
