@@ -1,0 +1,8 @@
+/*
+ * This should be something included in your style
+ * framework. Until then, here it is in the widget
+ * style sheet.
+ */
+@media only screen and (max-width: 980px) {
+  .hide-on-phones { display: none !important; }
+}
