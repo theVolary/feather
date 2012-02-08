@@ -26,7 +26,7 @@ _sayHello.template.html_
 
     <input type="button" id="sayHiBtn" value="say hello" />
 
-The `<widgetName>.template.html` file of a given widget is that widget's UI expression. This file may contain HTML as well as other embedded widgets (via the `<widget>` tag), [jQuery templating](http://api.jquery.com/jquery.tmpl/), and a couple other _special_ tags that we'll get to later. For now we'll just stick with vanilla HTML.
+The `<widgetName>.template.html` file of a given widget is that widget's UI expression. This file may contain HTML as well as other embedded widgets (via the `<widget>` tag), [jQuery templating](http://api.jquery.com/category/plugins/templates/), and a couple other _special_ tags that we'll get to later. For now we'll just stick with vanilla HTML.
 
 So, if you're following along, add the above markup to your `sayHello.template.html` file. The next step is to actually consume (embed) this widget in a page. 
 
