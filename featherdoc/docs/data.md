@@ -80,7 +80,9 @@ All data providers should implement the following methods.
       pageNumber: integer,
       pageSize: integer,
       cachePageBoundaries: true/false,
-      pageBoundaries: []
+      pageBoundaries: [],
+      pageCount: 0,
+      docCount: 0
     }
 
 * `criteria` - object that contains any criteria to pass along to the data provider, in this case, CouchDB options such as `key, startkey, endkey, limit, offset`, etc.  See [the CouchDB wiki](http://wiki.apache.org/couchdb/HTTP_view_API#Querying_Options) for all of the available options.
@@ -90,6 +92,8 @@ All data providers should implement the following methods.
 * `pageSize` - The size of the page you want to retrieve.  Set to 0 to disable pagination.
 * `cachePageBoundaries` - boolean.  If true, the view will be queried for all page boundary keys and will cache them in the `pageBoundaries` array unless the array is already populated.  If this is false and pagination is enabled, the CouchDB `skip` option will be used, which is less efficient.
 * `pageBoundaries` - An array of page boundary keys for the given source.  If blank or empty and cachePageBoundaries is set to true, this will be populated before returning the first page of data.  This **must** be passed on subsequent calls for the caching to work properly.
+* `pageCount` - The number of pages at the time of the first page request
+* `docCount` - The total number of documents across all pages.
 
 ##### find callback parameters #####
 * `error`
