@@ -2,7 +2,6 @@
 .tmp_*
 *.log
 *.orig
-node_modules
 lib/node-core-enhancements/*
 featherdoc/public/docs
 featherdoc/lib/node-jsdoc-toolkit/*
