@@ -55,8 +55,7 @@ var options = cli.parse({
     verbose: ['V', 'Verbose output', 'boolean', null],
     format: ['f', '(api-test command only) - Used for test commands to denote the output format.  Valid formats are "tap", "xunit", and "junitxml".', 'string', null],
     testsuite: ['t', '(api-test command only) - Specify the name of a single test suite to run inside of feather/test/unit (omit the file extension)', 'string', null],
-    "client-only": ['c', '(create-widget command only) - Indicates that the created widget is a client-side rendered widget (has no .server.js file)', 'boolean', false],
-    subpath: ['s', '(create-widget command only) - Indicates what subpath inside the "widgets" folder the create the new widget in.', 'string', '']
+    "client-only": ['c', '(create-widget command only) - Indicates that the created widget is a client-side rendered widget (has no .server.js file)', 'boolean', false]
   },
   ['run', 'test', 'api-test', 'create-app', 'create-widget', 'create-rest', 'help', 'stats']);
 
@@ -252,13 +251,13 @@ var commands = {
         cli.info("No namespace specified.  Assuming \"" + namespace + "\".  Is that ok? (y/n)");
         cli.readline(function(data) {
           if (data.toLowerCase()[0] === 'y') {
-            startCreateWidget(appDir, options.subpath, namespace, widgetName);
+            startCreateWidget(appDir, namespace, widgetName);
           } else {
             cli.fatal("I can't create a widget without knowing the namespace.  Please specify one next time.");
           }
         });
       } else {
-        startCreateWidget(appDir, options.subpath, namespace, widgetName);
+        startCreateWidget(appDir, namespace, widgetName);
       }
     }
   },
@@ -435,25 +434,25 @@ function createApp(dir, name) {
   cli.ok(color.ansify(" #green[App #white[" + name + "] created at #white[" + fullPath + "]]\n"));
 }
 
-function startCreateWidget(appDir, subPath, namespace, widgetName) {
+function startCreateWidget(appDir, namespace, widgetName) {
   var fullPath = path.join(appDir, 'public', 'widgets', widgetName);
   if (path.existsSync(fullPath)) {
     cli.info("Widget \"" + widgetName + "\" already exists!  Replace it? (y/n)");
     cli.readline(function(data) {
       if (data.toLowerCase()[0] === 'y') {
-        createWidget(appDir, subPath, namespace, widgetName);
+        createWidget(appDir, namespace, widgetName);
       } else {
         cli.ok("Aborting.");
       }
     });
   } else {
-    createWidget(appDir, subPath, namespace, widgetName);
+    createWidget(appDir, namespace, widgetName);
   }
 }
 
-function createWidget(appDir, subPath, namespace, widgetPath) {
+function createWidget(appDir, namespace, widgetPath) {
   var clientOnly = options["client-only"];
-  var fullPath = path.join(appDir, 'public', 'widgets', subPath, widgetPath);
+  var fullPath = path.join(appDir, 'public', 'widgets', widgetPath);
   ffs.mkdirpSync(fullPath);
   var widgetName = widgetPath.replace(/.*\/([^\/]*)$/, "$1");
   var serverTemplate = [
