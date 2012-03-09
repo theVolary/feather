@@ -39,9 +39,6 @@
     "max": 20
   },
   "environments": {
-    "dev": {},
-    "test": {}, 
-    "prod": {},
     "unittest": {
       "debug": true,
       "daemon": {
