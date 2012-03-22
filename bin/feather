@@ -417,8 +417,10 @@ function createApp(dir, name) {
   ].join('\n'), "utf-8");
   fs.writeFileSync(path.join(fullPath, 'app.js'), [
     '/*',
-    'exports.onInit = function(feather) {',
+    '// if you implement onInit, you must call cb() when done, so the framework knows when to continue start-up',
+    'exports.onInit = function(feather, cb) {',
     '',
+    '    if (typeof cb === "function") cb();',
     '};',
     '',
     'exports.onReady = function(feather) {',
