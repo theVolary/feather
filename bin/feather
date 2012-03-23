@@ -383,9 +383,13 @@ function runChild(cmd, args, childCwd) {
   if (!childCwd) {
     childCwd = process.cwd();
   }
-  var stdio = process.binding("stdio"),
-      fds = [ stdio.stdinFD, stdio.stdoutFD, stdio.stderrFD ],
-      child = spawn(cmd, args, { cwd: childCwd, customFds:fds });
+  var child = spawn(cmd, args, { cwd: childCwd });
+  child.stdout.on('data', function(data) {
+    console.log(data.toString());
+  });
+  child.stderr.on('data', function(data) {
+    console.log(data.toString());
+  });
 }
 
 function createApp(dir, name) {

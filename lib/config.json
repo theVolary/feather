@@ -1,6 +1,19 @@
 {
   "useAjaxForSystem": true,
 
+  "connect": {
+    "cookieParser": {
+      "secret": "feather.sid"
+    },
+    "session": {
+      "key": "feather.sid",
+      "cookie": {
+        "secure": false,
+        "httpOnly": false
+      }
+    }
+  },
+
   "host": "localhost",
   
   "socket.io": {
