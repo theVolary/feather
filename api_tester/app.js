@@ -1,4 +1,4 @@
-exports.onInit = function(feather) {
+exports.onInit = function(feather, cb) {
   feather.ns("test_namespace");
   test_namespace.foo = "bar";
 
@@ -86,4 +86,7 @@ exports.onInit = function(feather) {
       }
     });
   };
+
+  //tell feather to continue
+  cb();
 }
