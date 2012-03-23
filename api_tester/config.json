@@ -28,7 +28,7 @@
     "enabled": true,
     "defaultLevel": "trace",
     "categories": {
-      "feather.http": "off",
+      "http.access": "off",
       "feather.ssock": "debug"
     }
   },
@@ -64,9 +64,9 @@
   "environments": {
     "dev": {},
     "ryandev": {
-      "port": 80,
+      "port": 8080,
       "ssl": {
-        "enabled": true,
+        "enabled": false,
         "port": 443,
         "key": "/home/ryan/.ssl/test1.pem",
         "cert": "/home/ryan/.ssl/test1-cert.pem",
@@ -79,7 +79,7 @@
       "data": {
         "appdb": {
           "hostUrl": "http://localhost",
-          "dbName":"api_tester_db",
+          "dbName":"api_tester_database",
           "auth": { "username":"featheradmin", "password":"password" }
         }
       }
