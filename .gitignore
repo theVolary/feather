@@ -18,3 +18,4 @@ api_tester/public/feather-res-cache/*
 *.out
 __restProxy.js
 *.swp
+node_modules/underscore/raw
