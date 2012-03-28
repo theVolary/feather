@@ -10,5 +10,6 @@
   {"name": "onRequest", "path": "widgets/onRequestTest/"},
   {"name": "dataAbstraction", "path": "widgets/dataAbstractionTest/"},
   {"name": "RESTful API", "path": "widgets/restTest/"},
-  {"name": "client enable option tags in server templates", "path": "widgets/clientOptionsTest/"}
+  {"name": "client enable option tags in server templates", "path": "widgets/clientOptionsTest/"},
+  {"name": "ajax errors (test fails on client, watch console for 'this should show up in the console'", "path": "widgets/ajaxErrorsTest/"}
 ]
