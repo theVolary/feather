@@ -67,7 +67,8 @@
         "defaultLevel": "trace",
         "absorbConsoleLogging": true
       }
-    }
+    },
+    "dev": {}
   },
   "logging": {
     "enabled": true,
