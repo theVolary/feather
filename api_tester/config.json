@@ -64,9 +64,9 @@
   "environments": {
     "dev": {},
     "ryandev": {
-      "port": 80,
+      "port": 8080,
       "ssl": {
-        "enabled": true,
+        "enabled": false,
         "port": 443,
         "key": "/home/ryan/.ssl/test1.pem",
         "cert": "/home/ryan/.ssl/test1-cert.pem",
