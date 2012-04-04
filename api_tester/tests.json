@@ -11,5 +11,6 @@
   {"name": "dataAbstraction", "path": "widgets/dataAbstractionTest/"},
   {"name": "RESTful API", "path": "widgets/restTest/"},
   {"name": "client enable option tags in server templates", "path": "widgets/clientOptionsTest/"},
-  {"name": "ajax errors (test fails on client, watch console for 'this should show up in the console'", "path": "widgets/ajaxErrorsTest/"}
+  {"name": "ajax errors (test fails on client, watch console for 'this should show up in the console'", "path": "widgets/ajaxErrorsTest/"},
+  {"name": "client side querystring parsing 'NOTE: expects ?foo=bar&baz=123 in the querystring (add and refresh page)'", "path": "widgets/qsTest/"}
 ]
