@@ -3,12 +3,15 @@
 var fs    = require("fs"),
     path  = require("path"),
     spawn = require("child_process").spawn,
-    exec = require("child_process").exec,
+    exec  = require("child_process").exec,
     ffs   = require("../lib/util"),
     color = require("colorize"),
     util  = require("util"),
     cli   = require("cli").enable('version').setApp('feather', '0.1'),
     _     = require("underscore");
+
+// Validate that the environment variable
+// FEATHER_HOME has been been initialized.
 
 if (!process.env.FEATHER_HOME) {
   cli.fatal(color.ansify("The environment variable #white[FEATHER_HOME] is required."));
