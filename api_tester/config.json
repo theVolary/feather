@@ -2,10 +2,13 @@
   "socket.io": {
     "enabled": false
   },
+
   "rest": {
     "autoGenerateProxy": true
   },
+
   "useAjaxForSystem": true,
+
   "ssl": {
     "enabled": false,
     "key": "/home/ryan/.ssl/test1.pem",
@@ -13,10 +16,12 @@
     "useRedirectServer": true,
     "redirectServerPort": 8180
   },
+
   "socketOptions": {
     "log level": 1,
     "log level docs": "0 = error, 1 = warn, 2 = info, 3 = debug"
   },
+
   "data": {
     "appdb": {
       "hostUrl": "http://localhost",
@@ -24,6 +29,7 @@
       "auth": { "username":"admin", "password":"password" }
     }
   },
+
   "logging": {
     "enabled": true,
     "defaultLevel": "trace",
@@ -32,6 +38,7 @@
       "feather.ssock": "debug"
     }
   },
+  
   "resources": {
     "publish": {
       "consolidate": false,
@@ -60,29 +67,5 @@
         "publisherId": "local"
       }
     ]
-  },
-  "environments": {
-    "dev": {},
-    "ryandev": {
-      "port": 8080,
-      "ssl": {
-        "enabled": false,
-        "port": 443,
-        "key": "/home/ryan/.ssl/test1.pem",
-        "cert": "/home/ryan/.ssl/test1-cert.pem",
-        "useRedirectServer": false,
-        "redirectServerPort": 8180,
-        "routes": [
-          "^/ssl/.*"
-        ]
-      },
-      "data": {
-        "appdb": {
-          "hostUrl": "http://localhost",
-          "dbName":"api_tester_database",
-          "auth": { "username":"featheradmin", "password":"password" }
-        }
-      }
-    }
   }
 }
