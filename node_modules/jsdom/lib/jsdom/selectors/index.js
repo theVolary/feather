@@ -1,28 +1,31 @@
-var Sizzle = require("./sizzle").Sizzle;
+var createSizzle = require("./sizzle");
 exports.applyQuerySelectorPrototype = function(dom) {
+  var addSizzle = function(document) {
+
+    if (!document._sizzle) {
+      document._sizzle = createSizzle(document);
+    }
+    return document._sizzle;
+  };
+
   dom.Document.prototype.querySelector = function(selector) {
-    return Sizzle(selector, this)[0];
+    return addSizzle(this)(selector, this)[0];
   };
 
   dom.Document.prototype.querySelectorAll = function(selector) {
-    var self = this;
-    return new dom.NodeList(self, function() {
-      return Sizzle(selector, self);
-    });
+    return new dom.NodeList(addSizzle(this)(selector, this));
   };
 
   dom.Element.prototype.querySelector = function(selector) {
-    return Sizzle(selector, this)[0];
+    return addSizzle(this.ownerDocument)(selector, this)[0];
   };
 
   dom.Element.prototype.querySelectorAll = function(selector) {
-    var self = this;
-    if( !this.parentNode ){
-      self = this.ownerDocument.createElement("div");
-      self.appendChild(this);
+    var el = this;
+    if (!this.parentNode) {
+      el = this.ownerDocument.createElement("div");
+      el.appendChild(this);
     }
-    return new dom.NodeList(self.ownerDocument, function() {
-      return Sizzle(selector, self.parentNode || self);
-    });
+    return new dom.NodeList(addSizzle(this.ownerDocument)(selector, el.parentNode || el));
   };
 };
