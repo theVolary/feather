@@ -5,7 +5,7 @@ Hello, feather
   
   Creating an application is covered in a little more detail in [applications.md](applications.md). For the purposes of this tutorial, we'll assume you have feather installed already and that you have a terminal open to some folder you want to store your feather apps.
 
-  1. Create the app via `feather create-app hello_world`.
+  1. Create the app via `feather create-app hello_world`
   2. Move into the new app via `cd hello_world`
   3. Run the app via `feather run`
   4. Test the app by opening a browser and going to http://localhost:8080 (note: 8080 is the default port for feather app development). You should see the text "Light as a Feather".
