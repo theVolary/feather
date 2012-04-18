@@ -37,18 +37,34 @@ Hello, feather
 
   So, to add our first widget to the hello_world app, do the following...
 
-  1. from the `hello_world` folder, create a widget via the command line: `feather create-widget sayHello`
+  1. From the `hello_world` folder, create a widget via the command line: `feather create-widget sayHello`
 
-  This will ask you if `hello_world` is OK to use as the namespace of the widget (since we omitted a namespace as the last argument when we ran the command). So far we've typically just stuck with the app name as being the namespace for all widgets; it's a pattern that seems to work for most apps, though you may want to introduce additional namespaces if your app design is particulary large. After you say "yes", it will then create a folder at ` ~/feather_apps/hello_world/public/widgets/sayHello` that contains four files as follows...
+  This will ask you if `hello_world` is OK to use as the namespace of the widget (since we omitted a namespace as the last argument when we ran the command). So far we've typically just stuck with the app name as being the namespace for all widgets; it's a pattern that seems to work for most apps, though you may want to introduce additional namespaces if your app design is particulary large. After you say "yes", it will then create a folder at `hello_world/public/widgets/sayHello` that contains four files as follows...
 
   * sayHello.client.js
   * sayHello.css
   * sayHello.server.js
   * sayHello.template.html
 
-  b. discussion of widget files
-  c. embedding the widget on the page
-  d. discussion of client-side widget events (onInit, onReady)
+  As we move forward we'll be working in those files to implement various changes in UI or functionality for our widgets.
+
+  2. Edit `hello_world/public/widgets/sayHello/sayHello.template.html` in your text editor and add the following text
+
+    I am a widget
+
+  3. Edit `hello_world/public/index.feather.html' as follows:
+
+    <html>
+    <head>
+      <title>Index.feather.html</title>
+      <resources />
+    </head>
+    <body>
+      <widget id="sayHello1" path="widgets/sayHello/" />
+    </body>
+    </html>
+
+  4. Restart the app and test the changes in the browser. You should now see the text 
 
 --
 
@@ -59,8 +75,9 @@ Hello, feather
     ba. discuss implicit css class naming 
     bb. point out why id-based selectors are a no-no
   c. add interaction via binding a click handler
-    ca. discussion on jQuery integration
-    cb. discussion on this.domEvents and this.get
+    ca. discussion of client-side widget events (onInit, onReady)
+    cb. discussion on jQuery integration
+    cc. discussion on this.domEvents and this.get
 5. Adding a server-side RPC method
   a. implement the prototype and add a feather.Widget.serverMethod
   b. add client-side code to click handler to call server method
