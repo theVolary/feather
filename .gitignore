@@ -18,4 +18,7 @@ api_tester/public/feather-res-cache/*
 __restProxy.js
 *.swp
 node_modules/underscore/raw
-node_modules/daemon/lib/daemon.v0.4.12.node
+node_modules/daemon/build/
+node_modules/daemon/lib/*.node
+*.lock-wscript
+*.wafpickle-7

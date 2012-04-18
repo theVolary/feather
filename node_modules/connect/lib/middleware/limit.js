@@ -6,18 +6,22 @@
  */
 
 /**
- * Limit request bodies to the given size in `bytes`.
+ * Module dependencies.
+ */
+
+var utils = require('../utils');
+
+/**
+ * Limit:
  *
- * A string representation of the bytesize may also be passed,
- * for example "5mb", "200kb", "1gb", etc.
+ *   Limit request bodies to the given size in `bytes`.
  *
- * Examples:
+ *   A string representation of the bytesize may also be passed,
+ *   for example "5mb", "200kb", "1gb", etc.
  *
- *     var server = connect(
- *       connect.limit('5.5mb')
- *     ).listen(3000);
- *
- * TODO: pause EV_READ
+ *     connect()
+ *       .use(connect.limit('5.5mb'))
+ *       .use(handleImageUpload)
  *
  * @param {Number|String} bytes
  * @return {Function}
@@ -33,22 +37,17 @@ module.exports = function limit(bytes){
         ? parseInt(req.headers['content-length'], 10)
         : null;
 
-    // deny the request
-    function deny() {
-      req.destroy();
-    }
-
     // self-awareness
     if (req._limit) return next();
     req._limit = true;
 
     // limit by content-length
-    if (len && len > bytes) deny();
+    if (len && len > bytes) return next(utils.error(413));
 
     // limit
     req.on('data', function(chunk){
       received += chunk.length;
-      if (received > bytes) deny();
+      if (received > bytes) req.destroy();
     });
 
     next();
