@@ -5,10 +5,10 @@ Hello, feather
   
   Creating an application is covered in a little more detail in [applications.md](applications.md). For the purposes of this tutorial, we'll assume you have feather installed already and that you have a terminal open to some folder you want to store your feather apps.
 
-  1. Create the app via `feather create-app hello_world`
-  2. Move into the new app via `cd hello_world`
-  3. Run the app via `feather run`
-  4. Test the app by opening a browser and going to http://localhost:8080 (note: 8080 is the default port for feather app development). You should see the text "Light as a Feather".
+  -`1.` Create the app via `feather create-app hello_world`  
+  -`2.` Move into the new app via `cd hello_world`  
+  -`3.` Run the app via `feather run`  
+  -`4.` Test the app by opening a browser and going to http://localhost:8080 (note: 8080 is the default port for feather app development). You should see the text "Light as a Feather".
 
 --
 
@@ -20,10 +20,10 @@ Hello, feather
 
   For now, we'll just make a simple HTML change involving no widgets...
 
-  1. In your favorite text editor, open `hello_world/public/index.feather.html`
-  2. Change the text 'Light as a Feather' to 'Fast as a Bird' and save the file
-  3. (**) Restart the application via the command line (stop via `Ctrl-C` if it's still running and then start via `feather run`)
-  4. Test the change in the browser.
+  -`1.` In your favorite text editor, open `hello_world/public/index.feather.html`  
+  -`2.` Change the text 'Light as a Feather' to 'Fast as a Bird' and save the file  
+  -`3.` (**) Restart the application via the command line (stop via `Ctrl-C` if it's still running and then start via `feather run`)  
+  -`4.` Test the change in the browser.
 
   (**: At the time of writing (v0.2.1 of feather), server side changes (i.e. editing a .feather.html file, or a widget's .server.js or .template.html file) currently require restarting the feather server. We do intend to resolve this fact and enable seamless "hot deployments")
 
@@ -37,7 +37,7 @@ Hello, feather
 
   So, to add our first widget to the hello_world app, do the following...
 
-  1. From the `hello_world` folder, create a widget via the command line: `feather create-widget sayHello`
+  -`1.` From the `hello_world` folder, create a widget via the command line: `feather create-widget sayHello`
 
   This will ask you if `hello_world` is OK to use as the namespace of the widget (since we omitted a namespace as the last argument when we ran the command). So far we've typically just stuck with the app name as being the namespace for all widgets; it's a pattern that seems to work for most apps, though you may want to introduce additional namespaces if your app design is particulary large. After you say "yes", it will then create a folder at `hello_world/public/widgets/sayHello` that contains four files as follows...
 
@@ -48,12 +48,15 @@ Hello, feather
 
   As we move forward we'll be working in those files to implement various changes in UI or functionality for our widgets.
 
-  2. Edit `hello_world/public/widgets/sayHello/sayHello.template.html` in your text editor and add the following text
+  -`2.` Edit `hello_world/public/widgets/sayHello/sayHello.template.html` in your text editor and add the following text
 
+```
     I am a widget
+```
 
-  3. Edit `hello_world/public/index.feather.html' as follows:
+  -`3.` Edit `hello_world/public/index.feather.html' as follows:
 
+```html
     <html>
     <head>
       <title>Index.feather.html</title>
@@ -63,8 +66,9 @@ Hello, feather
       <widget id="sayHello1" path="widgets/sayHello/" />
     </body>
     </html>
+```
 
-  4. Restart the app and test the changes in the browser. You should now see the text 
+  -`4.` Restart the app and test the changes in the browser. You should now see the text "I am a widget".
 
 --
 
