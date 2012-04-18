@@ -1,18 +1,57 @@
-Outline
+Hello, feather
 --
 
-1. Creating your first application.
-  a. Configuration
-  b. Running the app (intro to the CLI)
-2. Modifying the page
-  a. index.feather.html
-  b. discussion on feather.html pages
-  c. (for now) need to restart the server
-3. Adding a widget
-  a. feather create-widget
+## Creating your first application
+  
+  Creating an application is covered in a little more detail in [applications.md](applications.md). For the purposes of this tutorial, we'll assume you have feather installed already and that you have a terminal open to some folder you want to store your feather apps.
+
+  1. Create the app via `feather create-app hello_world`.
+  2. Move into the new app via `cd hello_world`
+  3. Run the app via `feather run`
+  4. Test the app by opening a browser and going to http://localhost:8080 (note: 8080 is the default port for feather app development). You should see the text "Light as a Feather".
+
+--
+
+## A simple HTML change
+
+  OK, so now we'll start making changes to the application, working our way through various fundamental concepts in the feather framework...
+
+  The first thing to realize is that "feather pages" are specially named HTML files. Any file in the `public` folder of your app that ends with `.feather.html` will be treated as a "feather page" and will be parsed by feather's specialized parser when your application starts up. This parsing process ultimately figures out what `widgets` your page(s) are embedding, recursively expands all the widget templates (which results in a composite HTML document), automatically collects all the required `client.js` and `css` files used by all of the embedded widgets, and bundles everything into static files that will be served to the browser for you. So the "feather page" can be thought of as the composition layer for `widgets`, which are the basic unit of encapsulating reusable chunks of functionality in your application.
+
+  For now, we'll just make a simple HTML change involving no widgets...
+
+  1. In your favorite text editor, open `hello_world/public/index.feather.html`
+  2. Change the text 'Light as a Feather' to 'Fast as a Bird' and save the file
+  3. (**) Restart the application via the command line (stop via `Ctrl-C` if it's still running and then start via `feather run`)
+  4. Test the change in the browser.
+
+  (**: At the time of writing (v0.2.1 of feather), server side changes (i.e. editing a .feather.html file, or a widget's .server.js or .template.html file) currently require restarting the feather server. We do intend to resolve this fact and enable seamless "hot deployments")
+
+--
+
+## Adding a widget
+  
+  Now we'll start getting into the heart of the feather framework, which is creating and using widgets. First, a brief discussion to answer the question "What is a widget?"...
+
+  A widget, from feather's perspective, is really just a way of saying "cross-tier component". You will create widgets to encapsulate re-usable chunks of content or functionality (i.e. "loginForm", "videoPlayer", or "helpWizard"). We say "cross-tier" because a widget consists of four distinct files that are seamlessly combined to provide both server side and client side functionality in a nice convenient package. All widgets can be embedded directly into the markup of feather.html pages or inside of other widget templates, and can also be dynamically loaded directly from the client.
+
+  So, to add our first widget to the hello_world app, do the following...
+
+  1. from the `hello_world` folder, create a widget via the command line: `feather create-widget sayHello`
+
+  This will ask you if `hello_world` is OK to use as the namespace of the widget (since we omitted a namespace as the last argument when we ran the command). So far we've typically just stuck with the app name as being the namespace for all widgets; it's a pattern that seems to work for most apps, though you may want to introduce additional namespaces if your app design is particulary large. After you say "yes", it will then create a folder at ` ~/feather_apps/hello_world/public/widgets/sayHello` that contains four files as follows...
+
+  * sayHello.client.js
+  * sayHello.css
+  * sayHello.server.js
+  * sayHello.template.html
+
   b. discussion of widget files
   c. embedding the widget on the page
   d. discussion of client-side widget events (onInit, onReady)
+
+--
+
 4. Adding UI and client side interactions
   a. adding a button
     aa. discussion on id attribute
