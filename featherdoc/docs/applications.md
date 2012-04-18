@@ -148,7 +148,7 @@ It's important to note that you may add any arbitrary sections you want to this 
 You would then be able to access that within one of your widget's .server.js files like so:
 
     exports.getWidget = function(feather, cb) {
-      if (feather.appOptions.myAppCustomConfigSection.something === "123") {
+      if (feather.config('myAppCustomConfigSection.something') === "123") {
         //do something based on the custom config value
       }
 
@@ -216,6 +216,6 @@ EXAMPLE: You have a config.json file that looks like this:
 
 Now let's look at the behavior of running the app using a couple different commands:
   
-  - `feather run`: This will result in the app running with `feather.appOptions.ssl.enabled` being `false`, `feather.appOptions.someCustomConfigSection.something.nestedSomething` being `"abc"` and `feather.appOptions.someCustomConfigSection.something.nestedTwo` being `"123"`. Also, the system defaults of `host` = `localhost`, `socket.io.host` = `localhost`, `socket.io.port` = `8081`, and so forth... and finally, the app will _not_ be running as a daemon.
-  - `feather run -e prod`: This will result in the app running with `feather.appOptions.ssl.enabled` being `true` (with a shim redirect server running on port 80 to redirect all traffic from port 80 to the default ssl port of 443), `feather.appOptions.someCustomConfigSection.something.nestedSomething` being `"abc"` and `feather.appOptions.someCustomConfigSection.something.nestedTwo` being `"xyz"` (notice the overriding for this section will leave the default values in tact for any values not defined in the custom environment). Also, `host` = `www.somewebsite.com`, `socket.io.host` = `www.somewebsite.com`, `socket.io.port` = `8989`, and so forth... and finally, the app will _still_ _not_ be running as a daemon.
+  - `feather run`: This will result in the app running with `feather.config('ssl.enabled')` being `false`, `feather.config('someCustomConfigSection.something.nestedSomething')` being `"abc"` and `feather.config('someCustomConfigSection.something.nestedTwo')` being `"123"`. Also, the system defaults of `host` = `localhost`, `socket.io.host` = `localhost`, `socket.io.port` = `8081`, and so forth... and finally, the app will _not_ be running as a daemon.
+  - `feather run -e prod`: This will result in the app running with `feather.config('ssl.enabled')` being `true` (with a shim redirect server running on port 80 to redirect all traffic from port 80 to the default ssl port of 443), `feather.config('someCustomConfigSection.something.nestedSomething')` being `"abc"` and `feather.config('someCustomConfigSection.something.nestedTwo')` being `"xyz"` (notice the overriding for this section will leave the default values intact for any values not defined in the custom environment). Also, `host` = `www.somewebsite.com`, `socket.io.host` = `www.somewebsite.com`, `socket.io.port` = `8989`, and so forth... and finally, the app will _still_ _not_ be running as a daemon.
   - `feather run -e prod -z`: All of the above will be applied, and the app will be run as a daemon under the system user `feather` (assuming you have such a user on your machine), with the output and pid paths as specified in the config file.
