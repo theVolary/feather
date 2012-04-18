@@ -54,7 +54,7 @@ Hello, feather
     I am a widget
 ```
 
-  -`3.` Edit `hello_world/public/index.feather.html' as follows:
+  -`3.` Edit `hello_world/public/index.feather.html` as follows:
 
 ```html
     <html>
@@ -72,7 +72,10 @@ Hello, feather
 
 --
 
-4. Adding UI and client side interactions
+## Adding UI and client side interactions
+  
+  
+
   a. adding a button
     aa. discussion on id attribute
   b. styling the button via css file
@@ -82,6 +85,9 @@ Hello, feather
     ca. discussion of client-side widget events (onInit, onReady)
     cb. discussion on jQuery integration
     cc. discussion on this.domEvents and this.get
+
+--
+
 5. Adding a server-side RPC method
   a. implement the prototype and add a feather.Widget.serverMethod
   b. add client-side code to click handler to call server method
