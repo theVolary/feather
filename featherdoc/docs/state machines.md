@@ -6,9 +6,9 @@ Finite State Machines (FSM) are well understood in computer science, and as such
 - - -
 State Machine Info
 
--       [Wikipedia](http://en.wikipedia.org/wiki/Finite-state_machine)
+- [Wikipedia](http://en.wikipedia.org/wiki/Finite-state_machine)
 
--       [State Machine Basics](http://blog.markwshead.com/869/state-machines-computer-science/)
+- [State Machine Basics](http://blog.markwshead.com/869/state-machines-computer-science/)
 
 - - -
 
