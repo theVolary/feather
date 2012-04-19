@@ -66,9 +66,11 @@ The FSM is first instantiated in the fsm member variable of me so communication 
 
 Sending events to a state machine requires an extra step that I need to cover.  The above state machine will wait forever in the enabled sate unless the clicked event is sent to the state machine, so lets send it the clicked event when foo is clicked.
 
-    me.domEvents.bind(me.get("#foo"), "click", function( ) {
-      me.fsm.fire("clicked");
-    });
+```javascript
+me.domEvents.bind(me.get("#foo"), "click", function( ) {
+  me.fsm.fire("clicked");
+});
+```
 
 
 foo specifies a HTML element by id, that is bound to the click event.  The callback sends the "clicked" event to the state machine.
@@ -92,108 +94,114 @@ A textbox, checkbox, and button.
 
 ####Client Side State Machine####
 
-    var me = this;
-    //
-    //Form Submission Example
-    var button = me.get("#tutorialButton");
-    var checkbox = me.get("#tutorialCheckbox");
-    var textbox = me.get("#tutorialTextbox");
-     me.fsm = new feather.FiniteStateMachine( {
-      states: {
-        initial: {
-          stateStartup: function( ) {
-            return this.states.waiting;
-          }
-        },
-        waiting: {
-          stateStartup: function( ) {
-            button.attr("disabled", true);
-            checkbox.attr("disabled", false); 
-          },
-          checked: function( ) {
-            return this.states.enabled;
-          }
-        },
-        enabled: {
-          stateStartup: function( ) {
-            button.attr("disabled", false); 
-            checkbox.attr("disabled", false);
-          },
-          unchecked: function( ) {
-            return this.states.waiting;
-          },
-          click: function( ) {
-            return this.states.validate;
-          }
-        },
-        submit: {
-          stateStartup: function( ) {
-            var email = textbox.val();
-            me.server_submitInfo([email], function (args) {
-              me.fsm.fire("response", args);
-            });
-          },
-          response: function(args) {
-            return args.success ? this.states.success : this.states.error;
-          }
-        },
-        validate: {
-          stateStartup: function( ) {
-
-            //Disable all buttons while validation is happening
-            button.attr("disabled", true);
-            checkbox.attr("disabled", true);
-
-            //Super complex validation that an email is believed to be valid could go here
-            var txt = textbox.val();
-            if(txt.length < 5) {
-              return this.states.error;
-            } else {
-              return this.states.submit;
-            }
-          }
-        },
-        error: {
-          stateStartup: function( ) {
-            //Show some sort of error indication here
-            button.attr("disabled", false);
-            checkbox.attr("disabled", false);
-
-            //Place ERR in the textbox
-            textbox.val("ERR");
-            return this.states.enabled;
-          }
-        },
-        success: {
-          stateStartup: function( ) {
-            me.get("#tutorialTextbox").val("Thank You");
-          }
-        }  
+```javascript
+var me = this;
+//
+//Form Submission Example
+var button = me.get("#tutorialButton");
+var checkbox = me.get("#tutorialCheckbox");
+var textbox = me.get("#tutorialTextbox");
+ me.fsm = new feather.FiniteStateMachine( {
+  states: {
+    initial: {
+      stateStartup: function( ) {
+        return this.states.waiting;
       }
-    });
+    },
+    waiting: {
+      stateStartup: function( ) {
+        button.attr("disabled", true);
+        checkbox.attr("disabled", false); 
+      },
+      checked: function( ) {
+        return this.states.enabled;
+      }
+    },
+    enabled: {
+      stateStartup: function( ) {
+        button.attr("disabled", false); 
+        checkbox.attr("disabled", false);
+      },
+      unchecked: function( ) {
+        return this.states.waiting;
+      },
+      click: function( ) {
+        return this.states.validate;
+      }
+    },
+    submit: {
+      stateStartup: function( ) {
+        var email = textbox.val();
+        me.server_submitInfo([email], function (args) {
+          me.fsm.fire("response", args);
+        });
+      },
+      response: function(args) {
+        return args.success ? this.states.success : this.states.error;
+      }
+    },
+    validate: {
+      stateStartup: function( ) {
+
+        //Disable all buttons while validation is happening
+        button.attr("disabled", true);
+        checkbox.attr("disabled", true);
+
+        //Super complex validation that an email is believed to be valid could go here
+        var txt = textbox.val();
+        if(txt.length < 5) {
+          return this.states.error;
+        } else {
+          return this.states.submit;
+        }
+      }
+    },
+    error: {
+      stateStartup: function( ) {
+        //Show some sort of error indication here
+        button.attr("disabled", false);
+        checkbox.attr("disabled", false);
+
+        //Place ERR in the textbox
+        textbox.val("ERR");
+        return this.states.enabled;
+      }
+    },
+    success: {
+      stateStartup: function( ) {
+        me.get("#tutorialTextbox").val("Thank You");
+      }
+    }  
+  }
+});
+```
 
 ####Client Side Binding####
 
-    //Bind Events
-    me.domEvents.bind(me.get("#tutorialButton"), "click", function(args) {
-      me.fsm.fire("click");
-    });
+```javascript
+//Bind Events
+me.domEvents.bind(me.get("#tutorialButton"), "click", function(args) {
+  me.fsm.fire("click");
+});
 
-    me.domEvents.bind(me.get("#tutorialCheckbox"), "click", function(args){
-      this.checked ? me.fsm.fire("checked") : me.fsm.fire("unchecked");        
-    });
+me.domEvents.bind(me.get("#tutorialCheckbox"), "click", function(args){
+  this.checked ? me.fsm.fire("checked") : me.fsm.fire("unchecked");        
+});
+```
 
 ####Server Side Validation####
 
-    prototype: {
-      submitInfo: feather.Widget.serverMethod(function(email, _cb){
-        if(Math.floor(Math.random()*11)<5){
-          _cb("Not Valid");
-        } else {
-          _cb(null);
-        }
-      })
+```javascript
+prototype: {
+  submitInfo: feather.Widget.serverMethod(function(email, _cb){
+    if(Math.floor(Math.random()*11)<5){
+      _cb("Not Valid");
+    } else {
+      _cb(null);
     }
+  })
+}
+```
 
 First off no real validation is occuring in my example, the client checks to make sure there is a string input with 5 or more characters into the textfield and then sends it to the server, the server just randomly tells the client they failed or succeeded.
 
