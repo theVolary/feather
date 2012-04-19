@@ -74,7 +74,7 @@ Hello, feather
 
 ## Adding UI and client side interactions
   
-  
+  Now that you've added your first widget, let's start making it (somewhat) useful. Since we called our widget 'sayHello' 
 
   a. adding a button
     aa. discussion on id attribute
