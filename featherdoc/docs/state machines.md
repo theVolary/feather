@@ -88,9 +88,11 @@ I've created an example that mimics a form submission, so let us go straight to 
 
 A textbox, checkbox, and button.
 
-    <input type="text" id="tutorialTextbox" />
-    <input type="checkbox" id="tutorialCheckbox" />I Agree
-    <button disabled="true" id="tutorialButton">Submit</button>
+```html
+<input type="text" id="tutorialTextbox" />
+<input type="checkbox" id="tutorialCheckbox" />I Agree
+<button disabled="true" id="tutorialButton">Submit</button>
+```
 
 ####Client Side State Machine####
 
