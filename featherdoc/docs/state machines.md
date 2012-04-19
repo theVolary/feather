@@ -231,7 +231,7 @@ I think this example state machine is easy enough to understand but I want to el
 In this example its easy to see that each piece of functionality is separated, so extending the functionality or tracking down a defect is much easier to accomplish.  
 
 
-###Finally###
+###Advanced Use###
 
 Now that you have an understanding of utilizing state machines in feather, we can look at some additional items that allow you to develop more powerful state machines and transition logic.
 
