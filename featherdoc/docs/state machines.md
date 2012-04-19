@@ -242,11 +242,11 @@ The public API for state machines can be found here.  [FSM API](#)
 FSM's in feather implement the following functions
 
 
--     `gotoPreviousState` : Switches the state machine back to the previous state.
+- `gotoPreviousState` : Switches the state machine back to the previous state.
 
--     `gotoInitialState` :  Transitions to the Initial state in the state machine.
+- `gotoInitialState` :  Transitions to the Initial state in the state machine.
 
--     `getCurrentStateName` :  Returns the name of the current state which is mainly useful for test cases and debugging.
+- `getCurrentStateName` :  Returns the name of the current state which is mainly useful for test cases and debugging.
 
 
 ####Inside Feather####
