@@ -209,19 +209,19 @@ First off no real validation is occuring in my example, the client checks to mak
 
 I start by defining the states.
 
-- <dt>initial</dt> : Required as the starting state.
+- *initial* : Required as the starting state.
 
-- <dt>waiting</dt> : This state enables the checkbox control, disables the button, and waits until the checkbox is checked.
+- *waiting* : This state enables the checkbox control, disables the button, and waits until the checkbox is checked.
 
-- <dt>enabled</dt> :  This state waits until the button is clicked, and transitions to the validate state.
+- *enabled* :  This state waits until the button is clicked, and transitions to the validate state.
 
-- <dt>validate</dt> : Client side validation, this can be as complex as you would want it to be.  Transitions to the submit or error state.
+- *validate* : Client side validation, this can be as complex as you would want it to be.  Transitions to the submit or error state.
 
-- <dt>submit</dt> : Sends the data to the server and waits for a response.  Based on the response the state machine will either transition to error state or success state.
+- *submit* : Sends the data to the server and waits for a response.  Based on the response the state machine will either transition to error state or success state.
 
-- <dt>error</dt> : Generic error state that any error causes a transition to.
+- *error* : Generic error state that any error causes a transition to.
 
-- <dt>success</dt> : The final state once the form is validated and finished.
+- *success* : The final state once the form is validated and finished.
 
 My next step before implementation was to define the transitions.  In more complex systems its best to layout a decision tree so its easy to see how the transitions occur, but in this case its simple enough to just write it down.  Remember though that state machines can quickly grow so keeping it documented can make it much easier when looking for faulty code or adding new states.
 
