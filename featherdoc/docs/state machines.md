@@ -20,11 +20,11 @@ In general Finite State Machines are a tool that simplifies common problems incl
 
 An application could easily be created without utilizing FSM's, but there are some clear advantages to using them.
 
--     `Flexibility` : Code can easily be tweaked and extended with proper use of state machines.
+- `Flexibility` : Code can easily be tweaked and extended with proper use of state machines.
 
--     `Debugging` : Code that is isolated in small testable states makes it much easier to track down defects in the software.
+- `Debugging` : Code that is isolated in small testable states makes it much easier to track down defects in the software.
 
--     `Simplicity` : Its human nature to think of things in terms of states.  It is generally simple to break down parts of software in terms of states.
+- `Simplicity` : Its human nature to think of things in terms of states.  It is generally simple to break down parts of software in terms of states.
 
 ###Example FSM###
 
