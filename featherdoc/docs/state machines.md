@@ -3,18 +3,19 @@
 
 Finite State Machines (FSM) are well understood in computer science, and as such I won't cover them much here.  There are some really good articles online that you can check out to read more in depth analysis on FSM's.
 
-- - -
-State Machine Info
+
+Links to some good articles
 
 - [Wikipedia](http://en.wikipedia.org/wiki/Finite-state_machine)
 
 - [State Machine Basics](http://blog.markwshead.com/869/state-machines-computer-science/)
 
-- - -
 
 In the simpliest definition a FSM is a set of states and transitions.  A FSM can only be in one state a time, thus allowing you to easily build state driven applications like Rich Internet Applications.  In more complex systems that utilize state machines you will begin to see hierarchical state machines, and states that have their own state machines.
 
 In general Finite State Machines are a tool that simplifies common problems including UI management and async flow.
+
+- - -
 
 ###Benefits of State Machines###
 
@@ -26,9 +27,11 @@ An application could easily be created without utilizing FSM's, but there are so
 
 - `Simplicity` : Its human nature to think of things in terms of states.  It is generally simple to break down parts of software in terms of states.
 
+- - -
+
 ###Example FSM###
 
-I want to start with a simplier example first to mainly demonstrate the syntax and structure for creating states and events.  Also I want to show how transitions are generated in feather state machines.  The below example is just 3 states and two transitions, but it really touches on some of the basics that I believe is important.
+I want to start with a simplier example first to mainly demonstrate the syntax and structure for creating states and events.  Also I want to show how transitions are generated in feather state machines.  The below example is just 3 states and two transitions, but it really touches on some of the basics that I believe are important.
 
 ```javascript
 onReady: function() {
@@ -62,6 +65,8 @@ Let's walk through what is happening in this simple example.  The FSM is created
 
 The FSM is first instantiated in the fsm member variable of me so communication with the fsm can occur which I will cover below.  Then the states are declared, in this example we have a very simple FSM with initial, enabled, and disabled as the states.  Each state has two very important optional events which are `stateStartup` and `leavingState`.  In this simple example only `stateStartup` is utilized, but we could just as easily use `leavingState`.
 
+- - -
+
 ###FSM Communication###
 
 Sending events to a state machine requires an extra step that I need to cover.  The above state machine will wait forever in the enabled sate unless the clicked event is sent to the state machine, so lets send it the clicked event when foo is clicked.
@@ -77,6 +82,7 @@ foo specifies a HTML element by id, that is bound to the click event.  The callb
 
 That is really it, just fire the event and the state machine will handle it if that event is implemented.  This allows modelling of complex systems using a powerful design, while keeping the software more manageable and flexible.
 
+- - -
 
 ###A Real Example###
 
@@ -230,6 +236,7 @@ I think this example state machine is easy enough to understand but I want to el
 
 In this example its easy to see that each piece of functionality is separated, so extending the functionality or tracking down a defect is much easier to accomplish.  
 
+- - -
 
 ###Advanced Use###
 
