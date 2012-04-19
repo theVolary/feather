@@ -255,6 +255,12 @@ FSM's in feather implement the following functions
 
 - `getCurrentStateName` :  Returns the name of the current state which is mainly useful for test cases and debugging.
 
+- `onceState` : Allows additional events to be fired when a state machine enters a state, the event triggers once and then is discarded.
+
+- 'onState' : Allows additiona events to be fired when entering states, with options for immediate and one time execution.
+
+- 'getStateName'  : Returns the state name based on the state reference passed in.
+
 
 ####Inside Feather####
 
