@@ -77,7 +77,7 @@ feather.ns("api_tester");
 
           testGetByIdError_404: function () {
             var test = this,
-              expected = "Document not found";
+              expected = "\"Document not found\"";
 
             $.ajax({
               url: "/_rest/test/789",
@@ -240,7 +240,7 @@ feather.ns("api_tester");
 
           testGetByIdError_404: function () {
             var test = this,
-              expected = "Document not found";
+              expected = "\"Document not found\"";
 
             feather.rest.test.get("/789", function(args) {
               test.resume(function() {
