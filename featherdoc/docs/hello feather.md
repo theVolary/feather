@@ -74,7 +74,40 @@ Hello, feather
 
 ## Adding UI and client side interactions
   
-  Now that you've added your first widget, let's start making it (somewhat) useful. Since we called our widget 'sayHello' 
+  Now that you've added your first widget, let's start making it (somewhat) useful. Since we called our widget 'sayHello', let's add a button that when clicked alerts a "hello" message to the user.
+
+  -`1.` Add the following markup to the `sayHello.template.html` file...
+
+```html
+    <input id="sayHiBtn" type="button" value="say hello" />
+```
+
+  __A note about `id` attributes__
+  At this point we'd like to make you aware of an important feature of the feather framework. Let's say you want to add ten instances of this widget to your page. You would simply edit the `index.feather.html` file and add nine more `widget` tags. You must, however, take care that all ten instances have different `id`s (in fact the framework will hollar at you during startup if you fail to meet this requirement and will error out). The reason this is true is so that all the elements on the page can be gauranteed to be uniquely ID'ed and so that behavioral code in the widgets' `client.js` file can safely reference _only_ the DOM elements associated with _that_ _instance_. To accomplish this, feather auto prefixes an id chain to elements based on the hierarchy of where each instance is embedded. So in our example above (with just a single instance embedded in the page), the button will actually have an id of `sayHello1_sayHiBtn` in the DOM (because we gave the `widget` tag an id of `sayHello1` when we embedded it). Don't worry though, when you write client code within the widget's `client.js` file you will not have to worry about knowing what that id hierarchy looks like; you'll be able to reference the scoped elements by their relative IDs via code like `this.get('#sayHiBtn')`, which we'll demonstrate shortly.
+
+  -`2.` Add the following style rule to the `sayHello.css` file (let's make this button really ugly)...
+
+```css
+  .hello_world_sayHello input {
+    border: 3px dashed green;
+    font-family: verdana;
+    font-size: 20px;
+    color: red;
+  }
+```
+  For per-widget scoped styling, there is always an implicit class name for each widget that will be in the form of `"namespace_widgetName"`. Since our namespace is `hello_world` and our widget name is `sayHello`, the implicit class name is `hello_world_sayHello`. This is very handy when you want to create styles that target only those elements scoped to instances of this specific widget.
+
+  It's very important to note that ID based selectors in your CSS are a no-no. Going back to the discussion about how IDs are treated in feather, let's pretend you attempted the following CSS rule...
+
+```css
+  .hello_world_sayHello #sayHiBtn {
+    border: 3px dashed green;
+    font-family: verdana;
+    font-size: 20px;
+    color: red;
+  }
+```
+  The problem, of course, is that because widgets are meant to be reusable, and you will be embedding them in arbitrary locations in your app, the id prefixes will be (and should remain) unknown within the context of your CSS files. 
 
   a. adding a button
     aa. discussion on id attribute
@@ -120,4 +153,5 @@ Hello, feather
   b. demonstrate using the dialog system (assumes jQueryUI integration is enabled)
     ba. brief discussion on creating a custom containerizer function
   c. discuss serverOptions vs. clientOptions
-11. Solving dynamic data requirements via client-centric thinking
+11. Discussion of 'client-only' widgets
+12. Solving dynamic data requirements via client-centric thinking
