@@ -66,7 +66,7 @@ The FSM is first instantiated in the fsm member variable of me so communication 
 
 ###FSM Communication###
 
-Sending events to a state machine requires an extra step that I need to cover.  The above state machine will wait forever in the enabled sate unless the clicked event is sent to the state machine, so lets send it the clicked event when foo is clicked.
+Sending events to a state machine requires an extra step that I need to cover.  The above state machine will wait forever in the enabled state unless the clicked event is sent to the state machine, so lets send it the clicked event when foo is clicked.
 
 ```javascript
 this.domEvents.bind(this.get("#foo"), "click", function( ) {
