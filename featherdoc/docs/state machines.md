@@ -194,8 +194,6 @@ me.domEvents.bind(me.get("#tutorialCheckbox"), "click", function(args){
 });
 ```
 
-```
-
 First off no real validation is occuring in my example, the client checks to make sure there is a string input with 5 or more characters into the textfield and then sends it to the server.  The server implemenation can be anything you want it to be.
 
 Begin by defining the states.
