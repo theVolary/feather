@@ -11,7 +11,7 @@ Links to some good articles
 - [State Machine Basics](http://blog.markwshead.com/869/state-machines-computer-science/)
 
 
-In the simpliest definition a FSM is a set of states and transitions.  A FSM can only be in one state a time, thus allowing you to easily build state driven applications like Rich Internet Applications.  In more complex systems that utilize state machines you will begin to see hierarchical state machines, and states that have their own state machines.
+In the simplest definition a FSM is a set of states and transitions.  A FSM can only be in one state a time, thus allowing you to easily build state driven applications like Rich Internet Applications.  In more complex systems that utilize state machines you will begin to see hierarchical state machines, and states that have their own state machines.
 
 In general Finite State Machines are a tool that simplifies common problems including UI management and async flow.
 
