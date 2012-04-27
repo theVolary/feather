@@ -436,12 +436,13 @@ function runChild(cmd, args, childCwd) {
   if (!childCwd) {
     childCwd = process.cwd();
   }
-  var child = spawn(cmd, args, { cwd: childCwd });
+  var chomp = /(\n|\r)+$/,
+      child = spawn(cmd, args, { cwd: childCwd });
   child.stdout.on('data', function(data) {
-    console.log(data.toString());
+    console.log(data.toString().replace(chomp, ''));
   });
   child.stderr.on('data', function(data) {
-    console.log(data.toString());
+    console.error(data.toString().replace(chomp, ''));
   });
 }
 
