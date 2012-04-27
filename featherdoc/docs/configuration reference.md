@@ -99,10 +99,10 @@ TODO: List options
 
 * key [feather.sid] - the session cookie name
 * secret [feather app key] - the cookie "secret" to use.
-* cookie - object containing cookie config details
-* cookie.path [/] - the cookie's path value
-* cookie.httpOnly [false] - Whether or not the cookie is an http only cookie.  If you will manipulate the cookie at all in client-side code, set this to false.
-* cookie.maxAge [14400000] - The expiration of the cookie, in ms. (Default is 4 hours)
+  * cookie - object containing cookie config details
+  * path [/] - the cookie's path value
+  * httpOnly [false] - Whether or not the cookie is an http only cookie.  If you will manipulate the cookie at all in client-side code, set this to false.
+  * maxAge [14400000] - The expiration of the cookie, in ms. (Default is 4 hours)
 * ignorePaths [/robots.txt] - array of string paths to ignore
 
 
