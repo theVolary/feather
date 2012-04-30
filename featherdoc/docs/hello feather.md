@@ -39,7 +39,7 @@ Hello, feather
 
   -`1.` From the `hello_world` folder, create a widget via the command line: `feather create-widget sayHello`
 
-  This will ask you if `hello_world` is OK to use as the namespace of the widget (since we omitted a namespace as the last argument when we ran the command). So far we've typically just stuck with the app name as being the namespace for all widgets; it's a pattern that seems to work for most apps (assuming your app name isn't something long winded), though you may want to introduce additional namespaces if your app design is particulary large. After you say "yes", it will then create a folder at `hello_world/public/widgets/sayHello` that contains four files as follows...
+  This will ask you if `hello_world` is OK to use as the namespace of the widget (since we omitted a namespace as the last argument when we ran the command). So far we've typically just stuck with the app name as being the namespace for all widgets; it's a pattern that seems to work for most apps (assuming your app name isn't something long winded). You may want to introduce additional namespaces if your app design is particulary large. After you say "yes", it will then create a folder at `hello_world/public/widgets/sayHello` that contains four files as follows...
 
   * sayHello.client.js
   * sayHello.css
@@ -107,7 +107,40 @@ Hello, feather
     color: red;
   }
 ```
-  The problem, of course, is that because widgets are meant to be reusable, and you will be embedding them in arbitrary locations in your app, the id prefixes will be (and should remain) unknown within the context of your CSS files. 
+  The problem, of course, is that because widgets are meant to be reusable and you will be embedding them in (potentially) arbitrary locations in your app, the id prefixes will be (and should remain) unknown within the context of your CSS files. As demonstrated above, the actual id of the button in the DOM in our example will be `sayHello1_sayHiBtn`, and not just `sayHiBtn`, therefore the CSS selector above will actually find 0 elements. You may, then, be tempted to simply target your CSS rule as `.hello_world_sayHello #sayHello1_sayHiBtn`. That would be a mistake because it is tightly coupling the widget to a specific embed hierarchy, and this rule will break the second you decide to change that hierarchy for whatever reason.
+
+  -`3.` Bind a click handler in the `sayHello.client.js` file as follows...
+
+```js
+  feather.ns("hello_world");
+  (function() {
+    hello_world.sayHello = feather.Widget.create({
+      name: "hello_world.sayHello",
+      path: "widgets/sayHello/",
+      prototype: {
+        onInit: function() {
+          
+        },
+        onReady: function() {
+          
+          this.domEvents.bind(this.get('#sayHiBtn'), 'click', function() {
+            alert("Hi there!");
+          });
+
+        }
+      }
+    });
+  })();
+```
+
+  Since this is our first look at the `client.js` file, let's take a moment to examine the boilerplate to understand what's going on. The first line is a call to `feather.ns` (where 'ns' stands for 'namespace'). The feather.ns function encapsulates the creation of a given variable within a given context (where the default context is the global context, or `window` on the client). The call `feather.ns("hello_world")` first checks to see if the `hello_world` variable has already been created in the global context, and does nothing if it has, or creates an empty object to represent that namespace if it hasn't (this assures that the order in which you embed same-namespaced widgets won't inadvertantly affect the creation of this object.). Next you'll notice the very standard module pattern, followed by a single statement that creates a widget constructor at `hello_world.sayHello`. The constructor arguments template includes the widget boilerplate properties of `name`, `path`, and `prototype`. `name` seems redundant at first glance, but is important because it will be used in various places behind the scenes. The same is true of `path`; this is mainly used to pass into feather's dynamic widget loading mechanism so the server can easily resolve which widget is being requested. Finally, the `prototype` property is exactly that... the javascript prototype of the resulting widget constructor. 
+
+  There are two important methods of interest on all client-side widget prototypes: `onInit` and `onReady`. 
+
+  - The `onInit` function is called immediately after a widget instance is created on the client, but before the DOM has been updated with that widget's HTML from its template. This would be where you would add any initialization code (i.e. the stuff you'd normally put into a constructor function). 
+  - The `onReady` method is called immediately after the widget's HTML has been rendered into the DOM, and this is the point at which it's safe to interact with the widget's DOM elements (e.g add event handlers).
+
+
 
   a. adding a button
     aa. discussion on id attribute
