@@ -66,3 +66,5 @@ Test results are output to the console, as well as the __reports__ folder within
     });
     YUITest.TestRunner.add(tc);
     })();
+
+----

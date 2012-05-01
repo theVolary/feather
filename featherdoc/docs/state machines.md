@@ -246,3 +246,5 @@ FSM's in feather implement the following functions
 ####Inside Feather####
 
 The feather framework utilizes FSM's throughout, each Widget is derived from FiniteStateMachine.  FiniteStateMachine is derived from EventPublisher which provides the fire method.
+
+----
