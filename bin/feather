@@ -107,6 +107,7 @@ var commands = {
       runChild("node", args, appDir);
 
       if (options["debug-inspector"]) {
+        cli.ok("Starting node inspector on port 8888");
         exec("node-inspector --web-port=8888 &");
       }
     }
