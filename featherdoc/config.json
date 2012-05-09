@@ -21,5 +21,31 @@
         "/feather-client/lib/twitter-bootstrap/css/bootstrap-responsive-2.0.0.min.css"
       ]
     }
+  },
+  "logging": {
+    "enabled": true,
+    "defaultLevel": "info",
+    "absorbConsoleLogging": true,
+    "appenders": [
+      {
+        "type": "console",
+        "options": { 
+          "layout": "colored",
+          "disabled": true,
+          "excludedCategories": ["http.access"]
+        }
+      },
+      {
+        "type": "file",
+        "options": {
+          "layout": "basic",
+          "filename": "logs/access.log",
+          "maxFileSize": 1024,
+          "numBackups": 10,
+          "filePollInterval": 60,
+          "includedCategories": ["http.access"]
+        }
+      }
+    ]
   }
 }

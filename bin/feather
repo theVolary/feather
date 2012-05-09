@@ -76,7 +76,7 @@ var commands = {
   run: {
     desc: "Runs a feather app.  If the path option is omitted, the default is attempted.  (See feather --help)",
     usage: "feather [OPTIONS] run",
-    options: [
+    cmdOptions: [
       '--daemonize (-' + cliOptions.daemonize[0] + '): ' + cliOptions.daemonize[1],
       '--debug (-' + cliOptions.debug[0] + '): ' + cliOptions.debug[1],
       '--debug-inspector (-' + cliOptions['debug-inspector'][0] + '): ' + cliOptions['debug-inspector'][1],
@@ -107,6 +107,7 @@ var commands = {
       runChild("node", args, appDir);
 
       if (options["debug-inspector"]) {
+        cli.ok("Starting node inspector on port 8888");
         exec("node-inspector --web-port=8888 &");
       }
     }
@@ -114,7 +115,7 @@ var commands = {
   apiTest: {
     desc: "Runs the unit tests for the framework itself.",
     usage: "feather [OPTIONS] api-test",
-    options: [
+    cmdOptions: [
       '--path (-' + cliOptions.path[0] + '): ' + cliOptions.path[1],
       '--verbose (-' + cliOptions.verbose[0] + '): ' + cliOptions.verbose[1],
       '--format (-' + cliOptions.format[0] + '): ' + cliOptions.format[1],
@@ -217,7 +218,7 @@ var commands = {
   test: {
     desc: "Runs the tests for an app.  If the path option is omitted, the default is used.",
     usage: "feather [OPTIONS] test [--format] test/(unit|integration)",
-    options: [
+    cmdOptions: [
       '--path (-' + cliOptions.path[0] + '): ' + cliOptions.path[1],
       '--verbose (-' + cliOptions.verbose[0] + '): ' + cliOptions.verbose[1]
     ].join('\n'),
@@ -241,7 +242,7 @@ var commands = {
   createApp: {
     desc:"Creates a new feather application at the specified directory.  If NAME is omitted, the current directory is assumed, but it will prompt you for confirmation.",
     usage:"feather [OPTIONS] create-app [NAME]",
-    options: [
+    cmdOptions: [
       '--path (-' + cliOptions.path[0] + '): ' + cliOptions.path[1],
       '--verbose (-' + cliOptions.verbose[0] + '): ' + cliOptions.verbose[1]
     ].join('\n  '),
@@ -269,7 +270,7 @@ var commands = {
   createWidget: {
     desc:"Creates a new widget in a feather app.  If namespace is omitted, the name of the app's directory is assumed.",
     usage:"feather [OPTIONS] create-widget [namespace] widgetName",
-    options: [
+    cmdOptions: [
       '--path (-' + cliOptions.path[0] + '): ' + cliOptions.path[1],
       '--verbose (-' + cliOptions.verbose[0] + '): ' + cliOptions.verbose[1],
       '--client-only (-' + cliOptions['client-only'][0] + '): ' + cliOptions['client-only'][1]
@@ -303,7 +304,7 @@ var commands = {
   createRest: {
     desc:"Creates a new RESTful api source file.",
     usage:"feather [OPTIONS] create-rest restApiName",
-    options: [
+    cmdOptions: [
       '--path (-' + cliOptions.path[0] + '): ' + cliOptions.path[1],
       '--verbose (-' + cliOptions.verbose[0] + '): ' + cliOptions.verbose[1]
     ].join('\n  '),
@@ -332,7 +333,7 @@ var commands = {
   help: {
     desc:"Displays general help, or help on a specific command.  If you're reading this, you already know that.",
     usage:"feather help <command>",
-    options: [
+    cmdOptions: [
       '--path (-' + cliOptions.path[0] + '): ' + cliOptions.path[1],
       '--verbose (-' + cliOptions.verbose[0] + '): ' + cliOptions.verbose[1]
     ].join('\n  '),
@@ -348,7 +349,7 @@ var commands = {
           color.ansify("\n#bold[Usage:]"),
           "  " + cmd.usage + "\n",
           color.ansify("#bold[Options:]"),
-          "  " + cmd.options + "\n"
+          "  " + cmd.cmdOptions + "\n"
         ];
         console.log(output.join('\n'));
       }
@@ -357,7 +358,7 @@ var commands = {
   stats: {
     desc: "Calculates stats on the feather app.",
     usage: "feather [OPTIONS] stats",
-    options: [
+    cmdOptions: [
       '--path (-' + cliOptions.path[0] + '): ' + cliOptions.path[1],
       '--verbose (-' + cliOptions.verbose[0] + '): ' + cliOptions.verbose[1]
     ].join('\n  '),

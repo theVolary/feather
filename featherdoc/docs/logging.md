@@ -166,3 +166,5 @@ Templates are shortcuts for frequently used log statements.  They consist of an 
 `{ id: 'separator', template: '---------------------'}` can then be used in code via the following log statement: `feather.logger.info({ templateId: 'separator' });`
 
 Similarly, the template `{ id: 'foo', template: 'bar is ${bar}' }` can be used in code like so: `feather.logger.info({ templateId: 'foo', replacements: { bar: 'my bar value' } });`
+
+----

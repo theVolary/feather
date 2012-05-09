@@ -155,3 +155,5 @@ Hello, feather
   c. discuss serverOptions vs. clientOptions
 11. Discussion of 'client-only' widgets
 12. Solving dynamic data requirements via client-centric thinking
+
+---- 
