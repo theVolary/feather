@@ -40,7 +40,8 @@
     "runAsDaemon": false,
     "outputPath": "feather-app.out",
     "pidPath": "/tmp/feather-app.pid",
-    "runAsUser": "root"
+    "runAsUser": "root",
+    "runAsGroup": "root"
   },
   "data": {
     "datalinking": {
