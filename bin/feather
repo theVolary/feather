@@ -63,9 +63,10 @@ var cliOptions = {
     verbose: ['V', 'Verbose output', 'boolean', null],
     format: ['f', '(api-test command only) - Used for test commands to denote the output format.  Valid formats are "tap", "xunit", and "junitxml".', 'string', null],
     testsuite: ['t', '(api-test command only) - Specify the name of a single test suite to run inside of feather/test/unit (omit the file extension)', 'string', null],
-    "client-only": ['c', '(create-widget command only) - Indicates that the created widget is a client-side rendered widget (has no .server.js file)', 'boolean', false]
+    "client-only": ['c', '(create-widget command only) - Indicates that the created widget is a client-side rendered widget (has no .server.js file)', 'boolean', false]//,
+    //testrun: ['r', '(run command only) - Perform all the setup for the run command, but don\'t execute.  Instead, print the final run command to the console.', 'boolean', false]
   };
-var options = cli.parse(cliOptions, ['run', 'test', 'api-test', 'create-app', 'create-widget', 'create-rest', 'help', 'stats']);
+var options = cli.parse(cliOptions, ['run', 'test', 'api-test', 'create-app', 'create-widget', 'create-rest', 'help', 'stats', 'print-cmd']);
 if (options.debug) {
   cli.debug("Parsed options are: " + util.inspect(options));
   cli.debug("Command is " + cli.command);
@@ -104,7 +105,15 @@ var commands = {
 
       addAdditionalOptions(args);
       
-      runChild("node", args, appDir);
+      if (options.printCmd) {
+        var cmd = "node";
+        _.each(args, function(arg) {
+          cmd += " " + arg;
+        });
+        cli.ok("Run command: " + cmd);
+      } else {
+        runChild("node", args, appDir);
+      }
 
       if (options["debug-inspector"]) {
         cli.ok("Starting node inspector on port 8888");
@@ -112,6 +121,7 @@ var commands = {
       }
     }
   },
+
   apiTest: {
     desc: "Runs the unit tests for the framework itself.",
     usage: "feather [OPTIONS] api-test",
@@ -367,6 +377,17 @@ var commands = {
     }
   }
 };
+
+commands.printCmd = {
+  desc: 'Prints the final command the Run command would execute after all options are parsed.  This is useful to include in start/stop scripts.',
+  usage: "feather [OPTIONS] print-cmd",
+  cmdOptions: commands.run.cmdOptions,
+  fn: function() {
+    options.printCmd = true;
+    commands.run.fn.call();
+  }
+};
+
 commands[resolveCmd(cli.command)].fn.call();
 
 function checkResult(result) {
