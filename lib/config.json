@@ -7,9 +7,13 @@
     },
     "session": {
       "key": "feather.sid",
-      "cookie": {
-        "secure": false,
-        "httpOnly": false
+      "secret": "feather app key",
+      "ignorePaths": ["/robots.txt"],
+      "cookie": { 
+        "path": "/", 
+        "httpOnly": false, 
+        "maxAge": 14400000, 
+        "secure": false 
       }
     }
   },
@@ -115,14 +119,7 @@
       }
     ]
   },
-  "session": {
-    "config": {
-      "key": "feather.sid",
-      "cookie": { "path": "/", "httpOnly": false, "maxAge": 14400000 },
-      "secret": "feather app key"
-    },
-    "ignorePaths": ["/robots.txt"]
-  },
+  
   "ui": {
     "enabled": true,
     "provider": {
