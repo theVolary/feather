@@ -1,14 +1,22 @@
 #!/usr/bin/env node
 
+// feather
+// =======
+
+// Requires
+// --------
+
 var fs    = require("fs"),
     path  = require("path"),
     spawn = require("child_process").spawn,
-    exec = require("child_process").exec,
+    exec  = require("child_process").exec,
     ffs   = require("../lib/util"),
     color = require("colorize"),
     util  = require("util"),
     cli   = require("cli").enable('version').setApp('feather', '0.1'),
     _     = require("underscore");
+
+// Validate that the environment variable FEATHER_HOME has been been initialized.
 
 if (!process.env.FEATHER_HOME) {
   cli.fatal(color.ansify("The environment variable #white[FEATHER_HOME] is required."));
@@ -55,9 +63,10 @@ var cliOptions = {
     verbose: ['V', 'Verbose output', 'boolean', null],
     format: ['f', '(api-test command only) - Used for test commands to denote the output format.  Valid formats are "tap", "xunit", and "junitxml".', 'string', null],
     testsuite: ['t', '(api-test command only) - Specify the name of a single test suite to run inside of feather/test/unit (omit the file extension)', 'string', null],
-    "client-only": ['c', '(create-widget command only) - Indicates that the created widget is a client-side rendered widget (has no .server.js file)', 'boolean', false]
+    "client-only": ['c', '(create-widget command only) - Indicates that the created widget is a client-side rendered widget (has no .server.js file)', 'boolean', false]//,
+    //testrun: ['r', '(run command only) - Perform all the setup for the run command, but don\'t execute.  Instead, print the final run command to the console.', 'boolean', false]
   };
-var options = cli.parse(cliOptions, ['run', 'test', 'api-test', 'create-app', 'create-widget', 'create-rest', 'help', 'stats']);
+var options = cli.parse(cliOptions, ['run', 'test', 'api-test', 'create-app', 'create-widget', 'create-rest', 'help', 'stats', 'print-cmd']);
 if (options.debug) {
   cli.debug("Parsed options are: " + util.inspect(options));
   cli.debug("Command is " + cli.command);
@@ -68,7 +77,7 @@ var commands = {
   run: {
     desc: "Runs a feather app.  If the path option is omitted, the default is attempted.  (See feather --help)",
     usage: "feather [OPTIONS] run",
-    options: [
+    cmdOptions: [
       '--daemonize (-' + cliOptions.daemonize[0] + '): ' + cliOptions.daemonize[1],
       '--debug (-' + cliOptions.debug[0] + '): ' + cliOptions.debug[1],
       '--debug-inspector (-' + cliOptions['debug-inspector'][0] + '): ' + cliOptions['debug-inspector'][1],
@@ -96,17 +105,27 @@ var commands = {
 
       addAdditionalOptions(args);
       
-      runChild("node", args, appDir);
+      if (options.printCmd) {
+        var cmd = "node";
+        _.each(args, function(arg) {
+          cmd += " " + arg;
+        });
+        cli.ok("Run command: " + cmd);
+      } else {
+        runChild("node", args, appDir);
+      }
 
       if (options["debug-inspector"]) {
+        cli.ok("Starting node inspector on port 8888");
         exec("node-inspector --web-port=8888 &");
       }
     }
   },
+
   apiTest: {
     desc: "Runs the unit tests for the framework itself.",
     usage: "feather [OPTIONS] api-test",
-    options: [
+    cmdOptions: [
       '--path (-' + cliOptions.path[0] + '): ' + cliOptions.path[1],
       '--verbose (-' + cliOptions.verbose[0] + '): ' + cliOptions.verbose[1],
       '--format (-' + cliOptions.format[0] + '): ' + cliOptions.format[1],
@@ -209,7 +228,7 @@ var commands = {
   test: {
     desc: "Runs the tests for an app.  If the path option is omitted, the default is used.",
     usage: "feather [OPTIONS] test [--format] test/(unit|integration)",
-    options: [
+    cmdOptions: [
       '--path (-' + cliOptions.path[0] + '): ' + cliOptions.path[1],
       '--verbose (-' + cliOptions.verbose[0] + '): ' + cliOptions.verbose[1]
     ].join('\n'),
@@ -233,7 +252,7 @@ var commands = {
   createApp: {
     desc:"Creates a new feather application at the specified directory.  If NAME is omitted, the current directory is assumed, but it will prompt you for confirmation.",
     usage:"feather [OPTIONS] create-app [NAME]",
-    options: [
+    cmdOptions: [
       '--path (-' + cliOptions.path[0] + '): ' + cliOptions.path[1],
       '--verbose (-' + cliOptions.verbose[0] + '): ' + cliOptions.verbose[1]
     ].join('\n  '),
@@ -261,7 +280,7 @@ var commands = {
   createWidget: {
     desc:"Creates a new widget in a feather app.  If namespace is omitted, the name of the app's directory is assumed.",
     usage:"feather [OPTIONS] create-widget [namespace] widgetName",
-    options: [
+    cmdOptions: [
       '--path (-' + cliOptions.path[0] + '): ' + cliOptions.path[1],
       '--verbose (-' + cliOptions.verbose[0] + '): ' + cliOptions.verbose[1],
       '--client-only (-' + cliOptions['client-only'][0] + '): ' + cliOptions['client-only'][1]
@@ -295,7 +314,7 @@ var commands = {
   createRest: {
     desc:"Creates a new RESTful api source file.",
     usage:"feather [OPTIONS] create-rest restApiName",
-    options: [
+    cmdOptions: [
       '--path (-' + cliOptions.path[0] + '): ' + cliOptions.path[1],
       '--verbose (-' + cliOptions.verbose[0] + '): ' + cliOptions.verbose[1]
     ].join('\n  '),
@@ -324,7 +343,7 @@ var commands = {
   help: {
     desc:"Displays general help, or help on a specific command.  If you're reading this, you already know that.",
     usage:"feather help <command>",
-    options: [
+    cmdOptions: [
       '--path (-' + cliOptions.path[0] + '): ' + cliOptions.path[1],
       '--verbose (-' + cliOptions.verbose[0] + '): ' + cliOptions.verbose[1]
     ].join('\n  '),
@@ -340,7 +359,7 @@ var commands = {
           color.ansify("\n#bold[Usage:]"),
           "  " + cmd.usage + "\n",
           color.ansify("#bold[Options:]"),
-          "  " + cmd.options + "\n"
+          "  " + cmd.cmdOptions + "\n"
         ];
         console.log(output.join('\n'));
       }
@@ -349,7 +368,7 @@ var commands = {
   stats: {
     desc: "Calculates stats on the feather app.",
     usage: "feather [OPTIONS] stats",
-    options: [
+    cmdOptions: [
       '--path (-' + cliOptions.path[0] + '): ' + cliOptions.path[1],
       '--verbose (-' + cliOptions.verbose[0] + '): ' + cliOptions.verbose[1]
     ].join('\n  '),
@@ -358,6 +377,17 @@ var commands = {
     }
   }
 };
+
+commands.printCmd = {
+  desc: 'Prints the final command the Run command would execute after all options are parsed.  This is useful to include in start/stop scripts.',
+  usage: "feather [OPTIONS] print-cmd",
+  cmdOptions: commands.run.cmdOptions,
+  fn: function() {
+    options.printCmd = true;
+    commands.run.fn.call();
+  }
+};
+
 commands[resolveCmd(cli.command)].fn.call();
 
 function checkResult(result) {
@@ -428,9 +458,14 @@ function runChild(cmd, args, childCwd) {
   if (!childCwd) {
     childCwd = process.cwd();
   }
-  var stdio = process.binding("stdio"),
-      fds = [ stdio.stdinFD, stdio.stdoutFD, stdio.stderrFD ],
-      child = spawn(cmd, args, { cwd: childCwd, customFds:fds });
+  var chomp = /(\n|\r)+$/,
+      child = spawn(cmd, args, { cwd: childCwd });
+  child.stdout.on('data', function(data) {
+    console.log(data.toString().replace(chomp, ''));
+  });
+  child.stderr.on('data', function(data) {
+    console.error(data.toString().replace(chomp, ''));
+  });
 }
 
 function createApp(dir, name) {

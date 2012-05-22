@@ -1,6 +1,23 @@
 {
   "useAjaxForSystem": true,
 
+  "connect": {
+    "cookieParser": {
+      "secret": "feather.sid"
+    },
+    "session": {
+      "key": "feather.sid",
+      "secret": "feather app key",
+      "ignorePaths": ["/robots.txt"],
+      "cookie": { 
+        "path": "/", 
+        "httpOnly": false, 
+        "maxAge": 14400000, 
+        "secure": false 
+      }
+    }
+  },
+
   "host": "localhost",
   
   "socket.io": {
@@ -27,7 +44,8 @@
     "runAsDaemon": false,
     "outputPath": "feather-app.out",
     "pidPath": "/tmp/feather-app.pid",
-    "runAsUser": "root"
+    "runAsUser": "root",
+    "runAsGroup": "root"
   },
   "data": {
     "datalinking": {
@@ -101,23 +119,16 @@
       }
     ]
   },
-  "session": {
-    "config": {
-      "key": "feather.sid",
-      "cookie": { "path": "/", "httpOnly": false, "maxAge": 14400000 },
-      "secret": "feather app key"
-    },
-    "ignorePaths": ["/robots.txt"]
-  },
+  
   "ui": {
     "enabled": true,
     "provider": {
       "jsFiles": [
-        "/feather-client/lib/jqueryUI-1.8.14/js/jquery-ui-1.8.14.custom.min.js",
+        "/feather-client/lib/jqueryUI-1.8.20/js/jquery-ui-1.8.20.custom.min.js",
         "/feather-client/ui.js"
       ],
       "cssFiles": [
-        "/feather-client/lib/jqueryUI-1.8.14/css/black-tie/jquery-ui-1.8.14.custom.css"
+        "/feather-client/lib/jqueryUI-1.8.20/css/black-tie/jquery-ui-1.8.20.custom.css"
       ]
     }
   }

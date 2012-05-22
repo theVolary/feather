@@ -1,0 +1,9 @@
+{
+  "option-level": "app",
+  "useEnv": "internal-test",
+  "environments": {
+    "internal-test": {
+      "option-level": "internal-env"
+    }
+  }
+}
