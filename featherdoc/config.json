@@ -12,9 +12,7 @@
   },
   "ui": {
     "enabled": true,
-    "provider": {
-      "name": "bootstrap"      
-    }
+    "provider": "bootstrap"
   },
   "logging": {
     "enabled": true,
