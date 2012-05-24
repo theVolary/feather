@@ -122,14 +122,29 @@
   
   "ui": {
     "enabled": true,
-    "provider": {
-      "jsFiles": [
-        "/feather-client/lib/jqueryUI-1.8.20/js/jquery-ui-1.8.20.custom.min.js",
-        "/feather-client/ui.js"
-      ],
-      "cssFiles": [
-        "/feather-client/lib/jqueryUI-1.8.20/css/black-tie/jquery-ui-1.8.20.custom.css"
-      ]
-    }
+    "provider": "jqueryUI",
+    "providers": [
+      {
+        "name": "jqueryUI",
+        "jsFiles": [
+          "/feather-client/lib/jqueryUI-1.8.20/js/jquery-ui-1.8.20.custom.min.js",
+          "/feather-client/ui.js"
+        ],
+        "cssFiles": [
+          "/feather-client/lib/jqueryUI-1.8.20/css/black-tie/jquery-ui-1.8.20.custom.css"
+        ]
+      },
+      {
+        "name": "bootstrap",
+        "jsFiles": [
+          "/feather-client/lib/bootstrap/js/bootstrap.min.js",
+          "/feather-client/ui-bootstrap.js"
+        ],
+        "cssFiles": [
+          "/feather-client/lib/bootstrap/css/bootstrap.min.css",
+          "/feather-client/lib/bootstrap/css/bootstrap-responsive.min.css"
+        ]
+      }
+    ]
   }
 }

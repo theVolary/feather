@@ -12,15 +12,7 @@
   },
   "ui": {
     "enabled": true,
-    "provider": {
-      "jsFiles": [
-        "/feather-client/lib/twitter-bootstrap/js/bootstrap-2.0.0.min.js"
-      ],
-      "cssFiles": [
-        "/feather-client/lib/twitter-bootstrap/css/bootstrap-2.0.0.min.css",
-        "/feather-client/lib/twitter-bootstrap/css/bootstrap-responsive-2.0.0.min.css"
-      ]
-    }
+    "provider": "bootstrap"
   },
   "logging": {
     "enabled": true,
