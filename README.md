@@ -7,7 +7,7 @@ The main goal is to enable rapid development of powerful RIA-type apps (long run
 
 Since this is meant to be a full-featured framework, there will likely be some hard dependencies (like jQuery and CouchDB, for example). We will refactor things over time to be as generic as is prudent (and we of course welcome help). Some dependecies will be abstracted out, some may linger.
 
-Note: This project is not meant to be a competing project to Express as it aims to fill a very different development niche, although we certainly have "make an Express plugin" as a roadmap item.
+Note: This project is not meant to be a competing project to Express (in fact we started this project before Express existed) as it aims to fill a very different development niche, although we certainly have "make an Express plugin" as a roadmap item.
 
 Where possible (and sensible) we will work on extracting granular standalone npm modules, but please keep in mind that that is not a primary goal of the project at this time. We are first and foremost concerned with creating a powerful framework for building out arbitrarily complex RIAs that have deeply integrated and seamless support for the real-time web.
 
