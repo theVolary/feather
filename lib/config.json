@@ -127,7 +127,7 @@
       {
         "name": "jqueryUI",
         "jsFiles": [
-          "/feather-client/lib/jqueryui/js/jqueryUI.min.js",
+          "/feather-client/lib/jqueryUI/js/jqueryUI.min.js",
           "/feather-client/ui.js"
         ],
         "cssFiles": [
