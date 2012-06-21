@@ -32,7 +32,8 @@ cli.readline = function (encoding, callback) {
         callback = encoding;
         encoding = 'utf8';
     }
-    var stream = process.openStdin(), data = '';
+    var stream = process.openStdin(), 
+      data = '';
     stream.setEncoding(encoding);
     var listener = function (chunk) {
         data += chunk;
