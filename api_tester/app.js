@@ -2,6 +2,8 @@ exports.onInit = function(feather, cb) {
   feather.ns("test_namespace");
   test_namespace.foo = "bar";
 
+debugger;
+
   // Reset the test database.
   var db = feather.data.appdb.getRawDb();
   db.info(function(err, response) {
