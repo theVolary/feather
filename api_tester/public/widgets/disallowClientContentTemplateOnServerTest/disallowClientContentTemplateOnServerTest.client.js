@@ -35,10 +35,12 @@ feather.ns("api_tester");
 
                 onceState: {
                   ready: function() {
-                    var content = this.get('#Container').html();
+                    var widget = this;
+                    var content = widget.get('#Container').html();
 
                     test.resume(function() {
                       Y.Assert.areEqual('', content, "Embedded widget should not have any content");
+                      widget.dispose();
                     });                    
                   }
                 }
