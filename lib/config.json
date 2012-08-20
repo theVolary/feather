@@ -1,6 +1,8 @@
 {
   "useAjaxForSystem": true,
 
+  "cluster": false,
+
   "connect": {
     "cookieParser": {
       "secret": "feather.sid"
