@@ -499,10 +499,6 @@ function createApp(dir, name) {
     'exports.onReady = function(feather) {',
     '',
     '};',
-    '',
-    'exports.onRequest = function(feather, req, res, next) {',
-    '',
-    '};',
     '*/'
   ].join("\n"), "utf-8");
   fs.writeFileSync(path.join(fullPath, 'config.json'), "{}\n");
