@@ -33,14 +33,23 @@
   
   "resources": {
     "publish": {
-      "consolidate": false,
+      "consolidate": true,
       "minify": false,
-      "publisherId": "local",
+      "publisherId": "s3",
       "publishers": [
         {
           "id": "local",
           "config": {
             "publishLocation": "feather-res-cache"
+          }
+        },
+        {
+          "id": "s3",
+          "config": {
+            "key": "AKIAJ2SZCHHQCYYLLSCQ",
+            "secret": "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",
+            "bucket": "theVolary.feather.test",
+            "acl": "public-read"
           }
         }
       ]
@@ -48,15 +57,15 @@
     "packages": [
       { 
         "name":"feather-client-core.js",
-        "consolidate": false,
+        "consolidate": true,
         "minify": false,
-        "publisherId": "local"
+        "publisherId": "s3"
       },
       {
         "name": "feather-client-core.css",
         "consolidate": true,
         "minify": true,
-        "publisherId": "local"
+        "publisherId": "s3"
       }
     ]
   }
