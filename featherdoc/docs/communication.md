@@ -4,7 +4,7 @@
 Once a feather page has been served to a client, there are several ways in which you can communicate with the server, and with other connected clients. At the core of feather's communications lies the excellent [socket.io](http://socket.io) library. This means we have full support for the WebSocket protocol, assuming the client supports it. It also means we have full support for server push, as well as client broadcasting of messages. The channel abstraction allows for a pub/sub event model for real-time communications, while the `feather.Widget.widgetServerMethod` construct enables seamless widget-level RPC style communications.
 
 ## Widget-level RPC ##
-If you'd like to encapsulate server-side methods within a given widget, there is an easy mechanism for doing so: `feather.Widget.widgetServerMethod()`. When you wrap a method as a `widgetServerMethod`, a corresponding proxy method will be emitted to the client, which can be used to invoke the server method seamlessly. The name of the proxy method on the client will be the same name as the server method, prefixed with "server_" for clarity.
+If you'd like to encapsulate server-side methods within a given widget, there is an easy mechanism for doing so: `feather.Widget.serverMethod()`. When you wrap a method as a `serverMethod`, a corresponding proxy method will be emitted to the client, which can be used to invoke the server method seamlessly. The name of the proxy method on the client will be the same name as the server method, prefixed with "server_" for clarity.
 
 _Example_:
 
@@ -15,7 +15,7 @@ _Example_:
         name: "myapp.foo",
         path: "widgets/foo/",
         prototype: {
-          doSomething: feather.Widget.widgetServerMethod(function(arg1, cb) {
+          doSomething: feather.Widget.serverMethod(function(arg1, cb) {
             //doSomething with arg1...
             var result = {message: "you sent me" + arg1};
             
@@ -37,8 +37,10 @@ _Example_:
       prototype: {
         onReady: function() {
           var me = this;
+
           //when one of my buttons is clicked, do something on the server...
           me.domEvents.bind(me.get("#someButton"), "click", function() {
+            
             me.server_doSomething(["Whoaaaa Nelly!!!"], function(args) {
               if (args.success) {
                 alert(args.result.message);
