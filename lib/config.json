@@ -104,6 +104,16 @@
           "config": {
             "publishLocation": "feather-res-cache"
           }
+        },
+        {
+          "id": "s3",
+          "config": {
+            "key": "",
+            "secret": "",
+            "bucket": "",
+            "acl": "public-read",
+            "publishUri": null
+          }
         }
       ]
     },
