@@ -1,11 +1,14 @@
 {
   "useAjaxForSystem": true,
 
+  "cluster": false,
+
   "connect": {
     "cookieParser": {
       "secret": "feather.sid"
     },
     "session": {
+      "provider": "memory",
       "key": "feather.sid",
       "secret": "feather app key",
       "ignorePaths": ["/robots.txt"],
