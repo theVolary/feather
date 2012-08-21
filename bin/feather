@@ -206,7 +206,7 @@ var commands = {
       // Setup completion handler.
       testRunner.subscribe("complete", function(event) {
         var output = formatter(event.results);
-        if (! path.existsSync(process.env.FEATHER_HOME+"/reports")) {
+        if (! fs.existsSync(process.env.FEATHER_HOME+"/reports")) {
           fs.mkdirSync(process.env.FEATHER_HOME+"/reports", 0755);
         }
         var outputPath = process.env.FEATHER_HOME + "/reports/test-results.xml";
@@ -403,7 +403,7 @@ function getAppDir(createIfNoExist, ignorePublicMissing) {
     appDir = path.resolve(process.cwd(), appDir);
   }
 
-  if (!path.existsSync(appDir)) {
+  if (!fs.existsSync(appDir)) {
     if (createIfNoExist) {
       if (!ffs.mkdirpSync(appDir, 0755).result) {
         cli.fatal("Path " + appDir + " does not exist and I couldn't create it.");
@@ -415,7 +415,7 @@ function getAppDir(createIfNoExist, ignorePublicMissing) {
   if (!fs.statSync(appDir).isDirectory()) {
     cli.fatal(appDir + " is not a directory.");
   }
-  if (!ignorePublicMissing && !path.existsSync(appDir + '/public')) {
+  if (!ignorePublicMissing && !fs.existsSync(appDir + '/public')) {
     cli.fatal(appDir + " does not appear to be a feather application.");
   }
   return appDir;
@@ -499,10 +499,6 @@ function createApp(dir, name) {
     'exports.onReady = function(feather) {',
     '',
     '};',
-    '',
-    'exports.onRequest = function(feather, req, res, next) {',
-    '',
-    '};',
     '*/'
   ].join("\n"), "utf-8");
   fs.writeFileSync(path.join(fullPath, 'config.json'), "{}\n");
@@ -512,7 +508,7 @@ function createApp(dir, name) {
 
 function startCreateWidget(appDir, namespace, widgetName) {
   var fullPath = path.join(appDir, 'public', 'widgets', widgetName);
-  if (path.existsSync(fullPath)) {
+  if (fs.existsSync(fullPath)) {
     cli.info("Widget \"" + widgetName + "\" already exists!  Replace it? (y/n)");
     cli.readline(function(data) {
       if (data.toLowerCase()[0] === 'y') {

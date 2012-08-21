@@ -26,7 +26,7 @@
     "enabled": true,
     "defaultLevel": "trace",
     "categories": {
-      "http.access": "off",
+      "http.access": "on",
       "feather.ssock": "debug"
     }
   },
