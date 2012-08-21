@@ -108,7 +108,8 @@
             "key": "",
             "secret": "",
             "bucket": "",
-            "acl": "public-read"
+            "acl": "public-read",
+            "publishUri": null
           }
         }
       ]
