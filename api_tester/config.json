@@ -42,6 +42,15 @@
           "config": {
             "publishLocation": "feather-res-cache"
           }
+        },
+        {
+          "id": "s3",
+          "config": {
+            "key": "AKIAJ2SZCHHQCYYLLSCQ",
+            "secret": "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",
+            "bucket": "theVolary.feather.test",
+            "acl": "public-read"
+          }
         }
       ]
     },
