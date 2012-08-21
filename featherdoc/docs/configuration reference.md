@@ -2,9 +2,13 @@
 
 _Note:_ default values for various options are given in square brackets after the option name.
 
-## useAjaxForSystem
+## useAjaxForSystem [true]
 
-TODO: Fill in description
+When true, feather uses traditional XHR (via jQuery) to make async system calls (RPC methods, etc) to the server. When false, feather will use socket.io for these communications (so you must also enable socket.io in this case).
+
+## cluster [false]
+
+When true, the feather process will automatically cluster itself across all available cores on the machine (as reported by node's os.cpus().length). When false, only one feather process will run. 
 
 ## host
 

@@ -1,0 +1,41 @@
+{
+  "resources": {
+    "publish": {
+      "consolidate": true,
+      "minify": false,
+      "publisherId": "local",
+      "publishers": [
+        {
+          "id": "local",
+          "config": {
+            "publishLocation": "feather-res-cache"
+          }
+        },
+        {
+          "id": "s3",
+          "config": {
+            "key": "AKIAJ2SZCHHQCYYLLSCQ",
+            "secret": "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",
+            "bucket": "theVolary.feather.test",
+            "acl": "public-read",
+            "publishUri": "http://d2zgz3zrsu7s5n.cloudfront.net"
+          }
+        }
+      ]
+    },
+    "packages": [
+      { 
+        "name":"feather-client-core.js",
+        "consolidate": true,
+        "minify": false,
+        "publisherId": "s3"
+      },
+      {
+        "name": "feather-client-core.css",
+        "consolidate": true,
+        "minify": true,
+        "publisherId": "s3"
+      }
+    ]
+  }
+}

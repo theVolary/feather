@@ -20,5 +20,6 @@ __restProxy.js
 node_modules/underscore/raw
 node_modules/daemon/build/
 node_modules/daemon/lib/*.node
+node_modules/connect-redis/node_modules/redis/node_modules/hiredis/deps/hiredis/libhiredis.a
 *.lock-wscript
 *.wafpickle-7

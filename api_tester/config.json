@@ -26,7 +26,7 @@
     "enabled": true,
     "defaultLevel": "trace",
     "categories": {
-      "http.access": "off",
+      "http.access": "on",
       "feather.ssock": "debug"
     }
   },
@@ -41,6 +41,16 @@
           "id": "local",
           "config": {
             "publishLocation": "feather-res-cache"
+          }
+        },
+        {
+          "id": "s3",
+          "config": {
+            "key": "AKIAJ2SZCHHQCYYLLSCQ",
+            "secret": "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",
+            "bucket": "theVolary.feather.test",
+            "acl": "public-read",
+            "publishUri": "http://d2zgz3zrsu7s5n.cloudfront.net"
           }
         }
       ]
