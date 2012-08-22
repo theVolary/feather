@@ -61,6 +61,7 @@ The library itself has just two methods:
 * `appConfigPath` - the path to the application's config file.  If omitted, defaults to `appDir + "/config.json"`.
 * `defaultOptionsHook` - function the defaultOptions are passed into in case the app wishes to augment them before proceeding.  This is called immediately after the default config file is read, and it _must_ be synchronous.
 * `commandLineArgsHook` - function to process individual command line arguments.  It _must_ be synchronous. 
+
   #### args
   * arg - the current arg being processed
   * remainingArgs - the remainder of the arguments array that follows arg.
