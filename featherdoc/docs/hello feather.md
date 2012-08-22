@@ -145,34 +145,178 @@ Hello, feather
 
   So, with the understanding that `onReady` is the point at which our widget's DOM elements are ready, you can then see this is where we write the event binding code on our button.
 
-  _jQuery integration and the domEvents registry_
+  _jQuery integration and the domEvents registry_:
+  
   There is no mistaking that jQuery is the world's most popular client side toolkit. For this reason (and also because it's amazing), feather relies on jQuery heavily. jQuery is auto-included in all feather pages, and is not optional in the feather framework (yes, feather is opinionated on this topic). In our example code above, jQuery's `.bind()` method is what's actually being used behind the scenes. Feather widgets, however, all contain their own local registry of event handlers: the `.domEvents` property. The reason this exists is because widgets are able to be disposed of (imagine a single page interface where many widgets are dynamically created and destroyed as the user performs various actions). As each widget is destroyed, this local domEvents "registry" is used to automatically clean up all of that instance's listeners. This frees you from having to worry about memory leaks. _In short_: within a widget, use `.domEvents.bind()` instead of `$.bind()`.
 
   ---
   Next let's dissect `this.get('#sayHiBtn')`:
 
-  Going back to the previous discussion about how DOM IDs are treated in feather, remember that the actual ID of the button on the page will be `sayHello1_sayHiBtn` because this instance's ID is `sayHello1`. Just like the `.domEvents` method is a light wrapper around jQuery's `.bind()` method, all widgets have a `.get()` method that is a light wrapper around jQuery's top level selector function (i.e. `$()` itself). This wrapper simply auto-manages scoping your selector to the instance you call it from, which includes auto-prefixing ID based selectors appropriately with the acual ID of the instance. 
-
-
-
-  a. adding a button
-    aa. discussion on id attribute
-  b. styling the button via css file
-    ba. discuss implicit css class naming 
-    bb. point out why id-based selectors are a no-no
-  c. add interaction via binding a click handler
-    ca. discussion of client-side widget events (onInit, onReady)
-    cb. discussion on jQuery integration
-    cc. discussion on this.domEvents and this.get
+  Going back to the previous discussion about how DOM IDs are treated in feather, remember that the actual ID of the button on the page will be `sayHello1_sayHiBtn` because this instance's ID is `sayHello1`. Just like the `.domEvents` method is a light wrapper around jQuery's `.bind()` method, all widgets have a `.get()` method that is a light wrapper around jQuery's top level selector function (i.e. `$()` itself). This wrapper simply auto-manages scoping your selector to the instance you call it from, which includes auto-prefixing ID based selectors appropriately with the acual ID of the instance. You could have just as easily written the selector as `this.get('input')` in this case, but that selector is a bit too generic and as we add elements to this widget's template it will result in selecting more elements than we want. 
 
 --
 
-5. Adding a server-side RPC method
+## Adding a server-side RPC method
+
+  Now let's make the button click do something _slightly_ more useful: talk to the server and _then_ alert something. Feather has support for widget-level RPC (remote procedure call) methods. This is explained briefly at the beginning of the [communication.md](communication.md) document, but we'll cover it a little more here as well.
+  
+  -`1.` Implement the `prototype` and add a `feather.Widget.serverMethod` in `sayHello.server.js` file as follows...
+  
+```js
+  exports.getWidget = function(feather, cb) {
+    cb(null, {
+      name: "hello_world.sayHello",
+      path: "widgets/sayHello/",
+      prototype: {
+        
+        sayHowdy: feather.Widget.serverMethod(function(_cb) {
+          
+          _cb(null, "Howdy from the server!");
+        })
+        
+      }
+    });
+  };
+```
+  
+  The first thing you'll notice is that there is a small amount of boilerplate in this file that looks similar to the `client.js` file. The difference is that each widget's `server.js` file is actually a nodejs module, and as such it exposes its functionality via the `exports` object. The widget modules must export exactly 1 method, which is the `getWidget` method; it is a widget configuration factory function much like the `client.js` file's call to `feather.Widget.create()`. This function gets the full feather framework passed into it (so you don't have to worry about requiring it), and a callback function `cb`. Because this is an asynchronous process, you can do anything you like here before actually calling that callback function (for example, perhaps fetching this widget's definition from a database).
+  
+  For now, just make note that we've added a `prototype` with a single method: `sayHowdy`. The method itself is declared via the factory helper function `feather.Widget.serverMethod`. The result of wrapping a method like this is that now feather will auto-emit a small chunk of code for the client that will allow you to call this method directly. Also make note that this is a standard node-style asynchronous method and there is a callback function `_cb` being passed in. When you call this callback function it automatically triggers the response back to the client. As with all other node-style callbacks, this one is error-first.
+  
+  -`2.` Edit the `client.js` file to call the RPC method...
+  
+```js
+  feather.ns("hello_world");
+  (function() {
+    hello_world.sayHello = feather.Widget.create({
+      name: "hello_world.sayHello",
+      path: "widgets/sayHello/",
+      prototype: {
+        onInit: function() {
+          
+        },
+        onReady: function() {
+          var me = this;
+          
+          this.domEvents.bind(this.get('#sayHiBtn'), 'click', function() {
+            
+            me.server_sayHowdy(function(args) {
+              
+              alert(args.result);
+            });
+          });
+
+        }
+      }
+    });
+  })();
+```
+
+  _A quick note on scope_ (skip the next paragraph if you're experienced enough to know why we added the `var me = this;` bit.):
+  
+  The topic of scope and the `this` keyword in javascript is something that has been covered many (and more) times, but it's worth pointing out here, especially because you'll see that `var me = this;` pattern repeated all over the place in our example code. Since it's been covered in many places better than we could do here, please [click here to read about it](http://javascriptplayground.com/blog/2012/04/javascript-variable-scope-this) if the above is a new pattern for you.
+  
+  Now within our event handler you can see that we've added a call to `me.server_sayHowdy()`, passing in a callback function. This function will be executed when the server has responded. NOTE: this is the only place in feather that does not follow the error-first callback style. Instead, the `args` object wraps the result in a light RPC result object that has the following properties:
+  
+  - `.success` - this indicates whether the call was successful. If the server method calls back with an error (any non-null value in the 1st argument), this will be `false`.
+  - `.result` - this is the actual data passed from the server (if there was no error). In our example above, this will be the string `"Howdy from the server!"`. This will be `null` if success is `false`;
+  - `.err` - the error returned from the server (if there was one). This will be `null` if success is `true`.
+  
+  -`3.` Restart the server and click the button.
+
+  Nifty, eh? Alright, now let's make some minor changes to illustrate how to pass values to the server when making RPC calls...
+  
+  -`4.` Change the `sayHello.server.js` file as follow...
+  
+```js
+  exports.getWidget = function(feather, cb) {
+    cb(null, {
+      name: "hello_world.sayHello",
+      path: "widgets/sayHello/",
+      prototype: {
+        
+        sayHowdy: feather.Widget.serverMethod(function(arg1, arg2, _cb) {
+          
+          _cb(null, "Howdy from the server! You told me arg1 is '" + arg1 + "' and arg2 is '" + arg2 + "'.");
+        })
+        
+      }
+    });
+  };
+```
+
+  -`5.` Change the `sayHello.client.js` file as follows...
+  
+```js
+  feather.ns("hello_world");
+  (function() {
+    hello_world.sayHello = feather.Widget.create({
+      name: "hello_world.sayHello",
+      path: "widgets/sayHello/",
+      prototype: {
+        onInit: function() {
+          
+        },
+        onReady: function() {
+          var me = this;
+          
+          this.domEvents.bind(this.get('#sayHiBtn'), 'click', function() {
+            
+            me.server_sayHowdy(['foo', 'bar'], function(args) {
+              
+              alert(args.result);
+            });
+          });
+
+        }
+      }
+    });
+  })();
+```
+
+  -`6.` Restart the server and try it out.
+  
+  The changes we just made should be fairly easy to reason out. As briefly pointed out in the [communication.md](communication.md) document, one potential minor "gotcha" is the when calling RPC methods from the client, arguments are wrapped into an array (the `['foo', 'bar']` bit above). 
+  
+  The arguments passed in and the result the server sends back are not limited to only strings. Any value can be used as long as it's serializable as JSON (i.e. no circular references). The serializing and de-serializing (in both directions) is automatically handled for you by feather....
+  
+  -`7.` Change the `sayHello.server.js` file as follows...
+  
+```js
+  exports.getWidget = function(feather, cb) {
+    cb(null, {
+      name: "hello_world.sayHello",
+      path: "widgets/sayHello/",
+      prototype: {
+        
+        sayHowdy: feather.Widget.serverMethod(function(data, _cb) {
+          
+          var result = {
+            greeting: "Howdy from the server!",
+            foo: data.foo + " - server added some text to foo",
+            bar: data.bar + 5
+          };
+          
+          _cb(null, result);
+        })
+        
+      }
+    });
+  };
+```
+  
   a. implement the prototype and add a feather.Widget.serverMethod
   b. add client-side code to click handler to call server method
   c. change server method to accept arguments (change client code to pass args)
   d. change return type of server method
   e. show how to pass an error to the client and how to handle it
+
+--
+
+## Getting user input 1: field-level
+
+## Getting user input 2: forms with datalinking 
+
 6. Adding a second widget
   a. embed as sibling
   b. embed as child via contentTemplate
