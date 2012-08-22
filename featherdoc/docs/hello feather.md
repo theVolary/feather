@@ -525,7 +525,7 @@ Hello, feather
 
 ## Getting user input 2: forms with automatic datalinking 
 
-  Feather has built-in support for jQuery (datalinking)[https://github.com/jquery/jquery-datalink]. All you need to do is add a `<form>` tag that has a `datalink` attribute. For our example, we'll continue to use the `sayHello` widget.
+  Feather has built-in support for jQuery [datalinking](https://github.com/jquery/jquery-datalink). All you need to do is add a `<form>` tag that has a `datalink` attribute. For our example, we'll continue to use the `sayHello` widget.
 
   -`1.` Change `sayHello.template.html` as follows...
   
@@ -618,6 +618,12 @@ Hello, feather
 ```
 
   And that's it. The important things to note in this example are the `var data = me.model.person` line above in the `sayHello.client.js` file along with the `datalink="person"` attribute in the form tag within the `sayHello.template.html` file. Notice that the value of the datalink attribute directly corresponds to the name of the property on the widget's `model` object. As the user changes the values of the fields, the `person` object has its properties automatically updated behind the scenes, and those property name also correspond directly to the `name` attributes found in the form fields.
+
+--
+
+(unfinished outline below) ...
+
+--
 
 6. Adding a second widget
   a. embed as sibling
