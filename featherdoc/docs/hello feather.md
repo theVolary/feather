@@ -304,6 +304,128 @@ Hello, feather
     });
   };
 ```
+
+  -`8.` Change the `sayHello.client.js` file as follows...
+  
+```js
+  feather.ns("hello_world");
+  (function() {
+    hello_world.sayHello = feather.Widget.create({
+      name: "hello_world.sayHello",
+      path: "widgets/sayHello/",
+      prototype: {
+        onInit: function() {
+          
+        },
+        onReady: function() {
+          var me = this;
+          
+          this.domEvents.bind(this.get('#sayHiBtn'), 'click', function() {
+            
+            var data = {
+              foo: "I'm a string!",
+              bar: 5
+            };
+            
+            me.server_sayHowdy([data], function(args) {
+              
+              alert("greeting = " + args.result.greeting
+                + " -- foo = " + args.result.foo
+                + " -- bar = " + args.result.bar);
+            });
+          });
+
+        }
+      }
+    });
+  })();
+```
+  
+  -`9.` Restart the server and try again
+  
+  As you can see, the RPC methods make it very easy to send and receive arbitrary data. Of course, you really should be checking for errors. As a final note on widget RPC methods, we'll cover passing and checking for errors...
+  
+  -`10.` Change the `sayHello.server.js` as follows...
+  
+```js
+  exports.getWidget = function(feather, cb) {
+    cb(null, {
+      name: "hello_world.sayHello",
+      path: "widgets/sayHello/",
+      prototype: {
+        
+        sayHowdy: feather.Widget.serverMethod(function(data, _cb) {
+          
+          var err = null,
+            result = null;
+          
+          try {
+            var result = {
+              greeting: "Howdy from the server!",
+              foo: data.foo + " - server added some text to foo",
+              bar: data.bar + 5
+            };
+          
+            //throw a contrived error...
+            throw new Error('The server has determined that you are not allowed to do this.');
+          } catch (ex) {
+            
+            result = null;
+            err = ex.message;
+          }
+          
+          _cb(err, result);
+        })
+        
+      }
+    });
+  };
+```
+
+  -`11.` Change the `sayHello.client.js` as follows...
+  
+```js
+  feather.ns("hello_world");
+  (function() {
+    hello_world.sayHello = feather.Widget.create({
+      name: "hello_world.sayHello",
+      path: "widgets/sayHello/",
+      prototype: {
+        onInit: function() {
+          
+        },
+        onReady: function() {
+          var me = this;
+          
+          this.domEvents.bind(this.get('#sayHiBtn'), 'click', function() {
+            
+            var data = {
+              foo: "I'm a string!",
+              bar: 5
+            };
+            
+            me.server_sayHowdy([data], function(args) {
+              
+              if (args.success) {
+                
+                alert("greeting = " + args.result.greeting
+                  + " -- foo = " + args.result.foo
+                  + " -- bar = " + args.result.bar);
+              
+              } else {
+                
+                alert(args.err);
+              }
+            });
+          });
+
+        }
+      }
+    });
+  })();
+```
+
+  
   
   a. implement the prototype and add a feather.Widget.serverMethod
   b. add client-side code to click handler to call server method
