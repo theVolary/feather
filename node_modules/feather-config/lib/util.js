@@ -17,8 +17,8 @@ module.exports = {
       
       if (n[p] && typeof(n[p]) === "object") {
         n[p] = module.exports.recursiveExtend(n[p], o[p]);
-      } else if (n[p] && typeof(n[p]) === "array" && o[p] && typeof(o[p]) === "array") {
-        n[p] = o[p].concat(n[p]);
+      //} else if (n[p] && typeof(n[p]) === "array" && o[p] && typeof(o[p]) === "array") {
+       // n[p] = o[p].concat(n[p]);
       } else {
         n[p] = o[p];
       }
