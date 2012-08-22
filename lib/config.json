@@ -118,6 +118,10 @@
       ]
     },
     "packages": [
+      {
+        "publishType": "pageContent",
+        "publisherId": "local"
+      },
       { 
         "name":"feather-client-core.js",
         "consolidate": false,
