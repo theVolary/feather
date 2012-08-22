@@ -50,7 +50,7 @@ Hello, feather
 
   -`2.` Edit `hello_world/public/widgets/sayHello/sayHello.template.html` in your text editor and add the following text
 
-```
+```html
     I am a widget
 ```
 
@@ -226,7 +226,7 @@ Hello, feather
 
   Nifty, eh? Alright, now let's make some minor changes to illustrate how to pass values to the server when making RPC calls...
   
-  -`4.` Change the `sayHello.server.js` file as follow...
+  -`4.` Change `sayHello.server.js` as follow...
   
 ```js
   exports.getWidget = function(feather, cb) {
@@ -245,7 +245,7 @@ Hello, feather
   };
 ```
 
-  -`5.` Change the `sayHello.client.js` file as follows...
+  -`5.` Change `sayHello.client.js` as follows...
   
 ```js
   feather.ns("hello_world");
@@ -280,7 +280,7 @@ Hello, feather
   
   The arguments passed in and the result the server sends back are not limited to only strings. Any value can be used as long as it's serializable as JSON (i.e. no circular references). The serializing and de-serializing (in both directions) is automatically handled for you by feather....
   
-  -`7.` Change the `sayHello.server.js` file as follows...
+  -`7.` Change `sayHello.server.js` as follows...
   
 ```js
   exports.getWidget = function(feather, cb) {
@@ -305,7 +305,7 @@ Hello, feather
   };
 ```
 
-  -`8.` Change the `sayHello.client.js` file as follows...
+  -`8.` Change `sayHello.client.js` as follows...
   
 ```js
   feather.ns("hello_world");
@@ -345,7 +345,7 @@ Hello, feather
   
   As you can see, the RPC methods make it very easy to send and receive arbitrary data. Of course, you really should be checking for errors. As a final note on widget RPC methods, we'll cover passing and checking for errors...
   
-  -`10.` Change the `sayHello.server.js` as follows...
+  -`10.` Change `sayHello.server.js` as follows...
   
 ```js
   exports.getWidget = function(feather, cb) {
@@ -382,7 +382,7 @@ Hello, feather
   };
 ```
 
-  -`11.` Change the `sayHello.client.js` as follows...
+  -`11.` Change `sayHello.client.js` as follows...
   
 ```js
   feather.ns("hello_world");
@@ -410,8 +410,7 @@ Hello, feather
                 
                 alert("greeting = " + args.result.greeting
                   + " -- foo = " + args.result.foo
-                  + " -- bar = " + args.result.bar);
-              
+                  + " -- bar = " + args.result.bar);              
               } else {
                 
                 alert(args.err);
@@ -425,19 +424,200 @@ Hello, feather
   })();
 ```
 
+  -`12.` Restart the server and watch the fake error be alerted.
   
-  
-  a. implement the prototype and add a feather.Widget.serverMethod
-  b. add client-side code to click handler to call server method
-  c. change server method to accept arguments (change client code to pass args)
-  d. change return type of server method
-  e. show how to pass an error to the client and how to handle it
 
 --
 
 ## Getting user input 1: field-level
 
-## Getting user input 2: forms with datalinking 
+  Getting user input within the context of a widget is pretty straightforward. So let's get right to it.
+  
+  -`1.` Change `sayHello.template.html` as follows...
+  
+```html
+    <input id="someText" type="text" placeholder="Enter some text here" />
+    <input id="sayHiBtn" type="button" value="say hello" />
+```
+  
+  -`2.` Change `sayHello.server.js` as follows...
+  
+```js
+  exports.getWidget = function(feather, cb) {
+    cb(null, {
+      name: "hello_world.sayHello",
+      path: "widgets/sayHello/",
+      prototype: {
+        
+        sayHowdy: feather.Widget.serverMethod(function(data, _cb) {
+          
+          var err = null,
+            result = null;
+          
+          try {
+           
+            if (!data.text || data.text == 'ERROR') { 
+              
+              //throw a contrived error...
+              throw new Error('The server has determined that you are not allowed to do this.');            
+            } else {
+              
+              result = "You said: " + data.text;
+            }
+          } catch (ex) {
+            
+            result = null;
+            err = ex.message;
+          }
+          
+          _cb(err, result);
+        })
+        
+      }
+    });
+  };
+```
+
+  -`3.` Change the `sayHello.client.js` file as follows...
+  
+```js
+  feather.ns("hello_world");
+  (function() {
+    hello_world.sayHello = feather.Widget.create({
+      name: "hello_world.sayHello",
+      path: "widgets/sayHello/",
+      prototype: {
+        onInit: function() {
+          
+        },
+        onReady: function() {
+          var me = this;
+          
+          this.domEvents.bind(this.get('#sayHiBtn'), 'click', function() {
+            
+            var data = {
+              text: me.get('#someText').val()
+            };
+            
+            me.server_sayHowdy([data], function(args) {
+              
+              if (args.success) {
+                
+                alert(args.result);              
+              } else {
+                
+                alert(args.err);
+              }
+            });
+          });
+
+        }
+      }
+    });
+  })();
+```
+  
+  There you go. This example really only illustrated the jQuery integration a little further. In the `client.js` file we're getting the text from the textbox via `me.get('#someText').val()`, which once again is simply a light wrapper around `$()` making sure we target just _this widget instance's_ textbox. Also, you may have noticed that if you enter the string "ERROR" we're now using that to trigger our contrived error condition.
+  
+  So that's cool, but having to write code to fetch data from fields is a little old fashioned and can become tedious. Luckily it doesn't have to be like this...
+
+--
+
+## Getting user input 2: forms with automatic datalinking 
+
+  Feather has built-in support for jQuery (datalinking)[https://github.com/jquery/jquery-datalink]. All you need to do is add a `<form>` tag that has a `datalink` attribute. For our example, we'll continue to use the `sayHello` widget.
+
+  -`1.` Change `sayHello.template.html` as follows...
+  
+```html
+    <form datalink="person">
+      
+      <label for="firstName">First Name:</label>
+      <input id="firstName" name="firstName" placeholder="First Name" type="text" tabindex=1 />
+      
+      <label for="lastName">Last Name:</label>
+      <input id="lastName" name="lastName" placeholder="Last Name" type="text" tabindex=2 />
+      
+      <input id="sayHiBtn" type="button" value="say hello" />
+    </form>
+```
+  
+  -`2.` Change `sayHello.server.js` as follows...
+  
+```js
+  exports.getWidget = function(feather, cb) {
+    cb(null, {
+      name: "hello_world.sayHello",
+      path: "widgets/sayHello/",
+      prototype: {
+        
+        sayHowdy: feather.Widget.serverMethod(function(data, _cb) {
+          
+          var err = null,
+            result = null;
+          
+          try {
+           
+            if (data.firstName == 'Dave') { 
+              
+              //throw a contrived error...
+              throw new Error("Sorry, Dave, I'm afraid I can't let you do that.");            
+            } else {
+              
+              result = "Your full name is: " + data.firstName + " " + data.lastName;
+            }
+          } catch (ex) {
+            
+            result = null;
+            err = ex.message;
+          }
+          
+          _cb(err, result);
+        })
+        
+      }
+    });
+  };
+```
+
+  -`3.` Change the `sayHello.client.js` file as follows...
+  
+```js
+  feather.ns("hello_world");
+  (function() {
+    hello_world.sayHello = feather.Widget.create({
+      name: "hello_world.sayHello",
+      path: "widgets/sayHello/",
+      prototype: {
+        onInit: function() {
+          
+        },
+        onReady: function() {
+          var me = this;
+          
+          this.domEvents.bind(this.get('#sayHiBtn'), 'click', function() {
+            
+            var data = me.model.person;
+            
+            me.server_sayHowdy([data], function(args) {
+              
+              if (args.success) {
+                
+                alert(args.result);              
+              } else {
+                
+                alert(args.err);
+              }
+            });
+          });
+
+        }
+      }
+    });
+  })();
+```
+
+  And that's it. The important things to note in this example are the `var data = me.model.person` line above in the `sayHello.client.js` file along with the `datalink="person"` attribute in the form tag within the `sayHello.template.html` file. Notice that the value of the datalink attribute directly corresponds to the name of the property on the widget's `model` object. As the user changes the values of the fields, the `person` object has its properties automatically updated behind the scenes, and those property name also correspond directly to the `name` attributes found in the form fields.
 
 6. Adding a second widget
   a. embed as sibling
