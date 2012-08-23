@@ -741,7 +741,74 @@ Hello, feather
   
   Having said that, the next place we'll make use of these options is in the `sayHello.server.js` file. This example will be mocking up a potential case for fetching content from a database or external service during the initial parsing process, and will allow you to specify a fictitious relative URI to fetch the content from. Please keep in mind that this parsing process still only happens once (during application startup), and the resulting HTML for this page will then be statically served. This is an important performance feature of feather (we'll explain how to deal with truly dynamic content later on in this document).
   
+  -`4.` Edit the `sayHello.server.js` file as follows...
   
+```js
+
+  //mockup the datastore
+  var externalData = {
+    buttons: {
+      hello: "say hello",
+      howdy: "say howdy"
+    }
+  };
+
+  //mockup the URI based data service
+  function getData(uri, cb) {
+    var parts = uri.split('/'),
+      context = externalData,
+      err = null;
+    
+    //walk the store object to find the requested data element
+    for (var i = 0, l = parts.length; i < l; i++) {
+      try {
+        context = context[parts[i]];
+      } catch (ex) {
+        err = "data not found";
+      }
+    }
+    
+    cb(err, context);
+  }
+
+  exports.getWidget = function(feather, cb) {
+    cb(null, {
+      name: "hello_world.sayHello",
+      path: "widgets/sayHello/",
+      prototype: {
+        
+        onInit: function() {
+          
+        },
+        
+        sayHowdy: feather.Widget.serverMethod(function(data, _cb) {
+          
+          var err = null,
+            result = null;
+          
+          try {
+           
+            if (data.firstName == 'Dave') { 
+              
+              //throw a contrived error...
+              throw new Error("Sorry, Dave, I'm afraid I can't let you do that.");            
+            } else {
+              
+              result = "Your full name is: " + data.firstName + " " + data.lastName;
+            }
+          } catch (ex) {
+            
+            result = null;
+            err = ex.message;
+          }
+          
+          _cb(err, result);
+        })
+        
+      }
+    });
+  };
+```
 
 --
 
