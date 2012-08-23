@@ -777,8 +777,26 @@ Hello, feather
       path: "widgets/sayHello/",
       prototype: {
         
-        onInit: function() {
+        onRender: function(render) {
+          var me = this;
           
+          //use a default value for the uri if none are set via options
+          var buttonTextURI = me.options.buttonTextURI || 'buttons/hello';
+          
+          //mockup what a call to an async process would normally look like
+          getData(buttonTextURI, function(err, text) {
+            
+            //use a default value in case there was an error
+            var buttonText = "say hello";
+            
+            if (!err) {
+              buttonText = text;
+            }
+            
+            //set the value to be used in the template and then proceed with render
+            me.options.buttonText = buttonText;
+            render();
+          });
         },
         
         sayHowdy: feather.Widget.serverMethod(function(data, _cb) {
@@ -809,6 +827,41 @@ Hello, feather
     });
   };
 ```
+
+  -`5.` Edit the `index.feather.html` file as follows...
+  
+```html
+    <html>
+    <head>
+      <title>Index.feather.html</title>
+      <resources />
+    </head>
+    <body>
+      <widget id="sayHello1" path="widgets/sayHello/" >
+        <contentTemplate>
+          <p>This is additional embedded content.</p>
+          <strong>This content can be any HTML.</strong>
+        </contentTemplate>
+        
+        <options>
+          <option name="buttonTextURI" value="buttons/hello" />
+        </options>
+      </widget>
+      
+      <widget id="sayHello2" path="widgets/sayHello/" >
+        <options>
+          <option name="buttonTextURI" value="buttons/howdy" />
+        </options>
+      </widget>
+    </body>
+    </html>
+```
+
+  -`6.` Restart the server and refresh the page in the browser.
+  
+  This example illustrates a view things. Firstly, we added an `onRender` method to the `sayHello.server.js` file. This is an example of a method that has special meaning to feather. When you implement this method in your widgets you are given a chance to take over the parsing process. This method gets passed a `render` function reference that you must call to tell feather to continue with the rest of the rendering process. You may call whatever external methods or services you want before you yield control back to feather. Our example uses mockups of an external datastore and a URI based service, which should give you a pretty good picture of how to handle this type of scenario.
+  
+  
 
 --
 
