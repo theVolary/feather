@@ -85,9 +85,15 @@ Hello, feather
   __A note about `id` attributes__
   At this point we'd like to make you aware of an important feature of the feather framework. Let's say you want to add ten instances of this widget to your page. You would simply edit the `index.feather.html` file and add nine more `widget` tags. You must, however, take care that all ten instances have different `id`s (in fact the framework will hollar at you during startup if you fail to meet this requirement and will error out). The reason this is true is so that all the elements on the page can be gauranteed to be uniquely ID'ed and so that behavioral code in the widgets' `client.js` file can safely reference _only_ the DOM elements associated with _that_ _instance_. In this way, you can have as many instances of a single widget on the screen as you want without having to write any code to manage that stuff (it's managed for you). To accomplish this, feather auto prefixes an id chain to elements based on the hierarchy of where each instance is embedded. So in our example above (with just a single instance embedded in the page), the button will actually have an id of `sayHello1_sayHiBtn` in the DOM (because we gave the `widget` tag an id of `sayHello1` when we embedded it). As already mentioned, when you write client code within the widget's `client.js` file you will not have to worry about knowing what that id hierarchy looks like; you'll be able to reference the scoped elements by their relative IDs via code like `this.get('#sayHiBtn')`, which we'll demonstrate shortly.
 
-  -`2.` Add the following style rule to the `sayHello.css` file (let's make this button really ugly)...
+  -`2.` Add the following style rules to the `sayHello.css` file (let's make this button really ugly)...
 
 ```css
+  .hello_world_sayHello {
+    padding: 20px;
+    border: 1px solid #666;
+    border-radius: 5px;
+  }
+
   .hello_world_sayHello input {
     border: 3px dashed green;
     font-family: verdana;
@@ -95,7 +101,10 @@ Hello, feather
     color: red;
   }
 ```
-  For per-widget scoped styling, there is always an implicit class name for each widget that will be in the form of `"namespace_widgetName"`. Since our namespace is `hello_world` and our widget name is `sayHello`, the implicit class name is `hello_world_sayHello`. This is very handy when you want to create styles that target only those elements scoped to instances of this specific widget.
+
+  For per-widget scoped styling, there is always an implicit class name for each widget that will be in the form of `namespace_widgetName`. Since our namespace is `hello_world` and our widget name is `sayHello`, the implicit class name is `hello_world_sayHello`. This is very handy when you want to create styles that target only those elements scoped to instances of this specific widget type.
+  
+  We've added a border and some padding around the widget container, simply for illustrative purposes. This will also make it easier to disinguigh widget boundaries later when we get into various multiple widget scenarios.
 
   It's very important to note that ID based selectors in your CSS are a no-no. Going back to the discussion about how IDs are treated in feather, let's pretend you attempted the following CSS rule...
 
@@ -107,6 +116,7 @@ Hello, feather
     color: red;
   }
 ```
+
   The problem, of course, is that because widgets are meant to be reusable and you will be embedding them in (potentially) arbitrary locations in your app, the id prefixes will be (and should remain) unknown within the context of your CSS files. As demonstrated above, the actual id of the button in the DOM in our example will be `sayHello1_sayHiBtn`, and not just `sayHiBtn`, therefore the CSS selector above will actually find 0 elements. You may, then, be tempted to target your CSS rule as `.hello_world_sayHello #sayHello1_sayHiBtn`. That would also be a mistake because it is tightly coupling the CSS rule to a specific embed hierarchy, and this rule will break the second that hierarchy changes for whatever reason.
 
   -`3.` Bind a click handler in the `sayHello.client.js` file as follows...
@@ -617,13 +627,183 @@ Hello, feather
   })();
 ```
 
-  And that's it. The important things to note in this example are the `var data = me.model.person` line above in the `sayHello.client.js` file along with the `datalink="person"` attribute in the form tag within the `sayHello.template.html` file. Notice that the value of the datalink attribute directly corresponds to the name of the property on the widget's `model` object. As the user changes the values of the fields, the `person` object has its properties automatically updated behind the scenes, and those property name also correspond directly to the `name` attributes found in the form fields.
+  And that's it. The important things to note in this example are the `var data = me.model.person` line above in the `sayHello.client.js` file along with the `datalink="person"` attribute in the form tag within the `sayHello.template.html` file. Notice that the value of the datalink attribute directly corresponds to the name of the property on the widget's `model` object. As the user changes the values of the fields, the `person` object has its properties automatically updated behind the scenes, and those property names also correspond directly to the `name` attributes found in the form fields.
+  
+--
+
+## Embedding content with `<contentTemplate>`
+
+  So far what we've done is create the content and behavior definition for a widget type called `sayHello`. This definition will apply to all instances of this widget. But the widget model in feather also allows you to embed unique content at a per-instance level. This is accomplished by adding a `<contentTemplate>` tag inside the `<widget>` tag.
+  
+  -`1.` Edit the `/public/index.feather.html` file as follows...
+  
+```html
+    <html>
+    <head>
+      <title>Index.feather.html</title>
+      <resources />
+    </head>
+    <body>
+      <widget id="sayHello1" path="widgets/sayHello/" >
+        <contentTemplate>
+          <p>This is additional embedded content.</p>
+          <strong>This content can be any HTML.</strong>
+        </contentTemplate>
+      </widget>
+      
+      <widget id="sayHello2" path="widgets/sayHello/" />
+    </body>
+    </html>
+```
+
+  -`2.` Restart the server and refresh the page in the browser.
+  
+  As you can see, we have added a second instance of our `sayHello` widget and have embedded some additional content inside the first instance. By default, any content added within the `<contentTemplate>` tag gets appended at the end of the widget's pre-defined content. In the next example we'll show you how to control where this custom content gets embedded inside the main widget's template.
+  
+  -`3.` Edit the `sayHello.template.html` file as follows...
+  
+```html
+    <form datalink="person">
+    
+      <content />
+      
+      <label for="firstName">First Name:</label>
+      <input id="firstName" name="firstName" placeholder="First Name" type="text" tabindex=1 />
+      
+      <label for="lastName">Last Name:</label>
+      <input id="lastName" name="lastName" placeholder="Last Name" type="text" tabindex=2 />
+      
+      <input id="sayHiBtn" type="button" value="say hello" />
+    </form>
+```
+
+  -`4.` Restart the server and refresh the page in the browser.
+  
+  All we did was add a `<content />` tag where we wanted the custom content to get embedded. This simple embed model enables a wide range of content separation and re-use scenarios, where you can put common UI and behavior at the widget definition level and then layer in the unique content quite easily. 
+
+--
+
+## Making widgets configurable with `<options>`
+
+  The `<contentTemplate>` tag is one way that you can add per-instance uniqueness, but now we'll demonstrate how to make a widget more configurable. For this example, let's assume we want to allow the text of our button to be configurable. This will also serve as a quick introduction to the [jQuery templating](http://api.jquery.com/category/plugins/templates/) integration features of feather.
+  
+  -`1.` Edit the `sayHello.template.html` file as follows...  
+  
+```html
+    <form datalink="person">
+    
+      <content />
+      
+      <label for="firstName">First Name:</label>
+      <input id="firstName" name="firstName" placeholder="First Name" type="text" tabindex=1 />
+      
+      <label for="lastName">Last Name:</label>
+      <input id="lastName" name="lastName" placeholder="Last Name" type="text" tabindex=2 />
+      
+      <input id="sayHiBtn" type="button" value="${options.buttonText}" />
+    </form>
+```
+
+  -`2.` Edit the `index.feather.html` file as follows...
+  
+```html
+    <html>
+    <head>
+      <title>Index.feather.html</title>
+      <resources />
+    </head>
+    <body>
+      <widget id="sayHello1" path="widgets/sayHello/" >
+        <contentTemplate>
+          <p>This is additional embedded content.</p>
+          <strong>This content can be any HTML.</strong>
+        </contentTemplate>
+        
+        <options>
+          <option name="buttonText" value="say hello" />
+        </options>
+      </widget>
+      
+      <widget id="sayHello2" path="widgets/sayHello/" >
+        <options>
+          <option name="buttonText" value="say what's up" />
+        </options>
+      </widget>
+    </body>
+    </html>
+```
+
+  -`3.` Restart the server and refresh the page in the browser.
+  
+  
+
+--
+
+## Adding another widget
+
+  Now let's walk through a few different scenarios related to working with more than one widget. As you go through the next few sections you'll be learning everything there is to know about working with widgets and how to communicate across widgets. 
+  
+  -`1.` Create a new widget from the command line via `feather create-widget anotherWidget`
+  
+  -`2.` Edit the `anotherWidget.template.html` file as follows...
+  
+```html
+    <p>I am another widget.</p>
+    <div>
+      My button is here: <input type="button" id="sayHiBtn" value="say hello" />
+    </div>
+```
+
+ -`3.` Edit the `anotherWidget.client.js` file as follows...
+ 
+```js
+  feather.ns("hello_world");
+  (function() {
+    hello_world.anotherWidget = feather.Widget.create({
+      name: "hello_world.anotherWidget",
+      path: "widgets/anotherWidget/",
+      prototype: {
+        onInit: function() {
+          
+        },
+        onReady: function() {
+          var me = this;
+          
+          this.domEvents.bind(this.get('#sayHiBtn'), 'click', function() {
+            
+            alert('Hellow from another widget!');
+          });
+
+        }
+      }
+    });
+  })();
+```
+
+  -`3.` Edit the `index.feather.html` file as follows...
+  
+```html
+    <html>
+    <head>
+      <title>Index.feather.html</title>
+      <resources />
+    </head>
+    <body>
+      <widget id="sayHello1" path="widgets/sayHello/" />
+      <widget id="sayHello2" path="widgets/anotherWidget/" />
+    </body>
+    </html>
+```
+  
+  -`4.` Restart the server and then refresh the page in the browser.
+  
+  At this point, you haven't really learned anything new. We've simply created another (_incredibly_ useful) widget and embedded it in the page. 
 
 --
 
 (unfinished outline below) ...
 
---
+
 
 6. Adding a second widget
   a. embed as sibling
