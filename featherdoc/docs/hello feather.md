@@ -735,6 +735,12 @@ Hello, feather
 
   -`3.` Restart the server and refresh the page in the browser.
   
+  Take note of the change we made above in the `sayHello.template.html` file. The static string "say hello" was replaced with the jQuery template variable `${options.buttonText}`. Then, in the `index.feather.html` page we added a corresponding `<option>` tag within both of our instances with their `name` attributes set to map to the property name `buttonText`. You can use this pattern to expose any number of named configuration items. This example, however, is only one way in which these options can be used (i.e. to control templated content). You can also use options as a way to modify behavior. 
+  
+  Before we go into using options to modify behavior, you should be aware of the difference between the server's view of these options and the client's view. So far everything we've done with the templates and options only really affects the server. That is to say, the feather parsing process that happens when your application is starting up is the piece that has been making use of these changes. The `buttonText` option we added above, along with the addition of the template variable `${options.buttonText}` is telling that parsing process how to build the HTML for the widgets we're using on the index page of our site. That resulting static HTML is what is then being served to the browser when you request the page. The default behavior for the option tags is to only set the values in the rendering context that does the parsing. That means the `buttonText` option we set will _not_ be propagated out to the client automatically (which will be more clear in a bit here).
+  
+  Having said that, the next place we'll make use of these options is in the `sayHello.server.js` file. This example will be mocking up a potential case for fetching content from a database or external service during the initial parsing process, and will allow you to specify a fictitious relative URI to fetch the content from. Please keep in mind that this parsing process still only happens once (during application startup), and the resulting HTML for this page will then be statically served. This is an important performance feature of feather (we'll explain how to deal with truly dynamic content later on in this document).
+  
   
 
 --
