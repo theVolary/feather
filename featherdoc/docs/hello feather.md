@@ -1009,7 +1009,176 @@ Hello, feather
   
   -`4.` Restart the server and then refresh the page in the browser.
   
-  At this point, you haven't really learned anything new. We've simply created another (_incredibly_ useful) widget and embedded it in the page. These two instances are said to be siblings because they were embedded at the same level in your page. They don't know about each other.
+  At this point, you haven't really learned anything new. We've simply created another (_incredibly_ useful) widget and embedded it in the page. These two instances are said to be siblings because they were embedded at the same level in your page. They don't know about each other and won't interact with each other in any way right now.
+  
+  The first change we'll make will demonstrate how widgets can have children based on how you embed them, and will also serve as an introduction to using an event driven model for widget to widget communications. 
+  
+  -`5.` Edit the `anotherWidget.template.html` file as follows...
+  
+```html
+    <p>I am another widget.</p>
+    <div>
+      My button is here: <input type="button" id="sayHiBtn" value="say hello" />
+    </div>
+    
+    <widget id="sayHello1" path="widgets/sayHello/" />
+```
+
+  -`6.` Edit the `anotherWidget.client.js` file as follows...
+  
+```js
+  feather.ns("hello_world");
+  (function() {
+    hello_world.anotherWidget = feather.Widget.create({
+      name: "hello_world.anotherWidget",
+      path: "widgets/anotherWidget/",
+      prototype: {
+        onInit: function() {
+          
+        },
+        onReady: function() {
+          var me = this;
+          
+          this.domEvents.bind(this.get('#sayHiBtn'), 'click', function() {
+            
+            alert('Hello from another widget!');
+          });
+          
+          // example of listening to custom widget-level events
+          this.sayHello1.on('hello', function(greeting) {
+            
+            alert(greeting);
+          });
+
+        }
+      }
+    });
+  })();
+```
+
+  -`7.` Edit the `sayHello.client.js` file as follows...
+  
+```js
+  feather.ns("hello_world");
+  (function() {
+    hello_world.sayHello = feather.Widget.create({
+      name: "hello_world.sayHello",
+      path: "widgets/sayHello/",
+      prototype: {
+        onInit: function() {
+          
+        },
+        onReady: function() {
+          var me = this;
+          
+          this.domEvents.bind(this.get('#sayHiBtn'), 'click', function() {
+            
+            var data = me.model.person;
+            
+            me.server_sayHowdy([data], function(args) {
+              
+              if (args.success) {
+                
+                var exclamation = "";
+                
+                if (me.options.exciting == "yes") {
+                  exclamation = "!!!!!!!!!!!!";
+                }
+                
+                //instead of this widget doing the work, just fire an event declaring something happened
+                me.fire('hello', args.result + exclamation);              
+              } else {
+                
+                alert(args.err);
+              }
+            });
+          });
+
+        }
+      }
+    });
+  })();
+```
+
+  -`8.` Edit the `index.feather.html` file as follows...
+  
+```html
+    <html>
+    <head>
+      <title>Index.feather.html</title>
+      <resources />
+    </head>
+    <body>
+      <widget id="anotherWidget" path="widgets/anotherWidget/" />
+    </body>
+    </html>
+```
+
+  -`9.` Restart the server and refresh the page in the browser.
+  
+  In the above code examples, we've made the `sayHello` widget fire an event called `hello` instead of directly alerting the greeting. We also embedded an instance of `sayHello` directly in the template of `anotherWidget` and added an event listener for the event being fired from the child `sayHello` instance. Make note that the `id` given to embedded children widgets becomes the property name with which you can access that instance within the parent (e.g. the `this.sayHello1.on(...` line of code in the `anotherWidget.client.js` file).
+  
+  This pattern of firing events up to a container is a very common pattern in feather, and is a fundamental design pattern for implementing complex interfaces (long running single page applications). Using events is also a great way to decouple an interaction from the implementation of what happens as a result of that interaction. This means you can easily drop that interactive component into different consuming contexts that respond differently. 
+  
+  As a final simple example of embedding widgets, we'll show you that the `<contentTemplate>` tag can accept widgets as well.
+  
+  -`10.` Create another new widget type via the command `feather create-widget sayGoodbye`
+  
+  -`11.` Edit the `sayGoodbye.template.html` file as follows...
+  
+```html
+  <input id="goodbyeBtn" type="button" value="say goodbye" />
+```
+
+  -`12.` Edit the `sayGoodbye.client.js` file as follows...
+  
+```js
+  feather.ns("hello_world");
+  (function() {
+    hello_world.sayGoodbye = feather.Widget.create({
+      name: "hello_world.sayGoodbye",
+      path: "widgets/sayGoodbye/",
+      prototype: {
+        onInit: function() {
+          
+        },
+        onReady: function() {
+          var me = this;
+
+          this.domEvents.bind(this.get('#goodbyeBtn'), 'click', function() {
+            
+            // show off feather.confirm
+            feather.confirm('Leaving?', 'Are you sure you want to say goodbye?', function() {
+              
+              // normally this is a no-no (interacting directly with a widget's parent),
+              // but we're putting it here just for illustration purposes to show
+              // that there is a parent-child two-way hierarchy
+              me.parent.dispose();
+            });
+          });
+        }
+      }
+    });
+  })();
+```
+
+  -`13.` Edit the `index.feather.html` file as follows...
+  
+```html
+    <html>
+    <head>
+      <title>Index.feather.html</title>
+      <resources />
+    </head>
+    <body>
+      <widget id="anotherWidget" path="widgets/anotherWidget/" >
+        <contentTemplate>
+          <widget id="goodbye" path="widgets/sayGoodbye/" />
+        </contentTemplate>
+      </widget>
+    </body>
+    </html>
+```
 
 --
 
