@@ -1192,6 +1192,12 @@ Hello, feather
 
 ## Advanced templating
 
+  There are quite a lot of things you can do with feather's integration of jQuery templates. In these next examples we'll show you just a few more things you can do.
+  
+  First, within a widget's `.template.html` file you can define what we call "sub templates" by using the `<template>` tag. These sub templates each have a name, and can be used later within the main widget template.
+  
+  For example, let's say we have a widget called `showSomeLists` that is responsible for displaying... some lists. We want to make a couple list layouts and make it a configuration option which layout is used.
+  
   
 
 --
