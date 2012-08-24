@@ -735,11 +735,11 @@ Hello, feather
 
   -`3.` Restart the server and refresh the page in the browser.
   
-  Take note of the change we made above in the `sayHello.template.html` file. The static string "say hello" was replaced with the jQuery template variable `${options.buttonText}`. Then, in the `index.feather.html` page we added a corresponding `<option>` tag within both of our instances with their `name` attributes set to map to the property name `buttonText`. You can use this pattern to expose any number of named configuration items. This example, however, is only one way in which these options can be used (i.e. to control templated content). You can also use options as a way to modify behavior. 
+  Take note of the change we made above in the `sayHello.template.html` file. The static string "say hello" was replaced with the jQuery template variable `${options.buttonText}`. Then, in the `index.feather.html` page we added a corresponding `<option>` tag within both of our instances with their `name` attributes set to map to the property name `buttonText`. You can use this pattern to expose any number of named configuration items. This example, however, is only one way in which these options can be used (i.e. to control templated content directly). You can also use options as a way to modify behavior. 
   
-  Before we go into using options to modify behavior, you should be aware of the difference between the server's view of these options and the client's view. So far everything we've done with the templates and options only really affects the server. That is to say, the feather parsing process that happens when your application is starting up is the piece that has been making use of these changes. The `buttonText` option we added above, along with the addition of the template variable `${options.buttonText}` is telling that parsing process how to build the HTML for the widgets we're using on the index page of our site. That resulting static HTML is what is then being served to the browser when you request the page. The default behavior for the option tags is to only set the values in the rendering context that does the parsing. That means the `buttonText` option we set will _not_ be propagated out to the client automatically (which will be more clear in a bit here).
+  Before we go into using options to modify behavior, you should be aware of the difference between the server's view of these options and the client's view. So far everything we've done with the templates and options only really affects the server. That is to say, the feather parsing process that happens when your application is starting up is the piece that has been making use of these changes. The `buttonText` option we added above, along with the addition of the template variable `${options.buttonText}` is telling that parsing process how to build the HTML for the widgets we're using on the index page of our site. That resulting static HTML is what is then being served to the browser when you request the page. The default behavior for the option tags is to only set the values in the rendering context that does the parsing (so far that rendering context is all server-side). That means the `buttonText` option we set will _not_ be propagated out to the client automatically (which will be more clear in a bit here).
   
-  Having said that, the next place we'll make use of these options is in the `sayHello.server.js` file. This example will be mocking up a potential case for fetching content from a database or external service during the initial parsing process, and will allow you to specify a fictitious relative URI to fetch the content from. Please keep in mind that this parsing process still only happens once (during application startup), and the resulting HTML for this page will then be statically served. This is an important performance feature of feather (we'll explain how to deal with truly dynamic content later on in this document).
+  Having said that, the next place we'll make use of these options is in the `sayHello.server.js` file. This example will be mocking up a potential case for fetching content from a database or external service during the initial parsing process, and will allow you to specify a fictitious relative URI to fetch the content from. Please keep in mind that this parsing process still only happens once (during application startup), and the resulting HTML for this page will then be statically served. This is an important performance feature of feather, and it means you shouldn't expect this external data fetching logic to be triggered for every page request (we'll explain how to deal with truly dynamic content later on). 
   
   -`4.` Edit the `sayHello.server.js` file as follows...
   
@@ -861,11 +861,96 @@ Hello, feather
   
   This example illustrates a view things. Firstly, we added an `onRender` method to the `sayHello.server.js` file. This is an example of a method that has special meaning to feather. When you implement this method in your widgets you are given a chance to take over the parsing process. This method gets passed a `render` function reference that you must call to tell feather to continue with the rest of the rendering process. You may call whatever external methods or services you want before you yield control back to feather. Our example uses mockups of an external datastore and a URI based service, which should give you a pretty good picture of how to handle this type of scenario.
   
+  The other thing that's being illustrated above is the fact that the `options` object is a property of the widget instance, and can be accessed in code within the widget's methods. There is another subtle thing that this belies, which is that within the widget templates the widget instance itself is the data container (notice in the template we use the variable `${options.buttonText}`). That's a nice thing to know, as it allows you to pull any of the widget's properties in to your templates, not just the options object. For example, after we call `getData()` above, we could have set `me.buttonText` instead of `me.options.buttonText` and then change the template to use the variable `${buttonText}`.
   
+--
+
+## Sending options to the client
+
+  The `options` that you define in your embed code, by default, only have meaning on the server. The reason feather doesn't automatically serialize these options and send them to the client for you to access programmatically is that there are plenty of cases where these values are potentially sensitive. You may not want to expose some of the config key/value pairs you use in your widgets. Secondarily, if the client doesn't care about options that you're using to control server side templating (or some other server-only concern), some small amount of bandwidth is saved by not sending that to the client.
+  
+  Therefore, if you want to expose embedded options to the client you must explicitly tell feather. The way to do this is simply by setting `client_enabled="true"` on the `<option>` tag for each option you wish to have sent to the client.
+  
+  -`1.` Edit the `sayHello.client.js` file as follows...
+  
+```js
+  feather.ns("hello_world");
+  (function() {
+    hello_world.sayHello = feather.Widget.create({
+      name: "hello_world.sayHello",
+      path: "widgets/sayHello/",
+      prototype: {
+        onInit: function() {
+          
+        },
+        onReady: function() {
+          var me = this;
+          
+          this.domEvents.bind(this.get('#sayHiBtn'), 'click', function() {
+            
+            var data = me.model.person;
+            
+            me.server_sayHowdy([data], function(args) {
+              
+              if (args.success) {
+                
+                var exclamation = "";
+                
+                if (me.options.exciting = "yes") {
+                  exclamation = "!!!!!!!!!!!!";
+                }
+                
+                alert(args.result + exclamation);              
+              } else {
+                
+                alert(args.err);
+              }
+            });
+          });
+
+        }
+      }
+    });
+  })();
+```
+
+  -`2.` Edit the `index.feather.html` file as follows...
+  
+```html
+    <html>
+    <head>
+      <title>Index.feather.html</title>
+      <resources />
+    </head>
+    <body>
+      <widget id="sayHello1" path="widgets/sayHello/" >
+        <contentTemplate>
+          <p>This is additional embedded content.</p>
+          <strong>This content can be any HTML.</strong>
+        </contentTemplate>
+        
+        <options>
+          <option name="buttonTextURI" value="buttons/hello" />
+          <option name="exciting" value="yes" client_enabled="true" />
+        </options>
+      </widget>
+      
+      <widget id="sayHello2" path="widgets/sayHello/" >
+        <options>
+          <option name="buttonTextURI" value="buttons/howdy" />
+        </options>
+      </widget>
+    </body>
+    </html>
+```
+
+  -`3.` Restart the server and refresh the page in the browser.
+  
+  As you can see we now have a widget that has a degree of configurability for both the server and the client.
 
 --
 
-## Adding another widget
+## Working with multiple widgets
 
   Now let's walk through a few different scenarios related to working with more than one widget. As you go through the next few sections you'll be learning everything there is to know about working with widgets and how to communicate across widgets. 
   
@@ -897,7 +982,7 @@ Hello, feather
           
           this.domEvents.bind(this.get('#sayHiBtn'), 'click', function() {
             
-            alert('Hellow from another widget!');
+            alert('Hello from another widget!');
           });
 
         }
@@ -923,7 +1008,7 @@ Hello, feather
   
   -`4.` Restart the server and then refresh the page in the browser.
   
-  At this point, you haven't really learned anything new. We've simply created another (_incredibly_ useful) widget and embedded it in the page. 
+  At this point, you haven't really learned anything new. We've simply created another (_incredibly_ useful) widget and embedded it in the page. These two instances are said to be siblings because they were embedded at the same level in your page. They don't know about each other.
 
 --
 
