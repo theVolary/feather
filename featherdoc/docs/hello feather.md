@@ -1180,6 +1180,20 @@ Hello, feather
     </html>
 ```
 
+  -`14.` Restart the server and refresh the page in the browser.
+  
+  In this example we have shown a couple new things. Firstly, we are embedding the new `sayGoodbye` widget directly inside the `<contentTemplate>` tag just to show you that we can. Secondly, we've shown you the `feather.confirm` helper UI method, which displays a simple modal dialog with a title, a message and a pair of buttons. That's a teaser for the discussion on jQueryUI (and optionally, Twitter Bootstrap) integration that's baked into feather (this feature can also be turned off). Next, we show you how to access a widget's parent. And finally, we've introduced you to the notion of disposing of widgets (another feature that is important when implementing complex interfaces).
+  
+  You usually would _not_ write code that directly manipulates a widget's parent like that, but for some edge cases it could be useful to know that it's possible (like maybe in our example, if the `goodBye` widget's main purpose in life is to dispose of other widgets that you drop it into). The reason it's usually bad form to directly manipulate the parent is because that is tightly coupling the widget's behavior to a specific embed scenario. You want to design widgets such that they can be dropped into various places (or not embedded in other widgets at all), and the way to achieve that design is usually by modelling the "upstream" interactions through events rather than direct manipulation.
+  
+  You may have been surprised when the entire page seemed to have disappeared. The `.dispose()` method available on all widgets does a complete cleanup of a widget and its children, which includes things like cleaning up all of the DOM event handlers (via the `.domEvents` object) and removing the widget's HTML from the DOM. So in our case, when `me.parent.dispose()` is called, that is the `anotherWidget` instance which happens to contain all the content for our page.
+  
+--
+
+## Advanced templating
+
+  
+
 --
 
 (unfinished outline below) ...
