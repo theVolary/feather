@@ -763,6 +763,7 @@ Hello, feather
     for (var i = 0, l = parts.length; i < l; i++) {
       try {
         context = context[parts[i]];
+        if (typeof context === "undefined") throw new Error('not found');
       } catch (ex) {
         err = "data not found";
       }
@@ -946,7 +947,7 @@ Hello, feather
 
   -`3.` Restart the server and refresh the page in the browser.
   
-  As you can see we now have a widget that has a degree of configurability for both the server and the client.
+  As you can see we now have a widget that has a degree of configurability for both the server and the client. 
 
 --
 
