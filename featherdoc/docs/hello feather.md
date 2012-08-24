@@ -862,7 +862,7 @@ Hello, feather
   
   This example illustrates a view things. Firstly, we added an `onRender` method to the `sayHello.server.js` file. This is an example of a method that has special meaning to feather. When you implement this method in your widgets you are given a chance to take over the parsing process. This method gets passed a `render` function reference that you must call to tell feather to continue with the rest of the rendering process. You may call whatever external methods or services you want before you yield control back to feather. Our example uses mockups of an external datastore and a URI based service, which should give you a pretty good picture of how to handle this type of scenario.
   
-  The other thing that's being illustrated above is the fact that the `options` object is a property of the widget instance, and can be accessed in code within the widget's methods. There is another subtle thing that this belies, which is that within the widget templates the widget instance itself is the data container (notice in the template we use the variable `${options.buttonText}`). That's a nice thing to know, as it allows you to pull any of the widget's properties in to your templates, not just the options object. For example, after we call `getData()` above, we could have set `me.buttonText` instead of `me.options.buttonText` and then change the template to use the variable `${buttonText}`.
+  The other thing that's being illustrated above is the fact that the `options` object is a property of the widget instance, and can be accessed in code within the widget's methods. There is another subtle thing that this belies, which is that within the widget templates the widget instance itself is the data container (notice in the template we use the variable `${options.buttonText}`). That's a nice thing to know, as it allows you to pull any of the widget's properties in to your templates, not just the options object. For example, after we call `getData()` above, we could have set `me.buttonText` instead of `me.options.buttonText` and then we could have changed the template to use the variable `${buttonText}`.
   
 --
 
@@ -897,7 +897,7 @@ Hello, feather
                 
                 var exclamation = "";
                 
-                if (me.options.exciting = "yes") {
+                if (me.options.exciting == "yes") {
                   exclamation = "!!!!!!!!!!!!";
                 }
                 
