@@ -104,7 +104,7 @@ Hello, feather
 
   For per-widget scoped styling, there is always an implicit class name for each widget that will be in the form of `namespace_widgetName`. Since our namespace is `hello_world` and our widget name is `sayHello`, the implicit class name is `hello_world_sayHello`. This is very handy when you want to create styles that target only those elements scoped to instances of this specific widget type.
   
-  We've added a border and some padding around the widget container, simply for illustrative purposes. This will also make it easier to disinguigh widget boundaries later when we get into various multiple widget scenarios.
+  We've added a border and some padding around the widget container, simply for illustrative purposes. This will also make it easier to distinguigh widget boundaries later when we get into various multiple widget scenarios.
 
   It's very important to note that ID based selectors in your CSS are a no-no. Going back to the discussion about how IDs are treated in feather, let's pretend you attempted the following CSS rule...
 
