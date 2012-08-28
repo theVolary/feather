@@ -629,7 +629,7 @@ Hello, feather
 
   And that's it. The important things to note in this example are the `var data = me.model.person` line above in the `sayHello.client.js` file along with the `datalink="person"` attribute in the form tag within the `sayHello.template.html` file. Notice that the value of the datalink attribute directly corresponds to the name of the property on the widget's `model` object. As the user changes the values of the fields, the `person` object has its properties automatically updated behind the scenes, and those property names also correspond directly to the `name` attributes found in the form fields.
   
-  ### Binding the other way
+### Binding the other way
   
   If you want to modify the models objects directly through code, you can then have those changes automatically reflected in the UI (provided you are using a datalinked form) by making a call to your widget's `.datalink()` method.
   
