@@ -286,7 +286,7 @@ Hello, feather
 
   -`6.` Restart the server and try it out.
   
-  The changes we just made should be fairly easy to reason out. As briefly pointed out in the [communication.md](communication.md) document, one potential minor "gotcha" is the when calling RPC methods from the client, arguments are wrapped into an array (the `['foo', 'bar']` bit above). 
+  The changes we just made should be fairly easy to reason out. As briefly pointed out in the [communication.md](communication.md) document, one potential minor "gotcha" is that when calling RPC methods from the client, arguments are wrapped into an array (the `['foo', 'bar']` bit above). 
   
   The arguments passed in and the result the server sends back are not limited to only strings. Any value can be used as long as it's serializable as JSON (i.e. no circular references). The serializing and de-serializing (in both directions) is automatically handled for you by feather....
   
