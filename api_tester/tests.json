@@ -14,5 +14,6 @@
   {"name": "ajax errors (test fails on client, watch console for 'this should show up in the console'", "path": "widgets/ajaxErrorsTest/"},
   {"name": "client side querystring parsing 'NOTE: expects ?foo=bar&baz=123 in the querystring (add and refresh page)'", "path": "widgets/qsTest/"},
   {"name": "passing contentTemplate from client to server is disallowed", "path": "widgets/disallowClientContentTemplateOnServerTest/"},
-  {"name": "asyncronous widget rendering (via onRender on server)", "path": "widgets/asyncRenderTest/"}
+  {"name": "asyncronous widget rendering (via onRender on server)", "path": "widgets/asyncRenderTest/"},
+  {"name": "child widgets inside of tables", "path": "widgets/tableTest/"}
 ]
