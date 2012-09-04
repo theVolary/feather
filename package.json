@@ -20,7 +20,8 @@
     "clean-css": "~0.3.2",
     "validator": "~0.4.6-1",
     "socket.io": "~0.9.10",
-    "connect": "~2.3.0"
+    "connect": "~2.3.0",
+    "connect-redis": "1.4.1"
   },
   "devDependencies": {},
   "repository": {
