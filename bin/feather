@@ -14,7 +14,10 @@ var fs    = require("fs"),
     color = require("colorize"),
     util  = require("util"),
     cli   = require("cli").enable('version').setApp('feather', '0.1'),
-    _     = require("underscore");
+    _     = require("underscore"),
+    DomResource = require("../lib/dom").DomResource,
+    restSchemaGen = require("feather-rest-descriptor"),
+    restDocGen = require("feather-rest-doc-gen");
 
 // Validate that the environment variable FEATHER_HOME has been been initialized.
 
@@ -65,7 +68,7 @@ var cliOptions = {
     testsuite: ['t', '(api-test command only) - Specify the name of a single test suite to run inside of feather/test/unit (omit the file extension)', 'string', null],
     "client-only": ['c', '(create-widget command only) - Indicates that the created widget is a client-side rendered widget (has no .server.js file)', 'boolean', false]
   };
-var options = cli.parse(cliOptions, ['run', 'test', 'api-test', 'create-app', 'create-widget', 'create-rest', 'help', 'stats', 'print-cmd']);
+var options = cli.parse(cliOptions, ['run', 'test', 'api-test', 'create-app', 'create-widget', 'create-rest', 'deploy', 'doc-rest', 'help', 'stats', 'print-cmd']);
 if (options.debug) {
   cli.debug("Parsed options are: " + util.inspect(options));
   cli.debug("Command is " + cli.command);
@@ -222,6 +225,7 @@ var commands = {
       }
     }
   },
+
   test: {
     desc: "Runs the tests for an app.  If the path option is omitted, the default is used.",
     usage: "feather [OPTIONS] test [--format] test/(unit|integration)",
@@ -246,6 +250,7 @@ var commands = {
       runChild("node", args, appDir);
     }
   },
+
   createApp: {
     desc:"Creates a new feather application at the specified directory.  If NAME is omitted, the current directory is assumed, but it will prompt you for confirmation.",
     usage:"feather [OPTIONS] create-app [NAME]",
@@ -274,6 +279,7 @@ var commands = {
       }
     }
   },
+
   createWidget: {
     desc:"Creates a new widget in a feather app.  If namespace is omitted, the name of the app's directory is assumed.",
     usage:"feather [OPTIONS] create-widget [namespace] widgetName",
@@ -308,6 +314,7 @@ var commands = {
       }
     }
   },
+
   createRest: {
     desc:"Creates a new RESTful api source file.",
     usage:"feather [OPTIONS] create-rest restApiName",
@@ -337,6 +344,48 @@ var commands = {
       }
     }
   },
+
+  docRest: {
+    desc:"Generates documentation for one or more rest interfaces in the app.",
+    usage:"feather doc-rest [interface]",
+    cmdOptions: [
+      '--path (-' + cliOptions.path[0] + '): ' + cliOptions.path[1],
+      '--verbose (-' + cliOptions.verbose[0] + '): ' + cliOptions.verbose[1]
+    ].join('\n  '),
+    fn: function() {
+      var appDir = getAppDir(),
+          restDir = appDir + '/rest',
+          restDocDir = appDir + "/public/feather-res-cache/_rest",
+          ifc = cli.args[0] || "all",
+          restFiles = getFiles(restDir);
+
+      ffs.mkdirpSync(restDocDir);
+
+      restSchemaGen.generateSchemas({
+        restFolder: restDir,
+        interface: ifc
+      }, function(err, schemas) {
+        if (err) {
+          cli.error('Error generating REST schemas for ' + color.ansify("#bold[#cyan[" + ifc + "]]") + " interface(s): " + err);
+        } else {
+          _.each(schemas, function(schema) {
+            restDocGen.generateHtml({
+              schema: schema,
+              destDir: restDocDir
+            }, function(errorArray) {
+              if (errorArray && errorArray.length) {
+                cli.error("Error generating REST HTML docs for " + schema.name + ": " + JSON.stringify(errorArray));
+              } else {
+                cli.ok("Generated HTML docs for " + schema.name);
+              }
+            });
+          });
+          cli.ok("Document generation complete.");
+        }
+      });
+    }
+  },
+
   help: {
     desc:"Displays general help, or help on a specific command.  If you're reading this, you already know that.",
     usage:"feather help <command>",
@@ -362,6 +411,18 @@ var commands = {
       }
     }
   },
+
+  deploy: {
+    desc: "Not yet implemented: Generates a script used to deploy a feather app.",
+    usage: "feather [OPTIONS] deploy",
+    cmdOptions: [
+      '--deploy-type (upstart | initd)'
+    ],
+    fn: function() {
+      deploy();
+    }
+  },
+
   stats: {
     desc: "Calculates stats on the feather app.",
     usage: "feather [OPTIONS] stats",
@@ -603,4 +664,8 @@ function getFiles(dir){
 
 function stats() {
   cli.ok("TODO: Stats");
+}
+
+function deploy() {
+  cli.ok("TODO: Deploy");
 }
