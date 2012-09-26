@@ -21,9 +21,7 @@
     "validator": "~0.4.6-1",
     "socket.io": "~0.9.10",
     "connect": "~2.3.0",
-    "connect-redis": "1.4.1",
-    "feather-rest-descriptor": "~0.1",
-    "feather-rest-doc-gen": "~0.1"
+    "connect-redis": "1.4.1"
   },
   "devDependencies": {},
   "repository": {
