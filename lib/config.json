@@ -135,6 +135,14 @@
       }
     ]
   },
+
+  "rest": {
+    "autoGenerateProxy": false,
+    "docs": {
+      "enable": false,
+      "consolidate": false
+    }
+  },
   
   "ui": {
     "enabled": true,
