@@ -15,9 +15,7 @@ var fs    = require("fs"),
     util  = require("util"),
     cli   = require("cli").enable('version').setApp('feather', '0.1'),
     _     = require("underscore"),
-    DomResource = require("../lib/dom").DomResource,
-    restSchemaGen = require("feather-rest-descriptor"),
-    restDocGen = require("feather-rest-doc-gen");
+    DomResource = require("../lib/dom").DomResource;
 
 // Validate that the environment variable FEATHER_HOME has been been initialized.
 
