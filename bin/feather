@@ -512,13 +512,9 @@ function runChild(cmd, args, childCwd) {
   if (!childCwd) {
     childCwd = process.cwd();
   }
-  var chomp = /(\n|\r)+$/,
-      child = spawn(cmd, args, { cwd: childCwd });
-  child.stdout.on('data', function(data) {
-    console.log(data.toString().replace(chomp, ''));
-  });
-  child.stderr.on('data', function(data) {
-    console.error(data.toString().replace(chomp, ''));
+  var child = spawn(cmd, args, { 
+    cwd: childCwd,
+    stdio: 'inherit'
   });
 }
 
