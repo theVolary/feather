@@ -2,6 +2,9 @@
   "name": "feather",
   "version": "0.3.3",
   "description": "Full featured widget-based RIA framework for node",
+  "scripts": {
+    "test": "mocha"
+  },
   "dependencies": {
     "cli": "~0.4.1",
     "cradle": "~0.6.3",
@@ -23,7 +26,10 @@
     "connect": "~2.3.0",
     "connect-redis": "1.4.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "mocha": "1.2.x",
+    "should": "0.6.x"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/theVolary/feather.git"
