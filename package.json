@@ -27,8 +27,8 @@
     "connect-redis": "1.4.1"
   },
   "devDependencies": {
-    "mocha": "1.2.x",
-    "should": "0.6.x"
+    "mocha": "1.6.0",
+    "should": "1.2.0"
   },
   "repository": {
     "type": "git",
