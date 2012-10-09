@@ -135,6 +135,10 @@
       }
     ]
   },
+
+  "rest": {
+    "autoGenerateProxy": false
+  },
   
   "ui": {
     "enabled": true,
