@@ -1,6 +1,5 @@
 var RedisEventPublisher = require('../lib/event-publisher-redis'),
   should = require('should'),
-  fork = require('child_process').fork,
   path = require('path'),
   console = require('console');
 
