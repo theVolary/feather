@@ -6,6 +6,10 @@ var obj = {
 
   foo2: {
     bar: 456
+  },
+
+  'foo.bar.baz': {
+    'foo.bar': 'abc'
   }
 };
 
@@ -16,6 +20,14 @@ describe('ns Tests', function() {
     var val = ns('foo.bar', obj, true);
     should.exist(val);
     val.should.equal(obj['foo.bar']);
+    done();
+  });
+
+  it('should allow fetching nested string based keys with "." characters', function(done) {
+
+    var val = ns('foo.bar.baz.foo.bar', obj, true);
+    should.exist(val);
+    val.should.equal(obj['foo.bar.baz']['foo.bar']);
     done();
   });
 
