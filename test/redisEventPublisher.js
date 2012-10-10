@@ -7,7 +7,7 @@ var RedisEventPublisher = require('../lib/event-publisher-redis'),
 var publisher;
 
 //need the corresponding server running for this test
-console.warn('the RedisEventPublisher tests require REDIS and the redisEventPublisherServer.js file to be running.');
+console.warn('the RedisEventPublisher tests require REDIS and the redisEventPublisherServer.js file to be running (just use node command on that file in another terminal before running this test).');
 
 describe('RedisEventPublisher Tests', function() {
 
@@ -32,6 +32,20 @@ describe('RedisEventPublisher Tests', function() {
       done();
     });
     publisher.fire('event1');
+  });  
+
+  it('should only receive local events once', function(done) {
+
+    var num = 0;
+    publisher.on('event2', function() {
+      num++;
+    });
+    publisher.fire('event2');
+
+    setTimeout(function() {
+      num.should.equal(1);
+      done();
+    }, 1000);
   });  
 
 });

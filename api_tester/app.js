@@ -72,8 +72,9 @@ exports.onInit = function(feather, cb) {
       }
       callback && callback();
     });
-  },
-  tearDown = function(callback) {
+  };
+
+  var tearDown = function(callback) {
     feather.data.appdb.getRawDb().all({include_docs:true},function(err, response) {
       if (!err) {
         var docs = _.map(response, function(doc) {
