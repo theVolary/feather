@@ -72,8 +72,9 @@ exports.onInit = function(feather, cb) {
       }
       callback && callback();
     });
-  },
-  tearDown = function(callback) {
+  };
+
+  var tearDown = function(callback) {
     feather.data.appdb.getRawDb().all({include_docs:true},function(err, response) {
       if (!err) {
         var docs = _.map(response, function(doc) {
@@ -89,4 +90,10 @@ exports.onInit = function(feather, cb) {
 
   //tell feather to continue
   cb();
+}
+
+exports.onReady = function(feather) {
+  if (feather.config('socket.io.enabled')) {
+    require('./lib/addChannels').init(feather);
+  }
 }

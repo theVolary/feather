@@ -49,21 +49,13 @@ feather.ns("api_tester");
             channel6.send("ack:directMessage", {message: "got it"});
           }
         });
-        channel6.on("group:goodGroup:groupMessage", function(args) {
-          channel6.sendGroup("goodGroup", "ack", {message: "got it"});
-        });
-        channel6.on("group:badGroup:groupMessage", function(args) {
-          channel6.sendGroup("badGroup", "ack", {message: "got it"});
-        });
-        channel6.on("subscribe", function() {
-          channel6.joinGroup("goodGroup");          
-          channel6.joinGroup("badGroup");
-        });
+
 
         window.onbeforeunload = function() {
           channel2.dispose();
           channel4.dispose();
           channel5.dispose();
+          channel6.dispose();
         };
       }
     }
