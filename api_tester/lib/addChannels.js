@@ -59,7 +59,7 @@ exports.init = function(feather) {
               cb(null, args.data);
             } else if (args.data === "alterList") {
               //change toClients to send directly to self
-              var clientId = channel6.clientIds[args.client.sessionId];
+              var clientId = channel6.clientUUIDs[args.client.id];
               cb(null, args.data + ": to self", [clientId]);
             } else {
               cb("direct message not allowed");
