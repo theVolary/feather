@@ -22,14 +22,12 @@ exports.init = function(feather) {
   var channel5 = feather.socket.addChannel({
     id: "channel5",
     allowDirectMessaging: true,
-    allowGroups: true,
     messages: ["test", "ack", "ack2"]
   });
 
   var channel6 = feather.socket.addChannel({
     id: "channel6",
     allowDirectMessaging: true,
-    allowGroups: true,
     hooks: {
       subscribe: function(args, cb) {
         if (args.data.allowSubscribe) {
@@ -55,13 +53,6 @@ exports.init = function(feather) {
             break;
           case "disallowMessage":
             cb('not allowed');
-            break;
-          case "groupMessage":
-            if (args.groupName === "goodGroup") {
-              cb(null, args.data);
-            } else {
-              cb('group closed for the summer');
-            }
             break;
           case "directMessage":
             if (args.data === "allow") {
