@@ -32,11 +32,15 @@ feather.ns("api_tester");
         var channel = feather.socket.subscribe({id: "channel1"});
         channel.once("subscribe", function() {
           channel.once("unsubscribe", function() {
-            test.resume();
+            test.resume(function() {
+              channel.dispose();
+            });
           });
           channel.unsubscribe();
         });  
-        test.wait(2000); 
+        test.wait(2000, function() {
+          channel.dispose();
+        }); 
       }  
     }),
 
@@ -200,7 +204,7 @@ feather.ns("api_tester");
             Y.Assert.fail("'notAllowed' message should not have been allowed.");
           });
         });
-        this.channel.once("error", function(args) {
+        this.channel.once("channelError", function(args) {
           test.resume(function() {
             Y.Assert.areEqual("Unsupported Message", args.type);
           });
@@ -230,7 +234,7 @@ feather.ns("api_tester");
               Y.Assert.fail("Direct Messaging should not have been allowed");
             });          
           });
-          test.channel.once("error", function(args) {
+          test.channel.once("channelError", function(args) {
             test.resume(function() {
               Y.Assert.areEqual("Direct Messages Not Allowed", args.type);
             }); 
@@ -243,7 +247,7 @@ feather.ns("api_tester");
 
     new Y.Test.Case({
  
-      name: "Direct Messaging & Groups",
+      name: "Direct Messaging",
 
       //---------------------------------------------
       // Setup and tear down
@@ -290,53 +294,6 @@ feather.ns("api_tester");
             });
             test.channel.send("test", {message: "hi"}, [connectionArgs.clientId]);
           }
-        });        
-        test.wait(4000);
-      },
-
-      testPublicGroupSelfJoin: function() {
-        var test = this;
-        test.channel.once("subscribe", function(subscribeArgs) {
-          test.channel.on("group:publicGroup1", function(args) {
-            if (args.clientId === subscribeArgs.clientId) { //test for my own join event (vs. another client joining the group)
-              test.resume();
-            }
-          });
-          test.channel.joinGroup("publicGroup1");
-        });        
-        test.wait(2000);
-      },
-
-      testLeaveGroup: function() {
-        var test = this;
-        test.channel.once("subscribe", function(subscribeArgs) {
-          test.channel.on("group:publicGroup1", function(joinArgs) {
-            if (joinArgs.clientId === subscribeArgs.clientId) { //test for my own join event (vs. another client joining the group)
-              test.channel.on("group:publicGroup1:leave:", function(leaveArgs) {
-                if (leaveArgs.clientId === subscribeArgs.clientId) {
-                  test.resume();
-                }
-              });
-              test.channel.leaveGroup("publicGroup1");
-            }
-          });
-          test.channel.joinGroup("publicGroup1");
-        });        
-        test.wait(2000);
-      },
-
-      testSendGroup: function() {
-        var test = this;
-        test.channel.once("subscribe", function(subscribeArgs) {
-          test.channel.on("group:publicGroup1", function(args) {
-            if (args.memberCount === 2) { //wait until at least one other client has joined the group
-              test.channel.once("group:publicGroup1:ack", function() {
-                test.resume();
-              });
-              test.channel.sendGroup("publicGroup1", "test", {message: "hi"});
-            }
-          });
-          test.channel.joinGroup("publicGroup1");
         });        
         test.wait(4000);
       }
@@ -397,10 +354,12 @@ feather.ns("api_tester");
             Y.Assert.fail("subscribe should not have been allowed");
           });
         });
-        channel.on("error", function(args) {
+        channel.on("channelError", function(args) {
           channel.dispose();
           if (args.type === "Hook Error" && args.message === "Subscribe error: not allowed") {
-            test.resume();
+            test.resume(function() {
+                Y.Assert.areEqual(true, true);
+            });
           }
         });
         test.wait(2000, function() {
@@ -439,7 +398,7 @@ feather.ns("api_tester");
             allowConnect: false
           }
         });
-        channel.on("error", function(args) {
+        channel.on("channelError", function(args) {
           test.resume(function() {
             channel.dispose();
             Y.Assert.areEqual("Connect error: not allowed", args.message);
@@ -502,7 +461,7 @@ feather.ns("api_tester");
             Y.Assert.fail("message should not have been allowed");
           });
         });
-        channel.on("error", function(args) {
+        channel.on("channelError", function(args) {
           if (args.type === "Hook Error" && args.message === "Message error: not allowed") {
             test.resume(function() {
               channel.dispose();
@@ -550,7 +509,7 @@ feather.ns("api_tester");
               Y.Assert.fail("direct message should not have been allowed");
             });   
           });
-          channel.on("error", function(args) {
+          channel.on("channelError", function(args) {
             if (args.type === "Hook Error" && args.message === "Message error: direct message not allowed") {
               test.resume(function() {
                 channel.dispose();
@@ -584,62 +543,6 @@ feather.ns("api_tester");
             });   
           });
           channel.send("directMessage", "alterList", [connectionArgs.clientId]);
-        });        
-        test.wait(2000, function() {
-          channel.dispose();
-        });
-      },
-
-      testGroupMessageAllow: function() {
-        var test = this;
-        var channel = feather.socket.subscribe({
-          id: "channel6",
-          data: {allowSubscribe: true}
-        });
-        channel.once("subscribe", function(subscribeArgs) {
-          channel.on("group:goodGroup", function(args) {
-            if (args.memberCount === 2) { //wait until at least one other client has joined the group
-              channel.once("group:goodGroup:ack", function() {
-                test.resume(function() {
-                  channel.dispose();
-                });
-              });
-              channel.sendGroup("goodGroup", "groupMessage", "allow this");
-            }
-          });
-          channel.joinGroup("goodGroup");
-        });        
-        test.wait(2000, function() {
-          channel.dispose();
-        });
-      },
-
-      testGroupMessageDisallow: function() {
-        var test = this;
-        var channel = feather.socket.subscribe({
-          id: "channel6",
-          data: {allowSubscribe: true}
-        });
-        channel.once("subscribe", function(subscribeArgs) {
-          channel.on("group:badGroup", function(args) {
-            if (args.memberCount === 2) { //wait until at least one other client has joined the group
-              channel.once("group:badGroup:ack", function() {
-                test.resume(function() {
-                  channel.dispose();
-                  Y.Assert.fail("message should not have been allowed.");
-                });
-              });
-              channel.on("error", function(args) {
-                if (args.type === "Hook Error" && args.message === "Message error: group closed for the summer") {
-                  test.resume(function() {
-                    channel.dispose();
-                  });
-                }
-              });
-              channel.sendGroup("badGroup", "groupMessage", "disallow this");
-            }
-          });
-          channel.joinGroup("badGroup");
         });        
         test.wait(2000, function() {
           channel.dispose();

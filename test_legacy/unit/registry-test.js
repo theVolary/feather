@@ -32,7 +32,7 @@
       try {
         this.registry.add(item2);
       } catch (ex) {
-        var err = "Error: All items in this registry instance must have unique IDs.\n\nid: item1";
+        var err = "Error: All items in this registry instance must have unique IDs.... id: item1";
         Y.Assert.areEqual(ex.message, err, "no duplicate ids allowed");
       }
     },
