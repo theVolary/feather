@@ -200,7 +200,7 @@ feather.ns("api_tester");
             Y.Assert.fail("'notAllowed' message should not have been allowed.");
           });
         });
-        this.channel.once("error", function(args) {
+        this.channel.once("channelError", function(args) {
           test.resume(function() {
             Y.Assert.areEqual("Unsupported Message", args.type);
           });
@@ -230,7 +230,7 @@ feather.ns("api_tester");
               Y.Assert.fail("Direct Messaging should not have been allowed");
             });          
           });
-          test.channel.once("error", function(args) {
+          test.channel.once("channelError", function(args) {
             test.resume(function() {
               Y.Assert.areEqual("Direct Messages Not Allowed", args.type);
             }); 
@@ -397,10 +397,12 @@ feather.ns("api_tester");
             Y.Assert.fail("subscribe should not have been allowed");
           });
         });
-        channel.on("error", function(args) {
+        channel.on("channelError", function(args) {
           channel.dispose();
           if (args.type === "Hook Error" && args.message === "Subscribe error: not allowed") {
-            test.resume();
+            test.resume(function() {
+                Y.Assert.areEqual(true, true);
+            });
           }
         });
         test.wait(2000, function() {
@@ -439,7 +441,7 @@ feather.ns("api_tester");
             allowConnect: false
           }
         });
-        channel.on("error", function(args) {
+        channel.on("channelError", function(args) {
           test.resume(function() {
             channel.dispose();
             Y.Assert.areEqual("Connect error: not allowed", args.message);
@@ -502,7 +504,7 @@ feather.ns("api_tester");
             Y.Assert.fail("message should not have been allowed");
           });
         });
-        channel.on("error", function(args) {
+        channel.on("channelError", function(args) {
           if (args.type === "Hook Error" && args.message === "Message error: not allowed") {
             test.resume(function() {
               channel.dispose();
@@ -550,7 +552,7 @@ feather.ns("api_tester");
               Y.Assert.fail("direct message should not have been allowed");
             });   
           });
-          channel.on("error", function(args) {
+          channel.on("channelError", function(args) {
             if (args.type === "Hook Error" && args.message === "Message error: direct message not allowed") {
               test.resume(function() {
                 channel.dispose();
@@ -629,7 +631,7 @@ feather.ns("api_tester");
                   Y.Assert.fail("message should not have been allowed.");
                 });
               });
-              channel.on("error", function(args) {
+              channel.on("channelError", function(args) {
                 if (args.type === "Hook Error" && args.message === "Message error: group closed for the summer") {
                   test.resume(function() {
                     channel.dispose();

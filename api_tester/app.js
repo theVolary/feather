@@ -91,3 +91,9 @@ exports.onInit = function(feather, cb) {
   //tell feather to continue
   cb();
 }
+
+exports.onReady = function(feather) {
+  if (feather.config('socket.io.enabled')) {
+    require('./lib/addChannels').init(feather);
+  }
+}
