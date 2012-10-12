@@ -228,6 +228,36 @@
           "version": "0.7.0"
         }
       }
+    },
+    "should": {
+      "version": "1.2.0"
+    },
+    "spec": {
+      "version": "1.0.0rc4"
+    },
+    "request": {
+      "version": "2.11.4",
+      "dependencies": {
+        "form-data": {
+          "version": "0.0.3",
+          "dependencies": {
+            "combined-stream": {
+              "version": "0.0.3",
+              "dependencies": {
+                "delayed-stream": {
+                  "version": "0.0.5"
+                }
+              }
+            },
+            "async": {
+              "version": "0.1.9"
+            }
+          }
+        },
+        "mime": {
+          "version": "1.2.7"
+        }
+      }
     }
   }
 }
