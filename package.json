@@ -24,7 +24,8 @@
     "validator": "~0.4.6-1",
     "socket.io": "~0.9.10",
     "connect": "~2.3.0",
-    "connect-redis": "1.4.1"
+    "connect-redis": "1.4.1",
+    "redis": "0.8.1"
   },
   "devDependencies": {
     "mocha": "1.6.0",
