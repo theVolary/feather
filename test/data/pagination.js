@@ -34,7 +34,8 @@ var testDocs = [
     "language": "javascript",
     "views": {
       "byName": {
-        "map": "function(doc) { emit(doc.name, doc); }"
+        "map": "function(doc) { emit(doc.name, doc); }",
+        "reduce": "function(keys, values, rereduce) { if (rereduce) { var s = 0; values.forEach(function(val) { s += val; }); return s; } else { return values.length; }}"
       }
     }
   }
@@ -79,7 +80,7 @@ describe('pagination tests', function(done) {
     }, function(delErr, delRes, delBody) {
       done();
     });
-    // done();
+    //done();
   });
 
   it("should return a total of 13 records when getting all", function(done) {
@@ -154,6 +155,8 @@ describe('pagination tests', function(done) {
         result.documents.length.should.equal(3);
         result.documents[0].name.should.equal('Festerhide Boar');
         result.documents[2].name.should.equal('Griffin Rider');
+        should.exist(result.options.pagination.docCount);
+        result.options.pagination.docCount.should.equal(5);
         done();
       }
     });
@@ -177,6 +180,8 @@ describe('pagination tests', function(done) {
         result.documents.length.should.equal(3);
         result.documents[0].name.should.equal('Grizzled Outcasts');
         result.documents[2].name.should.equal('Lumberknot');
+        should.exist(result.options.pagination.docCount);
+        result.options.pagination.docCount.should.equal(11);  // filtered results should be length of 11.
         done();
       }
     });
