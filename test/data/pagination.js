@@ -85,7 +85,10 @@ describe('pagination tests', function(done) {
 
   it("should return a total of 13 records when getting all", function(done) {
     db.find({
-      source: 'pagination/byName'
+      source: 'pagination/byName',
+      criteria: {
+        reduce: false
+      },
     }, function(err, result) {
       if (err) done(err); else {
         result.documents.length.should.equal(testDocs.length-1);
