@@ -77,7 +77,7 @@
       }
     },
     "feather-config": {
-      "version": "0.1.1",
+      "version": "0.1.2",
       "from": "https://github.com/theVolary/feather-config/tarball/master"
     },
     "node-uuid": {
@@ -229,87 +229,36 @@
         }
       }
     },
-    "feather-rest-descriptor": {
-      "version": "0.1.0",
-      "from": "git+ssh://git@github.com:theVolary/feather-rest-descriptor.git"
+    "redis": {
+      "version": "0.8.1"
     },
-    "feather-rest-doc-gen": {
-      "version": "0.1.0",
-      "from": "git+ssh://git@github.com:skrenek/feather-rest-doc-gen.git",
+    "should": {
+      "version": "1.2.0"
+    },
+    "spec": {
+      "version": "1.0.0rc4"
+    },
+    "request": {
+      "version": "2.11.4",
       "dependencies": {
-        "jsdom": {
-          "version": "0.2.15",
+        "form-data": {
+          "version": "0.0.3",
           "dependencies": {
-            "htmlparser": {
-              "version": "1.7.6"
-            },
-            "request": {
-              "version": "2.11.4",
+            "combined-stream": {
+              "version": "0.0.3",
               "dependencies": {
-                "form-data": {
-                  "version": "0.0.3",
-                  "dependencies": {
-                    "combined-stream": {
-                      "version": "0.0.3",
-                      "dependencies": {
-                        "delayed-stream": {
-                          "version": "0.0.5"
-                        }
-                      }
-                    },
-                    "async": {
-                      "version": "0.1.9"
-                    }
-                  }
-                },
-                "mime": {
-                  "version": "1.2.7"
+                "delayed-stream": {
+                  "version": "0.0.5"
                 }
               }
             },
-            "cssom": {
-              "version": "0.2.5"
-            },
-            "contextify": {
-              "version": "0.1.3",
-              "dependencies": {
-                "bindings": {
-                  "version": "1.0.0"
-                }
-              }
+            "async": {
+              "version": "0.1.9"
             }
           }
         },
-        "should": {
-          "version": "1.1.0"
-        },
-        "mocha": {
-          "version": "1.4.2",
-          "dependencies": {
-            "commander": {
-              "version": "0.6.1"
-            },
-            "growl": {
-              "version": "1.5.1"
-            },
-            "jade": {
-              "version": "0.26.3",
-              "dependencies": {
-                "mkdirp": {
-                  "version": "0.3.0"
-                }
-              }
-            },
-            "diff": {
-              "version": "1.0.2"
-            },
-            "debug": {
-              "version": "0.7.0"
-            },
-            "mkdirp": {
-              "version": "0.3.3"
-            }
-          }
+        "mime": {
+          "version": "1.2.7"
         }
       }
     }

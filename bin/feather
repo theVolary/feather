@@ -15,9 +15,7 @@ var fs    = require("fs"),
     util  = require("util"),
     cli   = require("cli").enable('version').setApp('feather', '0.1'),
     _     = require("underscore"),
-    DomResource = require("../lib/dom").DomResource,
-    restSchemaGen = require("feather-rest-descriptor"),
-    restDocGen = require("feather-rest-doc-gen");
+    DomResource = require("../lib/dom").DomResource;
 
 // Validate that the environment variable FEATHER_HOME has been been initialized.
 
@@ -68,7 +66,7 @@ var cliOptions = {
     testsuite: ['t', '(api-test command only) - Specify the name of a single test suite to run inside of feather/test/unit (omit the file extension)', 'string', null],
     "client-only": ['c', '(create-widget command only) - Indicates that the created widget is a client-side rendered widget (has no .server.js file)', 'boolean', false]
   };
-var options = cli.parse(cliOptions, ['run', 'test', 'api-test', 'create-app', 'create-widget', 'create-rest', 'deploy', 'doc-rest', 'help', 'stats', 'print-cmd']);
+var options = cli.parse(cliOptions, ['run', 'test', 'api-test', 'create-app', 'create-widget', 'create-rest', 'deploy', 'help', 'stats', 'print-cmd']);
 if (options.debug) {
   cli.debug("Parsed options are: " + util.inspect(options));
   cli.debug("Command is " + cli.command);
@@ -345,47 +343,6 @@ var commands = {
     }
   },
 
-  docRest: {
-    desc:"Generates documentation for one or more rest interfaces in the app.",
-    usage:"feather doc-rest [interface]",
-    cmdOptions: [
-      '--path (-' + cliOptions.path[0] + '): ' + cliOptions.path[1],
-      '--verbose (-' + cliOptions.verbose[0] + '): ' + cliOptions.verbose[1]
-    ].join('\n  '),
-    fn: function() {
-      var appDir = getAppDir(),
-          restDir = appDir + '/rest',
-          restDocDir = appDir + "/public/feather-res-cache/_rest",
-          ifc = cli.args[0] || "all",
-          restFiles = getFiles(restDir);
-
-      ffs.mkdirpSync(restDocDir);
-
-      restSchemaGen.generateSchemas({
-        restFolder: restDir,
-        interface: ifc
-      }, function(err, schemas) {
-        if (err) {
-          cli.error('Error generating REST schemas for ' + color.ansify("#bold[#cyan[" + ifc + "]]") + " interface(s): " + err);
-        } else {
-          _.each(schemas, function(schema) {
-            restDocGen.generateHtml({
-              schema: schema,
-              destDir: restDocDir
-            }, function(errorArray) {
-              if (errorArray && errorArray.length) {
-                cli.error("Error generating REST HTML docs for " + schema.name + ": " + JSON.stringify(errorArray));
-              } else {
-                cli.ok("Generated HTML docs for " + schema.name);
-              }
-            });
-          });
-          cli.ok("Document generation complete.");
-        }
-      });
-    }
-  },
-
   help: {
     desc:"Displays general help, or help on a specific command.  If you're reading this, you already know that.",
     usage:"feather help <command>",
@@ -512,13 +469,9 @@ function runChild(cmd, args, childCwd) {
   if (!childCwd) {
     childCwd = process.cwd();
   }
-  var chomp = /(\n|\r)+$/,
-      child = spawn(cmd, args, { cwd: childCwd });
-  child.stdout.on('data', function(data) {
-    console.log(data.toString().replace(chomp, ''));
-  });
-  child.stderr.on('data', function(data) {
-    console.error(data.toString().replace(chomp, ''));
+  var child = spawn(cmd, args, { 
+    cwd: childCwd,
+    stdio: 'inherit'
   });
 }
 
