@@ -52,6 +52,43 @@ feather.ns("api_tester");
           }
         }));
 
+        suite.add(new Y.Test.Case({
+          name: "Test boolean/checkbox fields when model is known at render time",
+          setUp: feather.emptyFn,
+          tearDown : function(){
+            me.datalink1 && me.datalink1.dispose();
+          },
+
+          testCheckboxes: function () {
+            var test = this;
+            feather.Widget.load({
+              path: "widgets/datalink1/",
+              parent: me,
+              clientOptions: {
+                onceState: {
+                  ready: function() {
+                    me.datalink1 = this;
+                    test.resume(function() {
+                      Y.Assert.areEqual(me.datalink1.get('[name=bool]').attr('checked'), 'checked');                        
+                    });
+                  }
+                },
+                model: {
+                  test: {
+                    bool: true
+                  }
+                },
+                containerOptions: {
+                  title: "testing checkbox fields",
+                  width: 500,
+                  height: 300
+                }
+              }
+            });
+            test.wait();
+          }
+        }));
+
         Y.Test.Runner.add(suite);
       }
     }
