@@ -9,6 +9,7 @@
     },
     "session": {
       "provider": "memory",
+      "providerOptions": null,
       "key": "feather.sid",
       "secret": "feather app key",
       "ignorePaths": ["/robots.txt"],
@@ -49,6 +50,11 @@
     "runAsUser": "root",
     "runAsGroup": "root"
   },
+
+  "redis": {
+    "servers": {}
+  },
+  
   "data": {
     "datalinking": {
       "enabled": true
