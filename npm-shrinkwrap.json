@@ -43,7 +43,7 @@
       }
     },
     "daemon": {
-      "version": "0.4.1"
+      "version": "0.5.1"
     },
     "knox": {
       "version": "0.3.0",
