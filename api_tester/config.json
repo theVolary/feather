@@ -7,6 +7,10 @@
     "autoGenerateProxy": true
   },
 
+  "connect": {
+    "404": "/403.html"
+  },
+
   "useAjaxForSystem": true,  
 
   "socketOptions": {
