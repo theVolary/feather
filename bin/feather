@@ -66,7 +66,7 @@ var cliOptions = {
     testsuite: ['t', '(api-test command only) - Specify the name of a single test suite to run inside of feather/test/unit (omit the file extension)', 'string', null],
     "client-only": ['c', '(create-widget command only) - Indicates that the created widget is a client-side rendered widget (has no .server.js file)', 'boolean', false]
   };
-var options = cli.parse(cliOptions, ['run', 'test', 'api-test', 'create-app', 'create-widget', 'create-rest', 'deploy', 'help', 'stats', 'print-cmd']);
+var options = cli.parse(cliOptions, ['run', 'test', 'api-test', 'create-app', 'create-widget', 'create-rest', 'deploy', 'help', 'stats', 'print-cmd', 'lsenv']);
 if (options.debug) {
   cli.debug("Parsed options are: " + util.inspect(options));
   cli.debug("Command is " + cli.command);
@@ -98,7 +98,7 @@ var commands = {
 
       args.push(process.env.FEATHER_HOME + '/lib/app.js');
       
-      var appDir = getAppDir();      
+      var appDir = getAppDir();
       args.push(appDir);
 
       addAdditionalOptions(args);
@@ -390,6 +390,16 @@ var commands = {
     fn: function() {
       stats();
     }
+  },
+
+  lsenv: {
+    desc: "Lists all of the available environment names in the feather app.",
+    usage: "feather [OPTIONS] lsenv",
+    cmdOptions: [
+      '--path (-' + cliOptions.path[0] + '): ' + cliOptions.path[1],
+      '--verbose (-' + cliOptions.verbose[0] + '): ' + cliOptions.verbose[1]
+    ].join('\n '),
+    fn: lsenv
   }
 };
 
@@ -621,4 +631,22 @@ function stats() {
 
 function deploy() {
   cli.ok("TODO: Deploy");
+}
+
+function lsenv() {
+  // Read config.json and list all properties of environments.  Read contents of conf folder and list json files.
+  var envs = [];
+  var appDir = getAppDir();
+  var defaultConf = appDir + '/config.json';
+  if (fs.existsSync(defaultConf)) {
+    var defaultConfig = JSON.parse(fs.readFileSync(defaultConf));
+    if (defaultConfig.environments) {
+      _.each(defaultConfig, function(val, key) { envs.push(key); });
+    }
+  }
+  _.each(_.filter(fs.readdirSync(appDir + '/conf'), function(f) { return path.extname(f) === '.json' }), function(file) {
+    envs.push(path.basename(file, '.json'));
+  });
+
+  cli.ok(color.ansify("#white[Configured environments: #cyan[#bold[" + envs.join(']], #cyan[#bold[') + ']]]'));
 }
