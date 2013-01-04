@@ -1,17 +1,37 @@
 {
   "useAjaxForSystem": true,
 
+  "cluster": false,
+
+  "connect": {
+    "cookieParser": {
+      "secret": "feather.sid"
+    },
+    "session": {
+      "provider": "memory",
+      "providerOptions": null,
+      "key": "feather.sid",
+      "secret": "feather app key",
+      "ignorePaths": ["/robots.txt"],
+      "cookie": { 
+        "path": "/", 
+        "httpOnly": false, 
+        "maxAge": 14400000, 
+        "secure": false 
+      }
+    }
+  },
+
   "host": "localhost",
   
   "socket.io": {
     "enabled": false,
     "port": 8081,
-    "host": "localhost"
-  },
-  "socketOptions": {
+    "host": "localhost",
     "log level": 1,
     "log level docs": "0 = error, 1 = warn, 2 = info, 3 = debug"
   },
+  
   "auth": {
     "enabled": false,
     "userIdPrefix": "org.couchdb.user:"
@@ -27,8 +47,14 @@
     "runAsDaemon": false,
     "outputPath": "feather-app.out",
     "pidPath": "/tmp/feather-app.pid",
-    "runAsUser": "root"
+    "runAsUser": "root",
+    "runAsGroup": "root"
   },
+
+  "redis": {
+    "servers": {}
+  },
+  
   "data": {
     "datalinking": {
       "enabled": true
@@ -39,9 +65,6 @@
     "max": 20
   },
   "environments": {
-    "dev": {},
-    "test": {}, 
-    "prod": {},
     "unittest": {
       "debug": true,
       "daemon": {
@@ -57,7 +80,8 @@
         "defaultLevel": "trace",
         "absorbConsoleLogging": true
       }
-    }
+    },
+    "dev": {}
   },
   "logging": {
     "enabled": true,
@@ -85,10 +109,24 @@
           "config": {
             "publishLocation": "feather-res-cache"
           }
+        },
+        {
+          "id": "s3",
+          "config": {
+            "key": "",
+            "secret": "",
+            "bucket": "",
+            "acl": "public-read",
+            "publishUri": null
+          }
         }
       ]
     },
     "packages": [
+      {
+        "publishType": "pageContent",
+        "publisherId": "local"
+      },
       { 
         "name":"feather-client-core.js",
         "consolidate": false,
@@ -103,24 +141,36 @@
       }
     ]
   },
-  "session": {
-    "config": {
-      "key": "feather.sid",
-      "cookie": { "path": "/", "httpOnly": false, "maxAge": 14400000 },
-      "secret": "feather app key"
-    },
-    "ignorePaths": ["/robots.txt"]
+
+  "rest": {
+    "autoGenerateProxy": false
   },
+  
   "ui": {
     "enabled": true,
-    "provider": {
-      "jsFiles": [
-        "/feather-client/lib/jqueryUI-1.8.14/js/jquery-ui-1.8.14.custom.min.js",
-        "/feather-client/ui.js"
-      ],
-      "cssFiles": [
-        "/feather-client/lib/jqueryUI-1.8.14/css/black-tie/jquery-ui-1.8.14.custom.css"
-      ]
-    }
+    "provider": "jqueryUI",
+    "providers": [
+      {
+        "name": "jqueryUI",
+        "jsFiles": [
+          "/feather-client/lib/jqueryUI/js/jqueryUI.min.js",
+          "/feather-client/ui.js"
+        ],
+        "cssFiles": [
+          "/feather-client/lib/jqueryUI/css/jqueryUI.css"
+        ]
+      },
+      {
+        "name": "bootstrap",
+        "jsFiles": [
+          "/feather-client/lib/bootstrap/js/bootstrap.min.js",
+          "/feather-client/ui-bootstrap.js"
+        ],
+        "cssFiles": [
+          "/feather-client/lib/bootstrap/css/bootstrap.min.css",
+          "/feather-client/lib/bootstrap/css/bootstrap-responsive.min.css"
+        ]
+      }
+    ]
   }
 }

@@ -1,5 +1,7 @@
 var fs = require('fs'),
-    path = require('path');
+    path = require('path'),
+    ghm = require('github-flavored-markdown'),
+    sanitize = require('validator').sanitize;
 
 exports.getWidget = function(feather, cb) {
   cb(null, {
@@ -13,8 +15,6 @@ exports.getWidget = function(feather, cb) {
      */
     prototype: {
       onInit: function(options) {
-        var Converter = require('../../../lib/Markdown.Converter').Converter;
-        var converter = new Converter();
 
         var docs_path = path.join(feather.appOptions.featherRoot, 
           '../featherdoc/docs');
@@ -30,8 +30,9 @@ exports.getWidget = function(feather, cb) {
 
             file_no_ext = path.basename(file, '.md'); // drop .md extension
             doc.key = file_no_ext.replace(/\s+/g, '-'); // make class friendly
-            doc.value = converter.makeHtml(
-              fs.readFileSync(full_path, 'utf-8')); // convert to HTML
+            doc.value = ghm.parse(
+              sanitize(
+                fs.readFileSync(full_path, 'utf-8')).entityEncode()); // convert to HTML
 
             docs_as_html.push(doc);
 

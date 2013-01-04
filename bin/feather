@@ -1,14 +1,23 @@
 #!/usr/bin/env node
 
+// feather
+// =======
+
+// Requires
+// --------
+
 var fs    = require("fs"),
     path  = require("path"),
     spawn = require("child_process").spawn,
-    exec = require("child_process").exec,
+    exec  = require("child_process").exec,
     ffs   = require("../lib/util"),
     color = require("colorize"),
     util  = require("util"),
     cli   = require("cli").enable('version').setApp('feather', '0.1'),
-    _     = require("underscore");
+    _     = require("underscore"),
+    DomResource = require("../lib/dom").DomResource;
+
+// Validate that the environment variable FEATHER_HOME has been been initialized.
 
 if (!process.env.FEATHER_HOME) {
   cli.fatal(color.ansify("The environment variable #white[FEATHER_HOME] is required."));
@@ -24,7 +33,8 @@ cli.readline = function (encoding, callback) {
         callback = encoding;
         encoding = 'utf8';
     }
-    var stream = process.openStdin(), data = '';
+    var stream = process.openStdin(), 
+      data = '';
     stream.setEncoding(encoding);
     var listener = function (chunk) {
         data += chunk;
@@ -41,24 +51,22 @@ cli.readline = function (encoding, callback) {
     stream.on('data', listener);
 };
 
-var options = cli.parse({
+var cliOptions = {
     daemonize: ['z', '(run command only) - Daemonize this server so it runs in the background', 'boolean', null],
     debug: ['d', '(run command only) - Starts the app in debug mode (i.e. "node debug")', 'boolean', false],
     "debug-inspector": ['D', '(run command only) - Starts the app in debug mode and hosts node-inspector on port 8888', 'boolean', false],
-    dompoolmax: ['x', '(run command only) - The max size of the dom pool to use', 'number', null],
-    dompoolmin: ['n', '(run command only) - The min size of the dom pool to use', 'number', null],
     env: ['e', '(run command only) - The environment to run in (e.g. dev, prod)', 'string', "dev"],
     loglevel: ['l', '(run command only) - The default logging level to use.  Options are: all, trace, debug, info, warn, error, off', 'string', null],
     outputpath: ['o', '(run command only) - Path to write std output to when running as a daemon', 'path', null],
-    path: ['p', 'The path to the application to apply this command to', 'path', process.cwd()],
     pidpath: ['i', '(run command only) - The path of the pid file to use when running as a daemon', 'path', null],
+    extras: ['x', '(run command only) - Comma separated list of name:value pairs to append to the environment as additional configuration items. Usage: " feather run -x foo:bar,foo2:bar2"', 'string', null],
+    path: ['p', 'The path to the application to apply this command to.  If omitted, defaults to current dir.', 'path', process.cwd()],
     verbose: ['V', 'Verbose output', 'boolean', null],
     format: ['f', '(api-test command only) - Used for test commands to denote the output format.  Valid formats are "tap", "xunit", and "junitxml".', 'string', null],
     testsuite: ['t', '(api-test command only) - Specify the name of a single test suite to run inside of feather/test/unit (omit the file extension)', 'string', null],
     "client-only": ['c', '(create-widget command only) - Indicates that the created widget is a client-side rendered widget (has no .server.js file)', 'boolean', false]
-  },
-  ['run', 'test', 'api-test', 'create-app', 'create-widget', 'create-rest', 'help', 'stats']);
-
+  };
+var options = cli.parse(cliOptions, ['run', 'test', 'api-test', 'create-app', 'create-widget', 'create-rest', 'deploy', 'help', 'stats', 'print-cmd', 'lsenv']);
 if (options.debug) {
   cli.debug("Parsed options are: " + util.inspect(options));
   cli.debug("Command is " + cli.command);
@@ -69,6 +77,17 @@ var commands = {
   run: {
     desc: "Runs a feather app.  If the path option is omitted, the default is attempted.  (See feather --help)",
     usage: "feather [OPTIONS] run",
+    cmdOptions: [
+      '--daemonize (-' + cliOptions.daemonize[0] + '): ' + cliOptions.daemonize[1],
+      '--debug (-' + cliOptions.debug[0] + '): ' + cliOptions.debug[1],
+      '--debug-inspector (-' + cliOptions['debug-inspector'][0] + '): ' + cliOptions['debug-inspector'][1],
+      '--env (-' + cliOptions.env[0] + '): ' + cliOptions.env[1],
+      '--loglevel (-' + cliOptions.loglevel[0] + '): ' + cliOptions.loglevel[1],
+      '--outputpath (-' + cliOptions.outputpath[0] + '): ' + cliOptions.outputpath[1],
+      '--pidpath (-' + cliOptions.pidpath[0] + '): ' + cliOptions.pidpath[1],
+      '--path (-' + cliOptions.path[0] + '): ' + cliOptions.path[1],
+      '--verbose (-' + cliOptions.verbose[0] + '): ' + cliOptions.verbose[1]
+    ].join('\n  '),
     fn: function() {
       var args = [];
       if (options.debug) {
@@ -79,21 +98,37 @@ var commands = {
 
       args.push(process.env.FEATHER_HOME + '/lib/app.js');
       
-      var appDir = getAppDir();      
+      var appDir = getAppDir();
       args.push(appDir);
 
       addAdditionalOptions(args);
       
-      runChild("node", args, appDir);
+      if (options.printCmd) {
+        var cmd = "node";
+        _.each(args, function(arg) {
+          cmd += " " + arg;
+        });
+        cli.ok("Run command: " + cmd);
+      } else {
+        runChild("node", args, appDir);
+      }
 
       if (options["debug-inspector"]) {
+        cli.ok("Starting node inspector on port 8888");
         exec("node-inspector --web-port=8888 &");
       }
     }
   },
+
   apiTest: {
     desc: "Runs the unit tests for the framework itself.",
     usage: "feather [OPTIONS] api-test",
+    cmdOptions: [
+      '--path (-' + cliOptions.path[0] + '): ' + cliOptions.path[1],
+      '--verbose (-' + cliOptions.verbose[0] + '): ' + cliOptions.verbose[1],
+      '--format (-' + cliOptions.format[0] + '): ' + cliOptions.format[1],
+      '--testsuite (-' + cliOptions.testsuite[0] + '): ' + cliOptions.testsuite[1]
+    ].join('\n  '),
     fn: function() {
       var args = [];
       if (options.debug) args.push('debug');
@@ -172,7 +207,7 @@ var commands = {
       // Setup completion handler.
       testRunner.subscribe("complete", function(event) {
         var output = formatter(event.results);
-        if (! path.existsSync(process.env.FEATHER_HOME+"/reports")) {
+        if (! fs.existsSync(process.env.FEATHER_HOME+"/reports")) {
           fs.mkdirSync(process.env.FEATHER_HOME+"/reports", 0755);
         }
         var outputPath = process.env.FEATHER_HOME + "/reports/test-results.xml";
@@ -188,9 +223,14 @@ var commands = {
       }
     }
   },
+
   test: {
     desc: "Runs the tests for an app.  If the path option is omitted, the default is used.",
     usage: "feather [OPTIONS] test [--format] test/(unit|integration)",
+    cmdOptions: [
+      '--path (-' + cliOptions.path[0] + '): ' + cliOptions.path[1],
+      '--verbose (-' + cliOptions.verbose[0] + '): ' + cliOptions.verbose[1]
+    ].join('\n'),
     fn: function() {
       var args = [];
       if (options.debug) args.push('debug');
@@ -208,9 +248,14 @@ var commands = {
       runChild("node", args, appDir);
     }
   },
+
   createApp: {
     desc:"Creates a new feather application at the specified directory.  If NAME is omitted, the current directory is assumed, but it will prompt you for confirmation.",
     usage:"feather [OPTIONS] create-app [NAME]",
+    cmdOptions: [
+      '--path (-' + cliOptions.path[0] + '): ' + cliOptions.path[1],
+      '--verbose (-' + cliOptions.verbose[0] + '): ' + cliOptions.verbose[1]
+    ].join('\n  '),
     fn: function() {
       var dir = getAppDir(true, true), name;
       if (cli.argc < 1) {
@@ -232,9 +277,15 @@ var commands = {
       }
     }
   },
+
   createWidget: {
     desc:"Creates a new widget in a feather app.  If namespace is omitted, the name of the app's directory is assumed.",
     usage:"feather [OPTIONS] create-widget [namespace] widgetName",
+    cmdOptions: [
+      '--path (-' + cliOptions.path[0] + '): ' + cliOptions.path[1],
+      '--verbose (-' + cliOptions.verbose[0] + '): ' + cliOptions.verbose[1],
+      '--client-only (-' + cliOptions['client-only'][0] + '): ' + cliOptions['client-only'][1]
+    ].join('\n  '),
     fn:function() {
       var namespace, widgetName, appDir = getAppDir();
       if (cli.argc < 1) {
@@ -261,9 +312,14 @@ var commands = {
       }
     }
   },
+
   createRest: {
     desc:"Creates a new RESTful api source file.",
     usage:"feather [OPTIONS] create-rest restApiName",
+    cmdOptions: [
+      '--path (-' + cliOptions.path[0] + '): ' + cliOptions.path[1],
+      '--verbose (-' + cliOptions.verbose[0] + '): ' + cliOptions.verbose[1]
+    ].join('\n  '),
     fn:function() {
       var appDir = getAppDir(),
           name = cli.args[0];
@@ -286,9 +342,14 @@ var commands = {
       }
     }
   },
+
   help: {
     desc:"Displays general help, or help on a specific command.  If you're reading this, you already know that.",
     usage:"feather help <command>",
+    cmdOptions: [
+      '--path (-' + cliOptions.path[0] + '): ' + cliOptions.path[1],
+      '--verbose (-' + cliOptions.verbose[0] + '): ' + cliOptions.verbose[1]
+    ].join('\n  '),
     fn: function() {
       if (cli.argc < 1) {
         cli.getUsage();
@@ -299,20 +360,59 @@ var commands = {
           color.ansify("#bold[Description:]"),
           "  " + cmd.desc,
           color.ansify("\n#bold[Usage:]"),
-          "  " + cmd.usage + "\n"
+          "  " + cmd.usage + "\n",
+          color.ansify("#bold[Options:]"),
+          "  " + cmd.cmdOptions + "\n"
         ];
         console.log(output.join('\n'));
       }
     }
   },
+
+  deploy: {
+    desc: "Not yet implemented: Generates a script used to deploy a feather app.",
+    usage: "feather [OPTIONS] deploy",
+    cmdOptions: [
+      '--deploy-type (upstart | initd)'
+    ],
+    fn: function() {
+      deploy();
+    }
+  },
+
   stats: {
     desc: "Calculates stats on the feather app.",
     usage: "feather [OPTIONS] stats",
+    cmdOptions: [
+      '--path (-' + cliOptions.path[0] + '): ' + cliOptions.path[1],
+      '--verbose (-' + cliOptions.verbose[0] + '): ' + cliOptions.verbose[1]
+    ].join('\n  '),
     fn: function() {
       stats();
     }
+  },
+
+  lsenv: {
+    desc: "Lists all of the available environment names in the feather app.",
+    usage: "feather [OPTIONS] lsenv",
+    cmdOptions: [
+      '--path (-' + cliOptions.path[0] + '): ' + cliOptions.path[1],
+      '--verbose (-' + cliOptions.verbose[0] + '): ' + cliOptions.verbose[1]
+    ].join('\n '),
+    fn: lsenv
   }
 };
+
+commands.printCmd = {
+  desc: 'Prints the final command the Run command would execute after all options are parsed.  This is useful to include in start/stop scripts.',
+  usage: "feather [OPTIONS] print-cmd",
+  cmdOptions: commands.run.cmdOptions,
+  fn: function() {
+    options.printCmd = true;
+    commands.run.fn.call();
+  }
+};
+
 commands[resolveCmd(cli.command)].fn.call();
 
 function checkResult(result) {
@@ -331,7 +431,7 @@ function getAppDir(createIfNoExist, ignorePublicMissing) {
     appDir = path.resolve(process.cwd(), appDir);
   }
 
-  if (!path.existsSync(appDir)) {
+  if (!fs.existsSync(appDir)) {
     if (createIfNoExist) {
       if (!ffs.mkdirpSync(appDir, 0755).result) {
         cli.fatal("Path " + appDir + " does not exist and I couldn't create it.");
@@ -343,7 +443,7 @@ function getAppDir(createIfNoExist, ignorePublicMissing) {
   if (!fs.statSync(appDir).isDirectory()) {
     cli.fatal(appDir + " is not a directory.");
   }
-  if (!ignorePublicMissing && !path.existsSync(appDir + '/public')) {
+  if (!ignorePublicMissing && !fs.existsSync(appDir + '/public')) {
     cli.fatal(appDir + " does not appear to be a feather application.");
   }
   return appDir;
@@ -365,17 +465,13 @@ function addAdditionalOptions(args) {
     args.push("pidpath");
     args.push(options.pidpath);
   }
-  if (options.dompoolmin) {
-    args.push("dompoolmin");
-    args.push(options.dompoolmin);
-  }
-  if (options.dompoolmax) {
-    args.push("dompoolmax");
-    args.push(options.dompoolmax);
-  }
   if (options.loglevel) {
     args.push("loglevel");
     args.push(options.loglevel);
+  }
+  if (options.extras) {
+    args.push('extras');
+    args.push(options.extras);
   }
 }
 
@@ -383,9 +479,10 @@ function runChild(cmd, args, childCwd) {
   if (!childCwd) {
     childCwd = process.cwd();
   }
-  var stdio = process.binding("stdio"),
-      fds = [ stdio.stdinFD, stdio.stdoutFD, stdio.stderrFD ],
-      child = spawn(cmd, args, { cwd: childCwd, customFds:fds });
+  var child = spawn(cmd, args, { 
+    cwd: childCwd,
+    stdio: 'inherit'
+  });
 }
 
 function createApp(dir, name) {
@@ -417,15 +514,13 @@ function createApp(dir, name) {
   ].join('\n'), "utf-8");
   fs.writeFileSync(path.join(fullPath, 'app.js'), [
     '/*',
-    'exports.onInit = function(feather) {',
+    '// if you implement onInit, you must call cb() when done, so the framework knows when to continue start-up',
+    'exports.onInit = function(feather, cb) {',
     '',
+    '    if (typeof cb === "function") cb();',
     '};',
     '',
     'exports.onReady = function(feather) {',
-    '',
-    '};',
-    '',
-    'exports.onRequest = function(feather, req, res, next) {',
     '',
     '};',
     '*/'
@@ -437,7 +532,7 @@ function createApp(dir, name) {
 
 function startCreateWidget(appDir, namespace, widgetName) {
   var fullPath = path.join(appDir, 'public', 'widgets', widgetName);
-  if (path.existsSync(fullPath)) {
+  if (fs.existsSync(fullPath)) {
     cli.info("Widget \"" + widgetName + "\" already exists!  Replace it? (y/n)");
     cli.readline(function(data) {
       if (data.toLowerCase()[0] === 'y') {
@@ -532,4 +627,26 @@ function getFiles(dir){
 
 function stats() {
   cli.ok("TODO: Stats");
+}
+
+function deploy() {
+  cli.ok("TODO: Deploy");
+}
+
+function lsenv() {
+  // Read config.json and list all properties of environments.  Read contents of conf folder and list json files.
+  var envs = [];
+  var appDir = getAppDir();
+  var defaultConf = appDir + '/config.json';
+  if (fs.existsSync(defaultConf)) {
+    var defaultConfig = JSON.parse(fs.readFileSync(defaultConf));
+    if (defaultConfig.environments) {
+      _.each(defaultConfig, function(val, key) { envs.push(key); });
+    }
+  }
+  _.each(_.filter(fs.readdirSync(appDir + '/conf'), function(f) { return path.extname(f) === '.json' }), function(file) {
+    envs.push(path.basename(file, '.json'));
+  });
+
+  cli.ok(color.ansify("#white[Configured environments: #cyan[#bold[" + envs.join(']], #cyan[#bold[') + ']]]'));
 }

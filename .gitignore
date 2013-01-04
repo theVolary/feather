@@ -1,8 +1,8 @@
+node_modules
 .project
 .tmp_*
 *.log
 *.orig
-lib/node-core-enhancements/*
 featherdoc/public/docs
 featherdoc/lib/node-jsdoc-toolkit/*
 *.sublime-project
@@ -18,3 +18,5 @@ api_tester/public/feather-res-cache/*
 *.out
 __restProxy.js
 *.swp
+*.lock-wscript
+*.wafpickle-7

@@ -1,4 +1,4 @@
-exports.onInit = function(feather) {
+exports.onInit = function(feather, cb) {
   feather.ns("test_namespace");
   test_namespace.foo = "bar";
 
@@ -72,8 +72,9 @@ exports.onInit = function(feather) {
       }
       callback && callback();
     });
-  },
-  tearDown = function(callback) {
+  };
+
+  var tearDown = function(callback) {
     feather.data.appdb.getRawDb().all({include_docs:true},function(err, response) {
       if (!err) {
         var docs = _.map(response, function(doc) {
@@ -86,4 +87,13 @@ exports.onInit = function(feather) {
       }
     });
   };
+
+  //tell feather to continue
+  cb();
+}
+
+exports.onReady = function(feather) {
+  if (feather.config('socket.io.enabled')) {
+    require('./lib/addChannels').init(feather);
+  }
 }
