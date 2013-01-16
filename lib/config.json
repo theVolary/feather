@@ -123,6 +123,7 @@
             "key": "",
             "secret": "",
             "bucket": "",
+            "bucketFolder": "",
             "acl": "public-read",
             "publishUri": null
           }
