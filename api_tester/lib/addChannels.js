@@ -90,5 +90,5 @@ exports.init = function(feather) {
         _cb();
       }
     }
-  })
+  });
 };
