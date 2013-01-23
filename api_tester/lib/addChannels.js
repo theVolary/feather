@@ -75,4 +75,20 @@ exports.init = function(feather) {
       }
     }
   });
+
+  var channel7 = feather.socket.addChannel({
+    id: "channel7",
+    allowDirectMessaging: true,
+    hooks: {
+      subscribe: function(args, _cb) {
+        var sessionId = args.client.session.id;
+
+        process.nextTick(function() {
+          channel7.sendBySessionId(sessionId, 'bySessionId', 'foo');
+        });
+
+        _cb();
+      }
+    }
+  });
 };

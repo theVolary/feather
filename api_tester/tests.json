@@ -1,5 +1,6 @@
 [
-  {"name": "channels", "path": "widgets/channelTests/"},
+  {"name": "channels - basic test suite", "path": "widgets/channelTests/"},
+  {"name": "channels - sendBySessionId", "path": "widgets/channelSendBySessionIdTests/"},
   {"name": "session", "path": "widgets/sessionTests/"},
   {"name": "async widget definition", "path": "widgets/asyncWidgetTest/"},
   {"name": "datalink options", "path": "widgets/datalinkOptionsTest/"},
