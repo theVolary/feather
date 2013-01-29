@@ -91,4 +91,21 @@ exports.init = function(feather) {
       }
     }
   });
+
+  var channel8 = feather.socket.addChannel({
+    id: "channel8",
+    allowDirectMessaging: true,
+    hooks: {
+      message: function(args, _cb) {
+        if (args.message == "") {
+          var sessionId = args.client.session.id;
+          process.nextTick(function() {
+            channel8.sendBySessionId(sessionId, 'shouldBe3', 'hello');
+          });
+        } else {
+          _cb();
+        }
+      }
+    }
+  });
 };
