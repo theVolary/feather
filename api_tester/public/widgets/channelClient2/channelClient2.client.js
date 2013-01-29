@@ -16,8 +16,22 @@ feather.ns("api_tester");
           channel5.send("ack2", {message: "got it"});
         });
 
+
+        var channel8 = feather.socket.subscribe({
+          id: "channel8"
+        });
+
+        channel8.once("subscribe", function(args) {
+          channel8.send("hey", {message: "!"});
+        }); 
+
+        channel8.once("Heard you", function(args) {
+          channel8.send("came back");
+        });
+
         window.onbeforeunload = function() {
           channel5.dispose();
+          channel8.dispose();
         };
       }
     }

@@ -50,12 +50,26 @@ feather.ns("api_tester");
           }
         });
 
+        var channel8 = feather.socket.subscribe({
+          id: "channel8"
+        });
+
+        channel8.once("subscribe", function(args) {
+          channel8.send("hey", {message: "!"});
+        });
+
+        channel8.once("Heard you", function(args) {
+          channel8.send("came back");
+        });
+
+
 
         window.onbeforeunload = function() {
           channel2.dispose();
           channel4.dispose();
           channel5.dispose();
           channel6.dispose();
+          channel8.dispose();
         };
       }
     }
