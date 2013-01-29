@@ -125,6 +125,62 @@ feather.ns("api_tester");
         }));
 
         suite.add(new Y.Test.Case({
+          name: "Test initial model state",
+          setUp: feather.emptyFn,
+          tearDown : function(){
+            me.datalink2 && me.datalink2.dispose();
+          },
+
+          testRadioPrecheckedValues: function () {
+            var test = this;
+            feather.Widget.load({
+              path: "widgets/datalink2/",
+              parent: me,
+              clientOptions: {
+                onceState: {
+                  ready: function() {
+                    me.datalink2 = this;
+                    test.resume(function() {
+                      Y.Assert.areEqual(me.datalink2.model.test.radio, '2');                        
+                    });
+                  }
+                },
+                containerOptions: {
+                  title: "This should go away automatically",
+                  width: 500,
+                  height: 300
+                }
+              }
+            });
+            test.wait();
+          },
+
+          testCheckboxPrecheckedValues: function () {
+            var test = this;
+            feather.Widget.load({
+              path: "widgets/datalink2/",
+              parent: me,
+              clientOptions: {
+                onceState: {
+                  ready: function() {
+                    me.datalink2 = this;
+                    test.resume(function() {
+                      Y.Assert.areEqual(me.datalink2.model.test.bool, true);                        
+                    });
+                  }
+                },
+                containerOptions: {
+                  title: "This should go away automatically",
+                  width: 500,
+                  height: 300
+                }
+              }
+            });
+            test.wait();
+          }
+        }));
+
+        suite.add(new Y.Test.Case({
           name: "Test select changes to model",
           setUp: feather.emptyFn,
           tearDown : function(){
