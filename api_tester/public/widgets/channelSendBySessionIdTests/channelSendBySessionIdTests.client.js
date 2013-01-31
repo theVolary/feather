@@ -40,7 +40,48 @@ feather.ns("api_tester");
         });  
 
         test.wait(2000); 
-      }  
+      }
+    }),
+
+    new Y.Test.Case({
+      name: "SendBySessionIdMultiple",
+
+      setUp : function () {
+        this.channel = feather.socket.subscribe({id: "channel8"});
+        this.popup1 = window.open("/channelClient", "channelClient", "width=200, height=200");
+        this.popup2 = window.open("/channelClient2", "channelClient2", "width=200, height=200");
+      },
+
+      tearDown : function () { 
+        this.channel.dispose();
+        this.popup1.close();
+        this.popup2.close();
+        delete this.channel;  
+        delete this.popup1;     
+        delete this.popup2;           
+      },
+
+      testSendBySessionIdMultiple: function () {
+        var test = this;
+        var messages = 0;
+        this.channel.on("hey", function(args) {
+          messages++;
+          if(messages === 2) {
+            test.channel.send("Heard you");
+          }
+        });
+        var sessionMessage = 0;
+        this.channel.on("came back", function(args) {
+          sessionMessage++;
+          if(sessionMessage === 2) {
+            test.resume(function(){
+              Y.Assert.areEqual(sessionMessage, 2);
+            });
+          }
+        });
+        test.wait(2000);
+      }
+
     })
   ];
 
