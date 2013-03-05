@@ -19,6 +19,11 @@
         "maxAge": 14400000, 
         "secure": false 
       }
+    },
+    "bodyParser": {
+      "ignorePaths": {
+        
+      }
     }
   },
 
@@ -99,10 +104,12 @@
   },
   "resources": {
     "publish": {
-      "consolidate": false,
-      "minify": false,
-      "gzip": false,
-      "publisherId": "local",
+      "defaults": {
+        "consolidate": false,
+        "minify": false,
+        "gzip": false,
+        "publisherId": "local"
+      },
       "publishers": [
         {
           "id": "local",
@@ -116,6 +123,7 @@
             "key": "",
             "secret": "",
             "bucket": "",
+            "bucketFolder": "",
             "acl": "public-read",
             "publishUri": null
           }
@@ -129,12 +137,14 @@
       },
       { 
         "name":"feather-client-core.js",
+        "publishType": "package",
         "consolidate": false,
         "minify": false,
         "publisherId": "local"
       },
       {
         "name": "feather-client-core.css",
+        "publishType": "package",
         "consolidate": false,
         "minify": true,
         "publisherId": "local"
