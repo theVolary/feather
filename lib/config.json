@@ -98,6 +98,9 @@
         "options": { "layout": "colored" }
       }
     ],
+    "categories": {
+      "http.access.headers": "off"
+    },
     "templates": [
       {"id":"separator", "template":"-------------------------------------------------------------------------"}
     ]
