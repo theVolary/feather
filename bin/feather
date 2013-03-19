@@ -66,7 +66,7 @@ var cliOptions = {
     testsuite: ['t', '(api-test command only) - Specify the name of a single test suite to run inside of feather/test/unit (omit the file extension)', 'string', null],
     "client-only": ['c', '(create-widget command only) - Indicates that the created widget is a client-side rendered widget (has no .server.js file)', 'boolean', false]
   };
-var options = cli.parse(cliOptions, ['run', 'test', 'api-test', 'create-app', 'create-widget', 'create-rest', 'deploy', 'help', 'stats', 'print-cmd', 'lsenv']);
+var options = cli.parse(cliOptions, ['run', 'test', 'api-test', 'create-app', 'create-widget', 'create-rest', 'deploy', 'help', 'stats', 'print-cmd', 'lsenv', 'fun']);
 if (options.debug) {
   cli.debug("Parsed options are: " + util.inspect(options));
   cli.debug("Command is " + cli.command);
@@ -400,6 +400,13 @@ var commands = {
       '--verbose (-' + cliOptions.verbose[0] + '): ' + cliOptions.verbose[1]
     ].join('\n '),
     fn: lsenv
+  },
+
+  fun: {
+    desc: "",
+    usage: "",
+    cmdOptions: [],
+    fn: fun
   }
 };
 
@@ -649,4 +656,64 @@ function lsenv() {
   });
 
   cli.ok(color.ansify("#white[Configured environments: #cyan[#bold[" + envs.join(']], #cyan[#bold[') + ']]]'));
+}
+
+function fun() {
+  var fun = [    
+    
+    "                            N+?????????????IIII???D                             ",
+    "                        ??I??????????????????I??I??II??                         ",
+    "                     ?I?????????????I???IIIIIIIIII?IIIIIIIN                     ",
+    "                  ???=+???I?II??II??I?IIIIIIIIIIIIIIIIIIIII7+                   ",
+    "                ??=+I??????II????II???IIIIIIIIIIIIIIIIIIIIIIIII8                ",
+    "              +==+???I?II?IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII7               ",
+    "            =+=+???III?I????????III?IIIIIIIIIIIIIIIIIIIIIIIIIIIIIII             ",
+    "          N?==??????III?IIN7,,,,+DN?IIIIIIIIIIIIIIIIIIIIIIIIIIIIIII7$           ",
+    "         ==~+??????III?IN=.,.,,,,.,,N8IIIIIIIIIIIIIIIIIIIIIIIIIIIIII7I          ",
+    "        ?==????I???IIIIIO.,.,,,,,,,.,,M+IIIIIIIIIIIIIIIIIIIIIIIIIIIIII7N        ",
+    "       I==??II???I???IIM,,,,,,,,,,,,,,.M?IIIIIIIIIIIIIIIIIIIIIIIIIIIII778       ",
+    "      ?==?????III???IIIN,,,,,,,,,,,,,,,,MIIIIII$MNNM$IIIIIIIIIIIIIIIIIII78      ",
+    "     I==I???II?II???IIIN.,,,.DNNN,,,,,,,D?IIIIN..,,,,M?IIIIIIIIIIIIIIII777D     ",
+    "    I=+????IIIIIII?IIIIM.,,,NNND,D,,,,,,~8II7Z,,,.,,,,NIIIIIIIIIIIIIII7II77     ",
+    "   ???????IIIIIIIIIIIIIOI,,:NNNNNZ,,,,,,:NI?M.,,,:.,,.,MIIIIIIIIIIIIIIIII777    ",
+    "   ?+I????IIIIIIIIIIIII?M,,,NNNNM,,,,,,,D$I?M,,+M:N,,,,N?IIIIIIIIIIIIII7I7I77   ",
+    "  I????I?IIIIIIIIIIIIIII?N:.:DN7,,,,,,,,M?IIM,,MNMN,,,:MIIIIIIIIIIIIIIIIIII77   ",
+    " ZI????IIIIIIIIIIIIIIIIIIIMD~,,,,,,:,,=M?IIIDN,NNNN.,,M$IIIIIIIIIIIIIIIII7I77I  ",
+    " I??II?IIIIIIIIIIIIIIIIIII??MND:::,~8NN?IIII?MN:,,,::NMIIIIIIIIIIIIIIIIIIIII77  ",
+    " I?IIII?IIIIIIIIIIIIIIIIIIIIII?$NND$?IIIIIIIIIONO~~8M8IIIIIIIIIIIIIIIIIIIII777I ",
+    "II????IIIIIIIIIIIIIIIIIIIIIIIIIIII?IIIIIIIIIIIIIII?IIIIIIIIIIIIIIIIIIIIIIIII777 ",
+    "I???IIIIIIIIIIIII7?IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII7I777 ",
+    "II?IIIIIIII???$N ?IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII?77N",
+    "I?IIIIIIIIIIII?N?IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII~+7O",
+    "IIIII?IIIIIIIIINDIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIDN$IIIIIIIIIIII7I==7I",
+    "IIIIIIIIIIIIIII NIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII?MNII7IIIIIIIIII7I~=7?",
+    "7IIIIIIIIIIIIIIIN?IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIMNI7IIIIIIIIIIII7I~=7O",
+    "7IIIIIIIIIIIIIIINNIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII?NMIIIIIIIIIIIIIII7I==7N",
+    "7IIIIIIIIIIIIIIIIN7IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIMMIIIIIIIIIIIIIIIII7I=+$ ",
+    "IIIIIIIIIIIIIIIII7NIIIIIIIIIIIIIIIIIIIIIIII?IIIIIIIOMMNIIIIIIIIIIIIIIIIII7I+~77 ",
+    "N7IIIIIIIIIIIIIIIION?IIIIIIIIIIIIIIIIIIMNNN8OOZZ8M?IIIIIIIIIIIIIIIIIIIII777==7I ",
+    " 7IIIIIIIIIIIIIIIII7NOIIIIIIIIIIIIII8M8$ZZNNZZZZZZNMIIIIIIIIIIIIIIIIIII7I7I=+7  ",
+    " I7IIIIIIIIIIIIIIIIIIMM?IIIIIIII?$MNZZZZZZZMZZZZZZZZN?IIIIIIIIIIIIIIIIII77+=7I  ",
+    "  7IIIIIIIIIIIIIIIIIII?DMNMNNMMMN78DZZZZZZZZNZZZZZZZZMOIIIIIIIIIIIIIIII777=?$   ",
+    "  O7IIIIIIIIIIIIIIIIIIIIIII????IIIINZZZZZZZZ$N$$ZZZ$ZZM87IIIIIIIIIIIII7I7==7$   ",
+    "   7IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIINZZZZZZZZZZZZ$$ZZ$$ZMIIIIIIIIIIIII777?=7$    ",
+    "    7IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIMZZZZZZZZ$DZZZ$$Z$$ZMIIIIIIIIIIII777?7$     ",
+    "     77IIIIIIIIIIIIIIIIIIIIIIIIIIIIIMZZZZZZ$ZZZZZ$$$$$$$NIIIIIIIIIII777777N     ",
+    "      77IIIIIIIIIIIIIIIIIIIIIIIIIIIIIM$Z$Z$$Z$$$$$$$$$$$N$IIIIIIII777777$D      ",
+    "       777I7IIIIIIIIIIIIIIIIIIIIIIIIIM8$$$$$$$$$$$$$$$$$M?II77III777777$D       ",
+    "        777I7IIIIIIIIIIIIIIIIIIIIIIIIIMO$$$$$$$$$$$$$$$NOIIIIIII777777$D        ",
+    "         I777IIIIIIIIIIIIIIIIIIIIIIIIIIMN$$$$$$$$$$$$DMI7I7III777777$7          ",
+    "          8$77II7IIIIIIIIIIIIIIIIIIIIIII?NM8ZZZZONMM$IIII7II7777777$O           ",
+    "            $7777IIIIIIIIIIIIIIIIIIIIIIIII7??????I77II7III7777777$7             ",
+    "              $77777I777IIIIIIIIIIIIIIIIIIIIIIIII77I77777777777$7               ",
+    "               N77777777IIIIIIIIIIIIIIIIIIIIIIIIIII7777777777$$D                ",
+    "                  77777777777II7III7IIIIIIIII7I777777777777$7                   ",
+    "                    N77777777777777777I77777777777777777$$                      ",
+    "                        7$$7777777777777777777777777777                         ",
+    "                            Z7$$$777777777777$$$$7$                             ",
+    "                                   N8Z$77$8N                                    ",
+    "         \"It is fun to have fun but you have to know how.\" - Dr. Seuss\n"
+  ].join('\n');
+
+  console.log(fun);
 }
