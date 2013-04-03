@@ -13,30 +13,35 @@ exports.getWidget = function(feather, cb) {
       doGet: feather.Widget.serverMethod(function(options, callback) {
         var me = this;
         feather.data.appdb.get(options, function(err, results) {
+          if (err && err.message) err = err.message;
           callback(err, results);
         });
       }),
       doSave: feather.Widget.serverMethod(function(options, callback) {
         var me = this;
         feather.data.appdb.save(options, function(err, results) {
+          if (err && err.message) err = err.message;
           callback(err, results);
         });
       }),
       doRemove: feather.Widget.serverMethod(function(options, callback) {
         var me = this;
         feather.data.appdb.remove(options, function(err, results) {
+          if (err && err.message) err = err.message;
             callback(err, results);
         });
       }),
       doExists: feather.Widget.serverMethod(function(options, callback) {
         var me = this;
         feather.data.appdb.exists(options, function(err, results) {
+          if (err && err.message) err = err.message;
           callback(err, results);
         });
       }),
       doFind: feather.Widget.serverMethod(function(options, callback) {
         var me = this;
          feather.data.appdb.find(options, function(err, results) {
+          if (err && err.message) err = err.message;
           callback(err, results);
         });
       })

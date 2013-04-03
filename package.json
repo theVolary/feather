@@ -25,7 +25,8 @@
     "socket.io": "~0.9.10",
     "connect": "~2.3.0",
     "connect-redis": "1.4.1",
-    "redis": "0.8.1"
+    "redis": "0.8.1",
+    "fuzzymap": "~0.1"
   },
   "devDependencies": {
     "mocha": "1.6.0",

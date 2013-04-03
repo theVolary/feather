@@ -15,7 +15,8 @@ var fs    = require("fs"),
     util  = require("util"),
     cli   = require("cli").enable('version').setApp('feather', '0.1'),
     _     = require("underscore"),
-    DomResource = require("../lib/dom").DomResource;
+    DomResource = require("../lib/dom").DomResource,
+    fuzzymap = require("fuzzymap");
 
 // Validate that the environment variable FEATHER_HOME has been been initialized.
 
@@ -72,6 +73,11 @@ if (options.debug) {
   cli.debug("Command is " + cli.command);
   cli.debug("Args are " + util.inspect(cli.args));
 }
+
+// Put regex's in here for commonly misspelled commands.
+var fuzzyMap = fuzzymap.defineMap([ 
+  { run: [/rui?n/i] }
+]);
 
 var commands = {
   run: {
@@ -428,8 +434,8 @@ function checkResult(result) {
   }
 }
 
-function resolveCmd(cmd) {
-  return cmd.replace(/-([a-z])/, function(m) { return m[1].toUpperCase(); });
+function resolveCmd(cmd, fuzzymap) {
+  return fuzzyMap.map(cmd.replace(/-([a-z])/, function(m) { return m[1].toUpperCase(); }));
 }
 
 function getAppDir(createIfNoExist, ignorePublicMissing) {
