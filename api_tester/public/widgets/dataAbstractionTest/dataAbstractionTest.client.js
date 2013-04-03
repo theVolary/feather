@@ -46,8 +46,7 @@ feather.ns("api_tester");
             me.server_doGet([{}], function(args) {
               test.resume(function() {
                 Y.Assert.isNotNull(args.err, "Error should have occurred");
-                var err = JSON.parse(args.err);
-                Y.Assert.areEqual("No ids provided", err.message, "Error message mismatch: " + args.err.message);
+                Y.Assert.areEqual("No ids provided", args.err, "Error message mismatch: " + args.err);
                 Y.Assert.isFalse(args.success, "Method successful?");
               });
             });
@@ -135,8 +134,7 @@ feather.ns("api_tester");
             me.server_doSave([{}], function(args) {
               test.resume(function() {
                 Y.Assert.isNotNull(args.err, "Error should have occurred");
-                var err = JSON.parse(args.err);
-                Y.Assert.areEqual("No document specified to save.", err.message);
+                Y.Assert.areEqual("No document specified to save.", args.err);
                 Y.Assert.isFalse(args.success, "Method successful?");
               });
             });
@@ -173,8 +171,7 @@ feather.ns("api_tester");
             me.server_doExists([{}], function(args) {
               test.resume(function() {
                 Y.Assert.isNotNull(args.err, "Error should have occurred");
-                var err = JSON.parse(args.err);
-                Y.Assert.areEqual("No id specified", err.message);
+                Y.Assert.areEqual("No id specified", args.err);
                 Y.Assert.isFalse(args.success, "Method successful?");
               });
             });
@@ -187,8 +184,7 @@ feather.ns("api_tester");
             me.server_doFind([{}], function(args) {
               test.resume(function() {
                 Y.Assert.isNotNull(args.err, "Error should have occurred");
-                var err = JSON.parse(args.err);
-                Y.Assert.areEqual("No source option provided", err.message);
+                Y.Assert.areEqual("No source option provided", args.err);
                 Y.Assert.isFalse(args.success, "Method successful?");
               });
             });
@@ -272,14 +268,29 @@ feather.ns("api_tester");
             test.wait(10000);
           },
 
+          testFindBadKey: function() {
+            var test = this;
+            me.server_doFind([{
+              source: "test/test2",
+              criteria: {
+                key: null
+              }
+            }], function(args) {
+              test.resume(function() {
+                Y.Assert.isNotNull(args.err);
+                Y.Assert.areEqual("A key was specified but was either undefined or null.  This can result in returning all documents.", args.err);
+              });
+            });
+            test.wait(2000);
+          },
+
           //Remove tests.
           testRemoveNoDoc: function() {
             var test = this;
             me.server_doRemove([{}], function(args) {
               test.resume(function(){ 
                 Y.Assert.isNotNull(args.err, "Error should have occurred");
-                var err = JSON.parse(args.err);
-                Y.Assert.areEqual("No documents specified to remove.", err.message);
+                Y.Assert.areEqual("No documents specified to remove.", args.err);
                 Y.Assert.isFalse(args.success, "Method successful?");
               });
             });
