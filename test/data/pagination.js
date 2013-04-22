@@ -67,10 +67,31 @@ describe('pagination tests', function(done) {
         });
       }
     });
+    // request.put({ uri: 'http://admin:password@localhost:5984/' + dbOpts.dbName + "_clean" }, function(err, res, body) {
+    //   if (err || res.statusCode !== 201) {
+    //     console.error("Error creating database: " + err + "; status " + (res ? res.statusCode : "unknown"));
+    //     done();
+    //     throw new Error("Could not create database " + err + "; status " + (res ? res.statusCode : "unknown"));
+    //   } else {
+    //     request({
+    //       uri: 'http://admin:password@localhost:5984/' + dbOpts.dbName + "_clean/_bulk_docs",
+    //       json: { docs: testDocs },
+    //       method: "POST"
+    //     }, function(postErr, postRes, postBody) {
+    //       if (postErr || postRes.statusCode !== 201) {
+    //         done();
+    //         throw new Error("Couldn't populate db.");
+    //       } else {
+    //         console.info("Database populated.");
+    //         db = new DataInterface(dbOpts);
+    //         done();
+    //       }
+    //     });
+    //   }
+    // });
   });
 
   after(function(done) {
-    console.info("In after");
     _.each(testDocs, function(doc) {
       doc._deleted = true;
     });
@@ -129,7 +150,9 @@ describe('pagination tests', function(done) {
         pageNumber: 2
       }
     }, function(err, result) {
-      if (err) done(err); else {
+      if (err) {
+        done(err); 
+      } else {
         result.documents.length.should.equal(3);
         result.options.pagination.pageBoundaries.length.should.equal(5);
         result.documents[0].name.should.equal('Festerhide Boar');
@@ -159,7 +182,7 @@ describe('pagination tests', function(done) {
         result.documents[0].name.should.equal('Festerhide Boar');
         result.documents[2].name.should.equal('Griffin Rider');
         should.exist(result.options.pagination.docCount);
-        result.options.pagination.docCount.should.equal(5);
+        result.options.pagination.docCount.should.equal(5, "doc count");
         done();
       }
     });
