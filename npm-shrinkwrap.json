@@ -33,35 +33,6 @@
         }
       }
     },
-    "cradle": {
-      "version": "0.6.3",
-      "from": "cradle@0.6.3",
-      "resolved": "https://registry.npmjs.org/cradle/-/cradle-0.6.3.tgz",
-      "dependencies": {
-        "follow": {
-          "version": "0.7.2",
-          "from": "follow@0.7.2",
-          "resolved": "https://registry.npmjs.org/follow/-/follow-0.7.2.tgz",
-          "dependencies": {
-            "request": {
-              "version": "2.2.9",
-              "from": "request@2.2.9",
-              "resolved": "https://registry.npmjs.org/request/-/request-2.2.9.tgz"
-            }
-          }
-        },
-        "request": {
-          "version": "2.9.153",
-          "from": "request@2.9.153",
-          "resolved": "https://registry.npmjs.org/request/-/request-2.9.153.tgz"
-        },
-        "vargs": {
-          "version": "0.1.0",
-          "from": "vargs@0.1.0",
-          "resolved": "https://registry.npmjs.org/vargs/-/vargs-0.1.0.tgz"
-        }
-      }
-    },
     "daemon": {
       "version": "0.5.1",
       "from": "daemon@0.5.1",
