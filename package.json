@@ -26,7 +26,8 @@
     "connect": "~2.3.0",
     "connect-redis": "1.4.5",
     "redis": "0.8.1",
-    "fuzzymap": "~0.1"
+    "fuzzymap": "~0.1",
+    "watch": "~0.8"
   },
   "devDependencies": {
     "mocha": "1.6.0",
