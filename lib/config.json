@@ -56,6 +56,10 @@
     "runAsGroup": "root"
   },
 
+  "developer": {
+    "watchForChanges": false
+  },
+
   "redis": {
     "servers": {}
   },
