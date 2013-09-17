@@ -187,6 +187,16 @@
           "/feather-client/lib/bootstrap/css/bootstrap.min.css",
           "/feather-client/lib/bootstrap/css/bootstrap-responsive.min.css"
         ]
+      },
+      {
+        "name": "bootstrap3",
+        "jsFiles": [
+          "/feather-client/lib/bootstrap3/js/bootstrap.min.js",
+          "/feather-client/ui-bootstrap3.js"
+        ],
+        "cssFiles": [
+          "/feather-client/lib/bootstrap3/css/bootstrap.css"
+        ]
       }
     ]
   },
