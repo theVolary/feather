@@ -5609,22 +5609,9 @@ body.modal-open,
   left: 50%;
   margin: -250px 0 0 -280px;
   overflow: auto;
-  background-color: #ffffff;
-  border: 1px solid #999;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-  *border: 1px solid #999;
-  -webkit-border-radius: 6px;
-     -moz-border-radius: 6px;
-          border-radius: 6px;
-  -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
-     -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
-          box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
-  -webkit-background-clip: padding-box;
-     -moz-background-clip: padding-box;
-          background-clip: padding-box;
 }
 
-.modal.fade .modal-dialog {
+.modal.fade {
   -webkit-transform: translate(0, -25%);
       -ms-transform: translate(0, -25%);
           transform: translate(0, -25%);
@@ -5634,7 +5621,7 @@ body.modal-open,
           transition: transform 0.3s ease-out;
 }
 
-.modal.in .modal-dialog {
+.modal.in {
   -webkit-transform: translate(0, 0);
       -ms-transform: translate(0, 0);
           transform: translate(0, 0);
@@ -5655,9 +5642,18 @@ body.modal-open,
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 6px;
   outline: none;
-  -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
-          box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
-  background-clip: padding-box;
+  border: 1px solid #999;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  *border: 1px solid #999;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
+  -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+     -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+  -webkit-background-clip: padding-box;
+     -moz-background-clip: padding-box;
+          background-clip: padding-box;
 }
 
 .modal-backdrop {
