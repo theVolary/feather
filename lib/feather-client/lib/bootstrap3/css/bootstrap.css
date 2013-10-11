@@ -5694,6 +5694,7 @@ body.modal-open,
 .modal-body {
   position: relative;
   padding: 20px;
+  overflow: auto;
 }
 
 .modal-footer {
