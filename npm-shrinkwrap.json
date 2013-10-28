@@ -479,6 +479,11 @@
         }
       }
     },
+    "watch": {
+      "version": "0.8.0",
+      "from": "watch@0.8.0",
+      "resolved": "https://registry.npmjs.org/watch/-/watch-0.8.0.tgz"
+    },
     "should": {
       "version": "1.2.0",
       "from": "should@1.2.0",
