@@ -13,7 +13,7 @@
     "connect-gzip": "~0.1.6",
     "connect-redis": "1.4.6",
     "cradle": "git+http://github.com/ryedin/cradle.git#4246311c3b87",
-    "daemon": "~0.5.1",
+    "daemon": "~1.1.0",
     "feather-config": "~0.1",
     "fuzzymap": "~0.1",
     "github-flavored-markdown": "~1.0.1",
