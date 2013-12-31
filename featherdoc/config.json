@@ -1,4 +1,5 @@
 {
+  "port": 9999,
   "navbar": [
     {
       "url": "#",
@@ -13,6 +14,11 @@
   "ui": {
     "enabled": true,
     "provider": "bootstrap"
+  },
+  "resources": {
+    "publish": {
+      "gzip": true
+    }
   },
   "logging": {
     "enabled": true,
