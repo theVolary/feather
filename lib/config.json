@@ -114,7 +114,7 @@
       "defaults": {
         "consolidate": false,
         "minify": false,
-        "gzip": true,
+        "gzip": false,
         "publisherId": "local"
       },
       "publishers": [
