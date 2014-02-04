@@ -111,6 +111,7 @@
   },
   "resources": {
     "publish": {
+      "compileToSingleCss": false,
       "defaults": {
         "consolidate": false,
         "minify": false,
