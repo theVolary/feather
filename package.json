@@ -27,7 +27,8 @@
     "underscore": "~1.5.2",
     "watch": "~0.8",
     "yuitest": "~0.7.9",
-    "cookie": "~0.1.0"
+    "cookie": "~0.1.0",
+    "file": "~0.2.1"
   },
   "devDependencies": {
     "mocha": "1.15.1",
