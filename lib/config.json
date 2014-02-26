@@ -24,6 +24,15 @@
       "ignorePaths": {
         
       }
+    },
+    "crossSiteAccess": {
+      "enabled": false,
+      "authorizedOrigins": {
+        "http://a.trusted.server": [
+          "^/_rest/",
+          "^/another/trusting/route"
+        ]
+      }
     }
   },
 
