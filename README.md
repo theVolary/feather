@@ -13,14 +13,6 @@ Where possible (and sensible) we will work on extracting granular standalone npm
 
 In the end, the intent is to use feather to create a browser-based development platform where real-time collaboration is first-class. We believe app developers should be empowered to express the unique behaviors of their application as quickly as possible, so the aim is to remove as much ceremony, boilerplate, and process as possible from the development cycle until we are left with only an elegant expression layer that produces apps that "just work". We don't care if you call these goals crazy; we happen to be just a little bit crazy.
 
-### Features
-
-- Fill
-  - This
-  - In
-  - Before
-  - v0.2.0
-
 ### Installation
 First of all, not to be too obvious but this project requires node.js. Specifically, we intend to support node.js on *nix platforms. I assume the Windows/cygwin flavors of node builds should also work but we aren't going to go out of our way to support it right now.
 
