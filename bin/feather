@@ -657,9 +657,26 @@ function lsenv() {
       _.each(defaultConfig, function(val, key) { envs.push(key); });
     }
   }
-  _.each(_.filter(fs.readdirSync(appDir + '/conf'), function(f) { return path.extname(f) === '.json' }), function(file) {
+  var subdirs = [],
+      confContents = fs.readdirSync(appDir + '/conf'),
+      stat = null,
+      dirs = _.each(confContents, function(f) {
+        stat = fs.statSync(appDir + '/conf/' + f);
+        if (stat.isDirectory()) {
+          subdirs.push(appDir + '/conf/' + f);
+        }
+      });
+  _.each(_.filter(confContents, function(f) { return path.extname(f) === '.json' }), function(file) {
     envs.push(path.basename(file, '.json'));
   });
+
+  _.each(subdirs, function(dir) {
+    _.each(_.filter(fs.readdirSync(dir), function(f) { return path.extname(f) === '.json'}), function(file) {
+      envs.push(path.basename(path.dirname(path.resolve(dir + '/' + file))) + '/' + path.basename(file, '.json'));
+    });
+  });
+
+  envs.sort();
 
   cli.ok(color.ansify("#white[Configured environments: #cyan[#bold[" + envs.join(']], #cyan[#bold[') + ']]]'));
 }
