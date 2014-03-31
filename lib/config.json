@@ -23,6 +23,10 @@
     "bodyParser": {
       "ignorePaths": {
         
+      },
+      "multipart": {
+        "dest": "/tmp",
+        "for_full_options_see": "https://github.com/expressjs/multer#options"
       }
     },
     "crossSiteAccess": {
