@@ -28,7 +28,9 @@
     "watch": "~0.8",
     "yuitest": "~0.7.9",
     "cookie": "~0.1.0",
-    "file": "~0.2.1"
+    "file": "~0.2.1",
+    "multer": "0.0.5",
+    "body-parser": "~1.0.1"
   },
   "devDependencies": {
     "mocha": "1.15.1",
