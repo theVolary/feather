@@ -489,12 +489,20 @@ function addAdditionalOptions(args) {
 }
 
 function runChild(cmd, args, childCwd) {
+  cli.info('running child process');
   if (!childCwd) {
     childCwd = process.cwd();
   }
   var child = spawn(cmd, args, { 
     cwd: childCwd,
-    stdio: 'inherit'
+    stdio: 'inherit',
+    env: process.env
+  });
+  child.on('exit', function(code) {
+    cli.info('Feather exiting with code ' + code);
+    process.nextTick(function() {
+      process.exit(code);
+    });
   });
 }
 
