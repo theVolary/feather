@@ -489,7 +489,6 @@ function addAdditionalOptions(args) {
 }
 
 function runChild(cmd, args, childCwd) {
-  cli.info('running child process');
   if (!childCwd) {
     childCwd = process.cwd();
   }
