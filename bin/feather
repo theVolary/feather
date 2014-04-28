@@ -53,19 +53,21 @@ cli.readline = function (encoding, callback) {
 };
 
 var cliOptions = {
-    daemonize: ['z', '(run command only) - Daemonize this server so it runs in the background', 'boolean', null],
-    debug: ['d', '(run command only) - Starts the app in debug mode (i.e. "node debug")', 'boolean', false],
-    "debug-inspector": ['D', '(run command only) - Starts the app in debug mode and hosts node-inspector on port 8888', 'boolean', false],
-    env: ['e', '(run command only) - The environment to run in (e.g. dev, prod)', 'string', "dev"],
-    loglevel: ['l', '(run command only) - The default logging level to use.  Options are: all, trace, debug, info, warn, error, off', 'string', null],
-    outputpath: ['o', '(run command only) - Path to write std output to when running as a daemon', 'path', null],
-    pidpath: ['i', '(run command only) - The path of the pid file to use when running as a daemon', 'path', null],
-    extras: ['x', '(run command only) - Comma separated list of name:value pairs to append to the environment as additional configuration items. Usage: " feather run -x foo:bar,foo2:bar2"', 'string', null],
-    path: ['p', 'The path to the application to apply this command to.  If omitted, defaults to current dir.', 'path', process.cwd()],
-    verbose: ['V', 'Verbose output', 'boolean', null],
-    format: ['f', '(api-test command only) - Used for test commands to denote the output format.  Valid formats are "tap", "xunit", and "junitxml".', 'string', null],
-    testsuite: ['t', '(api-test command only) - Specify the name of a single test suite to run inside of feather/test/unit (omit the file extension)', 'string', null],
-    "client-only": ['c', '(create-widget command only) - Indicates that the created widget is a client-side rendered widget (has no .server.js file)', 'boolean', false]
+    daemonize:            ['z', '(run command only) - Daemonize this server so it runs in the background', 'boolean', null],
+    debug:                ['d', '(run command only) - Starts the app in debug mode (i.e. "node debug")', 'boolean', false],
+    "debug-inspector":    ['D', '(run command only) - Starts the app in debug mode and hosts node-inspector on port 8888', 'boolean', false],
+    env:                  ['e', '(run command only) - The environment to run in (e.g. dev, prod)', 'string', "dev"],
+    loglevel:             ['l', '(run command only) - The default logging level to use.  Options are: all, trace, debug, info, warn, error, off', 'string', null],
+    "max-old-space-size": ['M', '(run comand only) - Specify the max heap size, in MB', 'number', 1900],
+    outputpath:           ['o', '(run command only) - Path to write std output to when running as a daemon', 'path', null],
+    pidpath:              ['i', '(run command only) - The path of the pid file to use when running as a daemon', 'path', null],
+    extras:               ['x', '(run command only) - Comma separated list of name:value pairs to append to the environment as additional configuration items. Usage: " feather run -x foo:bar,foo2:bar2"', 'string', null],
+    path:                 ['p', 'The path to the application to apply this command to.  If omitted, defaults to current dir.', 'path', process.cwd()],
+    verbose:              ['V', 'Verbose output', 'boolean', null],
+    format:               ['f', '(api-test command only) - Used for test commands to denote the output format.  Valid formats are "tap", "xunit", and "junitxml".', 'string', null],
+    testsuite:            ['t', '(api-test command only) - Specify the name of a single test suite to run inside of feather/test/unit (omit the file extension)', 'string', null],
+    "client-only":        ['c', '(create-widget command only) - Indicates that the created widget is a client-side rendered widget (has no .server.js file)', 'boolean', false],
+    'heapdump':          ['h', 'Writes out a heap dump to a local file every N seconds.  Useful for profiling.', 'number', null]
   };
 var options = cli.parse(cliOptions, ['run', 'test', 'api-test', 'create-app', 'create-widget', 'create-rest', 'deploy', 'help', 'stats', 'print-cmd', 'lsenv', 'fun']);
 if (options.debug) {
@@ -88,7 +90,9 @@ var commands = {
       '--debug (-' + cliOptions.debug[0] + '): ' + cliOptions.debug[1],
       '--debug-inspector (-' + cliOptions['debug-inspector'][0] + '): ' + cliOptions['debug-inspector'][1],
       '--env (-' + cliOptions.env[0] + '): ' + cliOptions.env[1],
+      '--heapdump (-' + cliOptions.heapdump[0] + '): ' + cliOptions.heapdump[1],
       '--loglevel (-' + cliOptions.loglevel[0] + '): ' + cliOptions.loglevel[1],
+      '--max-old-space-size (-' + cliOptions['max-old-space-size'][0] + '): ' + cliOptions['max-old-space-size'][1],
       '--outputpath (-' + cliOptions.outputpath[0] + '): ' + cliOptions.outputpath[1],
       '--pidpath (-' + cliOptions.pidpath[0] + '): ' + cliOptions.pidpath[1],
       '--path (-' + cliOptions.path[0] + '): ' + cliOptions.path[1],
@@ -100,6 +104,10 @@ var commands = {
         args.push('debug');
       } else if (options["debug-inspector"]) {
         args.push('--debug');
+      }
+
+      if (options['max-old-space-size']) {
+        args.push('--max-old-space-size=' + options['max-old-space-size']);
       }
 
       args.push(process.env.FEATHER_HOME + '/lib/app.js');
@@ -485,6 +493,11 @@ function addAdditionalOptions(args) {
   if (options.extras) {
     args.push('extras');
     args.push(options.extras);
+  }
+
+  if (options.heapdump) {
+    args.push('heapdump');
+    args.push(options.heapdump);
   }
 }
 
