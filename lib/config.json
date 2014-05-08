@@ -7,22 +7,29 @@
     "cookieParser": {
       "secret": "feather.sid"
     },
+    "timing": {
+      "enabled": false,
+      "logging": {
+        "thresholdMs": 500,
+        "category": "http.access.timing"
+      }
+    },
     "session": {
       "provider": "memory",
       "providerOptions": null,
       "key": "feather.sid",
       "secret": "feather app key",
       "ignorePaths": ["/robots.txt"],
-      "cookie": { 
-        "path": "/", 
-        "httpOnly": false, 
-        "maxAge": 14400000, 
-        "secure": false 
+      "cookie": {
+        "path": "/",
+        "httpOnly": false,
+        "maxAge": 14400000,
+        "secure": false
       }
     },
     "bodyParser": {
       "ignorePaths": {
-        
+
       },
       "multipart": {
         "dest": "/tmp",
@@ -41,7 +48,7 @@
   },
 
   "host": "localhost",
-  
+
   "socket.io": {
     "enabled": false,
     "port": 8081,
@@ -49,7 +56,7 @@
     "log level": 1,
     "log level docs": "0 = error, 1 = warn, 2 = info, 3 = debug"
   },
-  
+
   "auth": {
     "enabled": false,
     "userIdPrefix": "org.couchdb.user:"
@@ -76,14 +83,14 @@
   "redis": {
     "servers": {}
   },
-  
+
   "data": {
     "datalinking": {
       "enabled": true
     }
   },
   "domPoolSize": {
-    "min": 10, 
+    "min": 10,
     "max": 20
   },
   "environments": {
@@ -112,11 +119,30 @@
     "appenders": [
       {
         "type": "console",
-        "options": { "layout": "colored" }
+        "options": {
+          "layout": "colored",
+          "excludedCategories": [
+            "http.access.timing"
+          ]
+        }
+      },
+      {
+        "type": "file",
+        "options": {
+          "layout": "passThrough",
+          "filename": "logs/request-timing.csv",
+          "maxFileSize": 10485760,
+          "numBackups": 100,
+          "filePollInterval": 60,
+          "includedCategories": [
+            "http.access.timing"
+          ]
+        }
       }
     ],
     "categories": {
-      "http.access.headers": "off"
+      "http.access.headers": "off",
+      "http.access.timing": "info"
     },
     "templates": [
       {"id":"separator", "template":"-------------------------------------------------------------------------"}
@@ -156,7 +182,7 @@
         "publishType": "pageContent",
         "publisherId": "local"
       },
-      { 
+      {
         "name":"feather-client-core.js",
         "publishType": "package",
         "consolidate": false,
@@ -176,7 +202,7 @@
   "rest": {
     "autoGenerateProxy": false
   },
-  
+
   "ui": {
     "enabled": true,
     "provider": "jqueryUI",
