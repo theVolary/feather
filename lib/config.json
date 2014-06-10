@@ -54,7 +54,10 @@
     "port": 8081,
     "host": "localhost",
     "log level": 1,
-    "log level docs": "0 = error, 1 = warn, 2 = info, 3 = debug"
+    "log level docs": "0 = error, 1 = warn, 2 = info, 3 = debug",
+    "browser client minification": true,
+    "browser client etag": true,
+    "browser client gzip": true
   },
 
   "auth": {
@@ -220,7 +223,7 @@
       {
         "name": "bootstrap",
         "jsFiles": [
-          "/feather-client/lib/bootstrap/js/bootstrap.min.js",
+          "//netdna.bootstrapcdn.com/twitter-bootstrap/2.0.4/js/bootstrap.min.js",
           "/feather-client/ui-bootstrap.js"
         ],
         "cssFiles": [
@@ -231,7 +234,7 @@
       {
         "name": "bootstrap3",
         "jsFiles": [
-          "/feather-client/lib/bootstrap3/js/bootstrap.min.js",
+          "//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js",
           "/feather-client/ui-bootstrap3.js"
         ],
         "cssFiles": [
