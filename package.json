@@ -10,7 +10,6 @@
     "cli": "~0.4.5",
     "colorize": "~0.1.0",
     "connect": "~2.12.0",
-    "connect-gzip": "git+http://github.com/tikonen/connect-gzip.git#44bccfe4b3",
     "connect-redis": "1.4.6",
     "cradle": "git+http://github.com/ryedin/cradle.git#4246311c3b87",
     "daemon": "~1.1.0",
