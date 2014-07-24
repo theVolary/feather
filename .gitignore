@@ -20,3 +20,4 @@ __restProxy.js
 *.swp
 *.lock-wscript
 *.wafpickle-7
+**/*.gz
