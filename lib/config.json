@@ -92,10 +92,6 @@
       "enabled": true
     }
   },
-  "domPoolSize": {
-    "min": 10,
-    "max": 20
-  },
   "environments": {
     "unittest": {
       "debug": true,
