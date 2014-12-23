@@ -190,10 +190,6 @@ if (!appName || appName.length == 0) {
     daemon: {
       runAsDaemon: false
     },
-    domPoolSize: {
-      min: 10,
-      max: 20
-    },
     session: {
       config: {
         key: "feather.sid",

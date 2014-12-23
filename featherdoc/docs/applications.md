@@ -92,10 +92,6 @@ Your application can be configured via the `config.json` file in the top level a
           "enabled": true
         }
       },
-      "domPoolSize": {
-        "min": 10, 
-        "max": 20
-      },
       "environments": {
         "unittest": {
           "debug": true,
