@@ -21,7 +21,7 @@
     "github-flavored-markdown": "~1.0.1",
     "heapdump": "~0.2.7",
     "inherits": "~1.0.0",
-    "jsdom": "1.5.0",
+    "jsdom": "0.11.1",
     "knox": "~0.8.8",
     "multer": "0.0.5",
     "node-uuid": "~1.4.1",
