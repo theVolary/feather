@@ -56,14 +56,6 @@ TODO:
 
 ### authdb
 
-TODO:
-
-## domPoolSize
-The DOM pool is used for parsing widgets during startup and at runtime.  These settings are used to tune the pool size for performance.  When the app starts up, the minimum number of DOM instances are created.  If more are needed during processing, more are created (up to max).  If _max_ DOMs are in use, any other processing must wait until a DOM is released back into the pool.
-
-* min [10] - The minimum number of DOM instances to create at runtime.
-* max [20] - The maximum number of DOM instances to create at runtime.
-
 ## environments
 
 Any properties of this object are considered to be a named environment (e.g. "dev" or "prod").  See the _Applications_ documentation for more details.

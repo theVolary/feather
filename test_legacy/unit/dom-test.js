@@ -1,7 +1,7 @@
 (function() {
   var Y = this.YUITest || require("yuitest"),
   DomResource = require("../../lib/dom").DomResource,
-  DomPool = require("../../lib/dom").DomPool,
+  DomManager = require("../../lib/dom").DomManager,
   _ = require("underscore")._;
 
   var suite = new Y.TestSuite("DomResource Tests");

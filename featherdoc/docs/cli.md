@@ -90,8 +90,6 @@ If the path option is omitted, the default is attempted.
     --daemonize (-z): (run command only) - Daemonize this server so it runs in the background
     --debug (-d): (run command only) - Starts the app in debug mode (i.e. "node debug")
     --debug-inspector (-D): (run command only) - Starts the app in debug mode and hosts node-inspector on port 8888
-    --dompoolmax (-x): (run command only) - The max size of the dom pool to use
-    --dompoolmin (-n): (run command only) - The min size of the dom pool to use
     --env (-e): (run command only) - The environment to run in (e.g. dev, prod)
     --loglevel (-l): (run command only) - The default logging level to use.  Options are: all, trace, debug, info, warn, error, off
     --outputpath (-o): (run command only) - Path to write std output to when running as a daemon.  Default is feather-app.out.
